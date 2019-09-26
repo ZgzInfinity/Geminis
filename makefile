@@ -15,7 +15,7 @@ SRCDIR = ./src
 CFLAGS += -I$(INCDIR) -I$(SRCDIR)
 
 # add here the source files for the compilation
-SOURCES = main.cpp Point.cpp Direcion.cpp SharedOps.cpp
+SOURCES = main.cpp Point.cpp Direction.cpp SharedOps.cpp
 
 # create the obj variable by substituting the extension of the sources
 # and adding a path
