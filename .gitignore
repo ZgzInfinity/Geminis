@@ -3,3 +3,4 @@ bin/*
 
 # exclude files inside obj folder
 obj/*
+.vscode
