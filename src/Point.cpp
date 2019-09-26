@@ -6,3 +6,5 @@ Point::Point(float x, float y, float z) {
     c[2] = z;
     c[3] = 1;
 }
+
+Point::Point(){}
