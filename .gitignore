@@ -1,0 +1,5 @@
+# exclude files inside bin folder
+bin/*
+
+# exclude files inside obj folder
+obj/*
