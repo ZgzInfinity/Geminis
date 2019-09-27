@@ -35,6 +35,8 @@ struct Planet {
     Direction axis;
     // Referenced city of the planet
     Point refCity;
+    // Radius of the planet
+    float radius;
 
 
     /**
@@ -45,6 +47,8 @@ struct Planet {
      * @returns a Planet type object
      */
     Planet(Point _center, Direction _axis, Point _refCity);
+
+    Planet();
 };
 
 #endif /* PLANET_H */

@@ -40,4 +40,6 @@ struct Point {
     Point();
 };
 
+Point add(Point p, Point q);
+
 #endif /* POINT_H */

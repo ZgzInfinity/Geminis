@@ -15,6 +15,7 @@
 
 #include "../include/Planet.h"
 
+const float MAX_RADIUS_ERROR = 0.000001;
 
 /**
  * Build a Planet type object
@@ -24,13 +25,15 @@
  * @returns a Planet type object
  */
 Planet::Planet(Point _center, Direction _axis, Point _refCity){
-    if(mod(_axis) == 2 * mod(sub(_center, _refCity))){
+    if(abs(mod(_axis) - 2 * (radius = mod(sub(_center, _refCity)))) <= MAX_RADIUS_ERROR){
         center = _center;
         axis = _axis;
         refCity = _refCity;
     }
     else{
         cout << "Error creating planet. Difference = " 
-        << mod(_axis) - 2 * mod(sub(_center, _refCity)) <<  endl;
+        << abs(mod(_axis) - 2 * radius) <<  endl;
     }
 }
+
+Planet::Planet(){}
