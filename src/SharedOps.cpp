@@ -38,6 +38,7 @@ Direction sub(Point p, Point q){
 }
 
 
+
 Direction mul(Matrix t, Direction d){
     Direction r = Direction();
     for(int i = 0; i < 4; i++){

@@ -67,6 +67,23 @@ void Matrix::matrixRotationZ(float theta){
 
 
 
+void Matrix::matrixChangeOfBase(Direction i, Direction j, Direction k, Point o){
+    m[0][0] = i.c[0];
+    m[0][1] = j.c[0];
+    m[0][2] = k.c[0];
+    m[0][3] = o.c[0];
+    m[1][0] = i.c[1];
+    m[1][1] = j.c[1];
+    m[1][2] = k.c[1];
+    m[1][3] = o.c[1];
+    m[2][0] = i.c[2];
+    m[2][1] = j.c[2];
+    m[2][2] = k.c[2];
+    m[2][3] = o.c[2];
+    m[3][3] = o.c[1];
+}
+
+
 
 
 Matrix mul(Matrix a, Matrix b){

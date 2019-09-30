@@ -16,6 +16,8 @@
 #define MATRIX_H
 
 #include "cmath"
+#include "Direction.h"
+#include "Point.h"
 
 struct Matrix
 {
@@ -55,7 +57,13 @@ struct Matrix
 
      void matrixRotationZ(float theta);
 
+
+
+
+     void matrixChangeOfBase(Direction i, Direction j, Direction k, Point o);
+
 };
+
 
 
 Matrix mul(Matrix a, Matrix b);
