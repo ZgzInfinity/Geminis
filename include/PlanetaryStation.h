@@ -19,5 +19,11 @@ struct PlanetaryStation {
     PlanetaryStation();
 };
 
+Point position(Planet p, float i, float a);
+
+Direction normal(Point _stationUCS, Point _center);
+
+Direction longitude(Planet p, Point _stationUCS);
+
 
 #endif /* PLANETARY_STATION_H */
