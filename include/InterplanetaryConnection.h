@@ -34,6 +34,11 @@ struct InterplanetaryConnection
      * Default builder without parameters
      */
     InterplanetaryConnection();
+
+
+    bool collisionInOrigin();
+
+    bool collisionInDestination();
 };
 
 

@@ -1,4 +1,5 @@
 #include "../include/InterplanetaryConnection.h"
+#include "../include/SharedOps.h"
 
 
 InterplanetaryConnection::InterplanetaryConnection(PlanetaryStation _origin,
@@ -12,10 +13,21 @@ InterplanetaryConnection::InterplanetaryConnection(PlanetaryStation _origin,
     connectionFromOrigin = mul(t, connectionUCS);
     t.matrixChangeOfBase(_destination.longitudeTangent, _destination.latitudeTangent,
      _destination.surfaceNormal, _destination.stationUCS);
-    connectionFromDestination = mul(t, connectionUCS);
+    //connectionFromDestination = mul(t, connectionUCS);
+    connectionFromDestination = mul(t, sub(_destination.stationUCS, _origin.stationUCS));
 }
 
 /**
  * Default builder without parameters
  */
 InterplanetaryConnection::InterplanetaryConnection(){}
+
+bool InterplanetaryConnection::collisionInOrigin(){
+    return acos(dot(origin.surfaceNormal, connectionFromOrigin) / 
+    (mod(origin.surfaceNormal) * mod(connectionFromOrigin))) > PI / 2; 
+}
+
+bool InterplanetaryConnection::collisionInDestination(){
+    return acos(dot(destination.surfaceNormal, connectionFromDestination) / 
+    (mod(destination.surfaceNormal) * mod(connectionFromDestination))) > PI / 2; 
+}

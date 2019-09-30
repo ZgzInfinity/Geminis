@@ -19,7 +19,7 @@
 #include "Point.h"
 #include "Matrix.h"
 
-
+const float PI = 3.141592741F;
 
 /**
  * Gets the destination point resulting from adding the direction d to the point p 

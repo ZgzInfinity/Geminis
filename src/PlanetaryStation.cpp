@@ -2,8 +2,6 @@
 
 #include "../include/PlanetaryStation.h"
 
-const float PI = 3.141592741F;
-
 
 PlanetaryStation::PlanetaryStation(Planet _planet, float _inclination, float _azimuth){
     if(_inclination > 0 && _inclination < PI){
