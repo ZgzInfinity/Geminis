@@ -17,6 +17,7 @@
 
 #include "Direction.h"
 #include "Point.h"
+#include "Matrix.h"
 
 
 
@@ -37,5 +38,18 @@ Point add(Point p, Direction d);
  * @returns the direction between both points
  */
 Direction sub(Point p, Point q);
+
+
+Direction mul(Matrix t, Direction d);
+
+
+Point mul(Matrix t, Point p);
+
+
+Direction translation(Direction d, Point p);
+
+
+
+
  
 #endif /* SHARED_OPS_H */

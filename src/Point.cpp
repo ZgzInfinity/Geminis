@@ -33,7 +33,12 @@ Point::Point(float x, float y, float z) {
 /**
  * Default builder without parameters
  */
-Point::Point(){}
+Point::Point(){
+    c[0] = 0;
+    c[1] = 0;
+    c[2] = 0;
+    c[3] = 1;
+}
 
 Point add(Point p, Point q){
   return Point(p.c[0] + q.c[0], p.c[1] + q.c[1], p.c[2] + q.c[2]);

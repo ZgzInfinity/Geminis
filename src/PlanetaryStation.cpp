@@ -13,6 +13,8 @@ PlanetaryStation::PlanetaryStation(Planet _planet, float _inclination, float _az
             azimuth = _azimuth;
             stationUCS = position(_planet, _inclination, _azimuth);
             surfaceNormal = normal(stationUCS, _planet.center);
+            longitudeTangent = longitude(_planet, stationUCS);
+            latitudeTangent = cross(surfaceNormal, longitudeTangent);
         }
         else{
             cout << "azimuth argument must be in range (- PI, PI]" << endl;
@@ -36,3 +38,17 @@ Direction normal(Point _stationUCS, Point _center){
     Direction d = sub(_stationUCS, _center);
     return div(d, mod(d));
 }
+
+
+
+Direction longitude(Planet p, Point _stationUCS){
+    Direction d = div(p.axis, 2);
+    Matrix t = Matrix();
+    t.matrixTranslation(p.center.c[0], p.center.c[1], p.center.c[2]);
+    d = cross(mul(t, d), sub(_stationUCS, p.center));
+    t.matrixTranslation(_stationUCS.c[0], _stationUCS.c[1], _stationUCS.c[2]);
+    d = mul(t, d);
+    return div(d, mod(d));
+}
+
+

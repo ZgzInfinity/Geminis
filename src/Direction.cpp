@@ -35,7 +35,12 @@ Direction::Direction(float x, float y, float z) {
 /**
  * Default builder without parameters
  */
-Direction::Direction(){}
+Direction::Direction(){
+    c[0] = 0;
+    c[1] = 0;
+    c[2] = 0;
+    c[3] = 0;
+}
 
 
 

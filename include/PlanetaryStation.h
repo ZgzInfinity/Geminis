@@ -9,6 +9,8 @@ struct PlanetaryStation {
     float azimuth;
     Point stationUCS;
     Direction surfaceNormal;
+    Direction longitudeTangent;
+    Direction latitudeTangent;
 
 
     PlanetaryStation(Planet _planet, float _inclination, float _azimuth);

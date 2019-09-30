@@ -36,3 +36,28 @@ Point add(Point p, Direction d){
 Direction sub(Point p, Point q){
     return Direction(p.c[0] - q.c[0], p.c[1] - q.c[1], p.c[2] - q.c[2]);
 }
+
+
+Direction mul(Matrix t, Direction d){
+    Direction r = Direction();
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            r.c[j] = r.c[j] + t.m[i][j] * d.c[j];
+        }
+    }
+    return r;
+}
+
+
+Point mul(Matrix t, Point p){
+    Point r = Point();
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 4; j++){
+            r.c[j] = r.c[j] + t.m[i][j] * p.c[j];
+        }
+    }
+    return r;
+}
+
+
+
