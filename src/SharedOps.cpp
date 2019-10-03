@@ -41,7 +41,7 @@ Direction operator - (Point p, Point q){
 
 Direction operator * (Matrix4 t, Direction d){
     Direction r = Direction();
-    for(int i = 0; i < 4; i++){
+    for(int i = 0; i < 3; i++){
         for(int j = 0; j < 4; j++){
             r.c[j] = r.c[j] + t.c[i][j] * d.c[j];
         }
@@ -53,7 +53,7 @@ Direction operator * (Matrix4 t, Direction d){
 Point operator * (Matrix4 t, Point p){
     Point r = Point();
     for(int i = 0; i < 4; i++){
-        for(int j = 0; j < 4; j++){
+        for(int j = 0; j < 3; j++){
             r.c[j] = r.c[j] + t.c[i][j] * p.c[j];
         }
     }

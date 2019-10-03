@@ -67,7 +67,8 @@ public:
      Matrix4 changeBase(Direction i, Direction j, Direction k, Point o);
 
 
-
+     Matrix4 reverse(Matrix4 a);
+     
 
      friend Matrix4 operator* (Matrix4 a, Matrix4 b);
 
