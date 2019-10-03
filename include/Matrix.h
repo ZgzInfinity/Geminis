@@ -19,14 +19,18 @@
 #include "Direction.h"
 #include "Point.h"
 
-struct Matrix
+struct Matrix4
 {
-    float m[4][4];
-
+private:
+    
     /**
      * Default builder without parameters
      */
-     Matrix();
+     Matrix4();
+
+public:
+
+    float c[4][4];
 
     /**
      * Build a Direction type object
@@ -35,37 +39,40 @@ struct Matrix
      * @param z z-coordinate
      * @returns a Direction type object
      */
-     void matrixTranslation(float x, float y, float z);
+     Matrix4 translation(float x, float y, float z);
 
 
 
 
-     void matrixScale(float x, float y, float z);
+     Matrix4 scale(float x, float y, float z);
 
 
 
 
-     void matrixRotationX(float theta);
+     Matrix4 rotationX(float theta);
 
 
 
 
-     void matrixRotationY(float theta);
+     Matrix4 rotationY(float theta);
 
 
 
 
-     void matrixRotationZ(float theta);
+     Matrix4 rotationZ(float theta);
 
 
 
 
-     void matrixChangeOfBase(Direction i, Direction j, Direction k, Point o);
+     Matrix4 changeBase(Direction i, Direction j, Direction k, Point o);
+
+
+
+
+     friend Matrix4 operator* (Matrix4 a, Matrix4 b);
 
 };
 
 
-
-Matrix mul(Matrix a, Matrix b);
 
 #endif

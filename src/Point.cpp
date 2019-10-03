@@ -26,7 +26,6 @@ Point::Point(float x, float y, float z) {
     c[0] = x;
     c[1] = y;
     c[2] = z;
-    c[3] = 1;
 }
 
 
@@ -37,9 +36,8 @@ Point::Point(){
     c[0] = 0;
     c[1] = 0;
     c[2] = 0;
-    c[3] = 1;
 }
 
-Point add(Point p, Point q){
+Point operator + (Point p, Point q){
   return Point(p.c[0] + q.c[0], p.c[1] + q.c[1], p.c[2] + q.c[2]);
 }

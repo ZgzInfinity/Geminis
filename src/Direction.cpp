@@ -28,7 +28,6 @@ Direction::Direction(float x, float y, float z) {
     c[0] = x;
     c[1] = y;
     c[2] = z;
-    c[3] = 0;
 }
 
 
@@ -39,7 +38,6 @@ Direction::Direction(){
     c[0] = 0;
     c[1] = 0;
     c[2] = 0;
-    c[3] = 0;
 }
 
 
@@ -50,7 +48,7 @@ Direction::Direction(){
  * @param e is the second direction
  * @returns the direction resulting from adding the Direction e to the Direction d
  */
-Direction add(Direction d, Direction e){
+Direction operator + (Direction d, Direction e){
     return Direction(d.c[0] + e.c[0], d.c[1] + e.c[1], d.c[2] + e.c[2]);
 }
 
@@ -62,7 +60,7 @@ Direction add(Direction d, Direction e){
  * @param e is the second direction
  * @returns the direction resulting from substracting the Direction e to the Direction d
  */
-Direction sub(Direction d, Direction e){
+Direction operator - (Direction d, Direction e){
     return Direction(d.c[0] - e.c[0], d.c[1] - e.c[1], d.c[2] - e.c[2]);
 }
 
@@ -74,7 +72,7 @@ Direction sub(Direction d, Direction e){
  * @param s is the scalar value
  * @returns the direction resulting from multiplying the Direction d by the scalar s
  */
-Direction mul(Direction d, float s){
+Direction operator * (Direction d, float s){
     return Direction(d.c[0] * s, d.c[1] * s, d.c[2] * s);
 }
 
@@ -86,7 +84,7 @@ Direction mul(Direction d, float s){
  * @param s is the scalar value
  * @returns the direction resulting from dividing the Direction d by the scalar s
  */
-Direction div(Direction d, float s){
+Direction operator / (Direction d, float s){
     if(s != 0){
         return Direction(d.c[0] / s, d.c[1] / s, d.c[2] / s);
     }
@@ -103,18 +101,6 @@ Direction div(Direction d, float s){
  */  
 float mod(Direction d){
     return sqrt(d.c[0] * d.c[0] + d.c[1] * d.c[1] + d.c[2] * d.c[2]);
-}
-
-
-
-/**
- * Gets the result of multiplying the module of the Direction d by the scalar s
- * @param d is the direction
- * @param s is the scalar value
- * @returns the result of multiplying the module of the Direction d by the scalar s
- */ 
-float modMul(Direction d, float s){
-    return mod(d) * s;
 }
 
 

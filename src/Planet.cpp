@@ -25,7 +25,7 @@ const float MAX_RADIUS_ERROR = 0.000001;
  * @returns a Planet type object
  */
 Planet::Planet(Point _center, Direction _axis, Point _refCity){
-    if(abs(mod(_axis) - 2 * (radius = mod(sub(_center, _refCity)))) <= MAX_RADIUS_ERROR){
+    if(abs(mod(_axis) - 2 * (radius = mod(_center - _refCity))) <= MAX_RADIUS_ERROR){
         center = _center;
         axis = _axis;
         refCity = _refCity;

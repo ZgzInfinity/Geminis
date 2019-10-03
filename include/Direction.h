@@ -23,7 +23,7 @@
  */
 struct Direction {
     // coordinate vector
-    float c[4];
+    float c[3];
 
     /**
      * Build a Direction type object
@@ -50,7 +50,7 @@ struct Direction {
  * @param e is the second direction
  * @returns the direction resulting from adding the Direction e to the Direction d
  */
-Direction add(Direction d, Direction e);
+Direction operator + (Direction d, Direction e);
 
 
 
@@ -60,7 +60,7 @@ Direction add(Direction d, Direction e);
  * @param e is the second direction
  * @returns the direction resulting from substracting the Direction e to the Direction d
  */
-Direction sub(Direction d, Direction e);
+Direction operator - (Direction d, Direction e);
 
 
 
@@ -70,7 +70,7 @@ Direction sub(Direction d, Direction e);
  * @param s is the scalar value
  * @returns the direction resulting from multiplying the Direction d by the scalar s
  */
-Direction mul(Direction d, float s);
+Direction operator * (Direction d, float s);
 
 
 
@@ -80,7 +80,7 @@ Direction mul(Direction d, float s);
  * @param s is the scalar value
  * @returns the direction resulting from dividing the Direction d by the scalar s
  */
-Direction div(Direction d, float s);
+Direction operator / (Direction d, float s);
 
 
 
@@ -91,15 +91,6 @@ Direction div(Direction d, float s);
  */  
 float mod(Direction d);
 
-
-
-/**
- * Gets the result of multiplying the module of the Direction d by the scalar s
- * @param d is the direction
- * @param s is the scalar value
- * @returns the result of multiplying the module of the Direction d by the scalar s
- */ 
-float modMul(Direction d, float s);
 
 
 

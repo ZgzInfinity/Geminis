@@ -27,7 +27,7 @@ const float PI = 3.141592741F;
  * @param q is the destination point
  * @returns the point resulting from adding the direction d to point p
  */
-Point add(Point p, Direction d);
+Point operator + (Point p, Direction d);
 
 
 
@@ -37,18 +37,13 @@ Point add(Point p, Direction d);
  * @param q is the destination point
  * @returns the direction between both points
  */
-Direction sub(Point p, Point q);
+Direction operator - (Point p, Point q);
 
 
-Direction mul(Matrix t, Direction d);
+Direction operator * (Matrix4 t, Direction d);
 
 
-Point mul(Matrix t, Point p);
-
-
-Direction translation(Direction d, Point p);
-
-
+Point operator * (Matrix4 t, Point p);
 
 
  

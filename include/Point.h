@@ -21,7 +21,7 @@
  */
 struct Point {
     // coordinate vector
-    float c[4];
+    float c[3];
 
     /**
      * Build a Point type object
@@ -40,6 +40,6 @@ struct Point {
     Point();
 };
 
-Point add(Point p, Point q);
+Point operator + (Point p, Point q);
 
 #endif /* POINT_H */

@@ -27,26 +27,22 @@ PlanetaryStation::PlanetaryStation(Planet _planet, float _inclination, float _az
 PlanetaryStation::PlanetaryStation(){}
 
 Point position(Planet p, float i, float a){
-    return add(p.center,
-        Point(p.radius * sin(i) * sin(a), p.radius * sin(i) * cos(a), p.radius * cos(i)));
+    return p.center +
+        Point(p.radius * sin(i) * sin(a), p.radius * sin(i) * cos(a), p.radius * cos(i));
 }
 
 
 Direction normal(Point _stationUCS, Point _center){
-    Direction d = sub(_stationUCS, _center);
-    return div(d, mod(d));
+    Direction d = _stationUCS - _center;
+    return d / mod(d);
 }
 
 
 
 Direction longitude(Planet p, Point _stationUCS){
-    Direction d = div(p.axis, 2);
-    Matrix t = Matrix();
-    t.matrixTranslation(p.center.c[0], p.center.c[1], p.center.c[2]);
-    d = cross(mul(t, d), sub(_stationUCS, p.center));
-    t.matrixTranslation(_stationUCS.c[0], _stationUCS.c[1], _stationUCS.c[2]);
-    d = mul(t, d);
-    return div(d, mod(d));
+    Direction d = p.axis / 2;
+    d = cross(d, _stationUCS - p.center);
+    return d / mod(d);
 }
 
 
