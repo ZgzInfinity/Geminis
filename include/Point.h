@@ -40,6 +40,16 @@ struct Point {
     Point();
 };
 
-Point operator + (Point p, Point q);
 
-#endif /* POINT_H */
+
+/**
+ * Checks if two POint vectors are equal
+ * @param d is the Point p
+ * @param q is the Point q
+ * @returns true if the two Point vectors p and q are equal and
+ *          false in any other case
+ */
+bool operator == (Point p, Point q);
+
+
+#endif 

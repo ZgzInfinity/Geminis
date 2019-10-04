@@ -85,12 +85,22 @@ Direction operator / (Direction d, float s);
 
 
 /**
+ * Checks if two Direction vectors are equal
+ * @param d is the fisrt direction
+ * @param e is the second direction
+ * @returns true if the two Direction vectors d and e are equal and
+ *          false in any other case
+ */
+bool operator == (Direction d, Direction e);
+
+
+
+/**
  * Gets the Direction modulus d
  * @param d is the direction
  * @returns the Direction modulus d
  */  
 float mod(Direction d);
-
 
 
 
@@ -144,4 +154,4 @@ float modCross(float dmod, float emod, float beta);
  */
 Direction cross(Direction d, Direction e);
 
-#endif /* DIRECTION_H */
+#endif 

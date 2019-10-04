@@ -94,6 +94,20 @@ Direction operator / (Direction d, float s){
 }
 
 
+
+/**
+ * Checks if two Direction vectors are equal
+ * @param d is the direction
+ * @param s is the scalar value
+ * @returns true if the two Direction vectors d and e are equal and
+ *          false in any other case
+ */
+bool operator == (Direction d, Direction e){
+    return d.c[0] == e.c[0] && d.c[1] == e.c[1] && d.c[2] == e.c[2];
+}
+
+
+
 /**
  * Gets the Direction modulus d
  * @param d is the direction

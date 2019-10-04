@@ -28,7 +28,7 @@ PlanetaryStation::PlanetaryStation(){}
 
 Point position(Planet p, float i, float a){
     return p.center +
-        Point(p.radius * sin(i) * sin(a), p.radius * sin(i) * cos(a), p.radius * cos(i));
+        Direction(sin(i) * sin(a), sin(i) * cos(a), cos(i)) * p.radius;
 }
 
 

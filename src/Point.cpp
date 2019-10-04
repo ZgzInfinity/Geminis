@@ -38,6 +38,14 @@ Point::Point(){
     c[2] = 0;
 }
 
-Point operator + (Point p, Point q){
-  return Point(p.c[0] + q.c[0], p.c[1] + q.c[1], p.c[2] + q.c[2]);
+
+/**
+ * Checks if two POint vectors are equal
+ * @param d is the Point p
+ * @param q is the Point q
+ * @returns true if the two Point vectors p and q are equal and
+ *          false in any other case
+ */
+bool operator == (Point p, Point q){
+    return p.c[0] == q.c[0] && p.c[1] == q.c[1] && p.c[2] == q.c[2];
 }
