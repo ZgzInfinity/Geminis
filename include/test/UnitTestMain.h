@@ -10,6 +10,7 @@
 #include "PointUnitTest.h"
 #include "SharedOpsUnitTest.h"
 
+void runDirectionUnitTests();
 void runAllUnitTests();
 
 

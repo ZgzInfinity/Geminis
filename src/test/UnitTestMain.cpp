@@ -1,9 +1,13 @@
 #include "../../include/test/UnitTestMain.h"
 
+void runDirectionUnitTests(){
+    testMod(Direction(3, 4, 0), 5);
+    cout << "Direction unit tests passed." << endl;
+}
 
 void runAllUnitTests(){
-    testMod(Direction(3, 4, 0), 5);
+    runDirectionUnitTests();
 
-    cout << "All unit tests have passed." << endl;
+    cout << "ALL UNIT TESTS HAVE PASSED." << endl;
 
 }
