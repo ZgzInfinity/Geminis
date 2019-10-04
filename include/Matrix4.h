@@ -39,35 +39,35 @@ public:
      * @param z z-coordinate
      * @returns a Direction type object
      */
-     Matrix4 translation(float x, float y, float z);
+     static Matrix4 translation(float x, float y, float z);
 
 
 
 
-     Matrix4 scale(float x, float y, float z);
+     static Matrix4 scale(float x, float y, float z);
 
 
 
 
-     Matrix4 rotationX(float theta);
+     static Matrix4 rotationX(float theta);
 
 
 
 
-     Matrix4 rotationY(float theta);
+     static Matrix4 rotationY(float theta);
 
 
 
 
-     Matrix4 rotationZ(float theta);
+     static Matrix4 rotationZ(float theta);
 
 
 
 
-     Matrix4 changeBase(Direction i, Direction j, Direction k, Point o);
+     static Matrix4 changeBase(Direction i, Direction j, Direction k, Point o);
 
 
-     Matrix4 reverse(Matrix4 a);
+     static Matrix4 inverse(Matrix4 a);
      
 
      friend Matrix4 operator* (Matrix4 a, Matrix4 b);

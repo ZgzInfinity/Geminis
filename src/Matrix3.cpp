@@ -60,7 +60,7 @@ Matrix3 Matrix3::changeBase(Direction i, Direction j, Direction k){
 
 
 
-Matrix3 Matrix3::reverse(Matrix3 m){
+Matrix3 Matrix3::inverse(Matrix3 m){
     float det = m.c[0][0] * m.c[1][1] * m.c[2][2] - m.c[2][1] * m.c[1][2] -
                 m.c[0][1] * m.c[1][0] * m.c[2][2] - m.c[1][2] * m.c[2][0] +
                 m.c[0][2] * m.c[1][0] * m.c[2][1] - m.c[1][1] * m.c[2][0];

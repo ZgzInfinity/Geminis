@@ -33,30 +33,30 @@ public:
     float c[3][3];
 
 
-     Matrix3 scale(float x, float y, float z);
+     static Matrix3 scale(float x, float y, float z);
 
 
 
 
-     Matrix3 rotationX(float theta);
+     static Matrix3 rotationX(float theta);
 
 
 
 
-     Matrix3 rotationY(float theta);
+     static Matrix3 rotationY(float theta);
 
 
 
 
-     Matrix3 rotationZ(float theta);
+     static Matrix3 rotationZ(float theta);
 
 
 
-     Matrix3 changeBase(Direction i, Direction j, Direction k);
+     static Matrix3 changeBase(Direction i, Direction j, Direction k);
 
 
 
-     Matrix3 reverse(Matrix3 a);
+     static Matrix3 inverse(Matrix3 a);
      
 
      friend Matrix3 operator* (Matrix3 a, Matrix3 b);
