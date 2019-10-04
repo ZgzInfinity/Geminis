@@ -15,5 +15,7 @@
 #ifndef POINT_UNIT_TEST_H
 #define POINT_UNIT_TEST_H
 
+#include <cassert>
+
 
 #endif /* POINT_UNIT_TEST_H */

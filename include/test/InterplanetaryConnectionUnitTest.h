@@ -15,6 +15,8 @@
 #ifndef INTERPLANETARY_CONNECTION_UNIT_TEST_H
 #define INTERPLANETARY_CONNECTION_UNIT_TEST_H
 
+#include <cassert>
+
 #include "../PlanetaryStation.h"
 
 

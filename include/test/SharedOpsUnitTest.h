@@ -15,6 +15,8 @@
 #ifndef SHARED_OPS_UNIT_TEST_H
 #define SHARED_OPS_UNIT_TEST_H
 
+#include <cassert>
+
 #include "../Direction.h"
 #include "../Point.h"
 #include "../Matrix4.h"

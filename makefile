@@ -15,7 +15,7 @@ SRCDIR = ./src
 CFLAGS += -I$(INCDIR) -I$(SRCDIR)
 
 MAINSOURCES = main.cpp Point.cpp Direction.cpp SharedOps.cpp Planet.cpp Matrix3.cpp Matrix4.cpp PlanetaryStation.cpp InterplanetaryConnection.cpp
-TESTSOURCES = test/PointUnitTest.cpp test/DirectionUnitTest.cpp test/SharedOpsUnitTest.cpp test/PlanetUnitTest.cpp test/Matrix3UnitTest.cpp test/Matrix4UnitTest.cpp test/PlanetaryStationUnitTest.cpp test/InterplanetaryConnectionUnitTest.cpp
+TESTSOURCES = test/PointUnitTest.cpp test/DirectionUnitTest.cpp test/SharedOpsUnitTest.cpp test/PlanetUnitTest.cpp test/Matrix3UnitTest.cpp test/Matrix4UnitTest.cpp test/PlanetaryStationUnitTest.cpp test/InterplanetaryConnectionUnitTest.cpp test/UnitTestMain.cpp
 
 # add here the source files for the compilation
 SOURCES = $(MAINSOURCES) $(TESTSOURCES)

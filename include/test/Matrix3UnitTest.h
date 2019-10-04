@@ -15,6 +15,8 @@
 #ifndef MATRIX3_UNIT_TEST_H
 #define MATRIX3_UNIT_TEST_H
 
+#include <cassert>
+
 #include "cmath"
 #include "../Direction.h"
 #include "../Point.h"

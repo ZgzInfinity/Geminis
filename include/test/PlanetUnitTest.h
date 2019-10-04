@@ -16,6 +16,8 @@
 #ifndef PLANET_UNIT_TEST_H
 #define PLANET_UNIT_TEST_H
 
+#include <cassert>
+
 #include <iostream>
 #include "../Direction.h"
 #include "../Point.h"

@@ -16,3 +16,7 @@
 #include <cmath>
 #include "../../include/test/DirectionUnitTest.h"
 
+void testMod(Direction d, float expected){
+    float result = mod(d);
+    assert(result == expected);
+}

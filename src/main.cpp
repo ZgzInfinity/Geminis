@@ -12,7 +12,9 @@
 #include "../include/Direction.h"
 #include "../include/Point.h"
 #include "../include/SharedOps.h"
+#include "../include/test/UnitTestMain.h"
 
 int main(){
+    runAllUnitTests();
     return 0;
 }

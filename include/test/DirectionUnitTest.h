@@ -17,5 +17,12 @@
 #ifndef DIRECTION_UNIT_TEST_H
 #define DIRECTION_UNIT_TEST_H
 
+#include <cassert>
+
+#include "../Direction.h"
+
+void testMod(Direction d, float expected);
+
+
 
 #endif /* DIRECTION_UNIT_TEST_H */
