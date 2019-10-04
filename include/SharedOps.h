@@ -18,6 +18,7 @@
 #include "Direction.h"
 #include "Point.h"
 #include "Matrix4.h"
+#include "Matrix3.h"
 
 const float PI = 3.141592741F;
 
@@ -44,6 +45,12 @@ Direction operator * (Matrix4 t, Direction d);
 
 
 Point operator * (Matrix4 t, Point p);
+
+
+Direction operator * (Matrix3 t, Direction d);
+
+
+Point operator * (Matrix3 t, Point d);
 
 
 #endif /* SHARED_OPS_H */

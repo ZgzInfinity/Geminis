@@ -80,7 +80,7 @@ Matrix4 Matrix4::changeBase(Direction i, Direction j, Direction k, Point o){
 
 
 Matrix4 Matrix4::reverse(Matrix4 m){
-    Matrix4 r = m;
+    Matrix4 r;
     r.c[0][0] = m.c[1][1] * m.c[2][2] * m.c[3][3] - m.c[1][1] * m.c[2][3] * m.c[3][2] - m.c[2][1] * m.c[1][2] * m.c[3][3] 
               + m.c[2][1] * m.c[1][3] * m.c[3][2] + m.c[3][1] * m.c[1][2] * m.c[2][3] - m.c[3][1] * m.c[1][3] * m.c[2][2];
 
@@ -116,14 +116,13 @@ Matrix4 Matrix4::reverse(Matrix4 m){
               + m.c[1][0] * m.c[0][2] * m.c[2][1] + m.c[2][0] * m.c[0][1] * m.c[1][2] - m.c[2][0] * m.c[0][2] * m.c[1][1];
 
     float D = r.c[0][0] * m.c[0][0] + r.c[1][0] * m.c[0][1] +  r.c[2][0] * m.c[0][2] + r.c[3][0] * m.c[0][3];
-    if(D > 0){
+    if(D != 0){
          r.c[0][0] /= D; r.c[0][1] /= D; r.c[0][2] /= D; r.c[0][3] /= D;
          r.c[1][0] /= D; r.c[1][1] /= D; r.c[1][2] /= D; r.c[1][3] /= D;
          r.c[2][0] /= D; r.c[2][1] /= D; r.c[2][2] /= D; r.c[2][3] /= D;
-         r.c[3][0] /= D; r.c[3][1] /= D; r.c[3][2] /= D; r.c[3][3] /= D;
-
-         return r;
+         r.c[3][0] /= D; r.c[3][1] /= D; r.c[3][2] /= D; r.c[3][3] /= D;   
     }
+    return r;
 }
 
 

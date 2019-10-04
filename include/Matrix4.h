@@ -12,8 +12,8 @@
  * Matrix.h interface file of the Matrix module
  */
 
-#ifndef MATRIX_H
-#define MATRIX_H
+#ifndef MATRIX4_H
+#define MATRIX4_H
 
 #include "cmath"
 #include "Direction.h"
