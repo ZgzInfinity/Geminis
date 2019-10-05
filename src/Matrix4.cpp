@@ -140,4 +140,18 @@ Matrix4 operator* (Matrix4 a, Matrix4 b){
 }
 
 
+/**
+     * Checks if two Matrix4 matrixes are equal
+     * @param m1 is the first matrix
+     * @param m2 is the second matrix
+     * @returns true if the two Matrix4 matrixes m1 and m2 are equal and
+     *          false in any other case
+     */
+bool operator == (Matrix4 m1, Matrix4 m2){
+    return m1.c[0][0] == m2.c[0][0] && m1.c[0][1] == m2.c[0][1] && m1.c[0][2] == m2.c[0][2] && m1.c[0][3] == m2.c[0][3]
+        && m1.c[1][0] == m2.c[1][0] && m1.c[1][1] == m2.c[1][1] && m1.c[1][2] == m2.c[1][2] && m1.c[1][3] == m2.c[1][3]
+        && m1.c[2][0] == m2.c[2][0] && m1.c[2][1] == m2.c[2][1] && m1.c[2][2] == m2.c[2][2] && m1.c[2][3] == m2.c[2][3]
+        && m1.c[3][0] == m2.c[3][0] && m1.c[3][1] == m2.c[3][1] && m1.c[3][2] == m2.c[3][2] && m1.c[3][3] == m2.c[3][3];
+}
+
 

@@ -23,14 +23,17 @@ struct Matrix3
 {
 private:
     
+    
+
+public:
+
+    float c[3][3];
+
     /**
      * Default builder without parameters
      */
      Matrix3();
 
-public:
-
-    float c[3][3];
 
 
      static Matrix3 scale(float x, float y, float z);
@@ -60,6 +63,18 @@ public:
      
 
      friend Matrix3 operator* (Matrix3 a, Matrix3 b);
+
+
+     /**
+     * Checks if two Matrix3 matrixes are equal
+     * @param m1 is the first matrix
+     * @param m2 is the second matrix
+     * @returns true if the two Matrix3 matrixes m1 and m2 are equal and
+     *          false in any other case
+     */
+    friend bool operator == (Matrix3 m1, Matrix3 m2);
+
+    friend void runSharedOpsUnitTests();
 
 };
 

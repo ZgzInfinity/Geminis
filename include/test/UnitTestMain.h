@@ -11,6 +11,7 @@
 #include "SharedOpsUnitTest.h"
 
 void runDirectionUnitTests();
+void runSharedOpsUnitTests();
 void runAllUnitTests();
 
 

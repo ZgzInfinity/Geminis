@@ -72,6 +72,19 @@ public:
 
      friend Matrix4 operator* (Matrix4 a, Matrix4 b);
 
+
+     /**
+     * Checks if two Matrix4 matrixes are equal
+     * @param m1 is the first matrix
+     * @param m2 is the second matrix
+     * @returns true if the two Matrix4 matrixes m1 and m2 are equal and
+     *          false in any other case
+     */
+     friend bool operator == (Matrix4 m1, Matrix4 m2);
+
+
+     friend void runSharedOpsUnitTests();
+
 };
 
 

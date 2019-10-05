@@ -95,4 +95,17 @@ Matrix3 operator* (Matrix3 a, Matrix3 b){
 }
 
 
+/**
+     * Checks if two Matrix3 matrixes are equal
+     * @param m1 is the first matrix
+     * @param m2 is the second matrix
+     * @returns true if the two Matrix3 matrixes m1 and m2 are equal and
+     *          false in any other case
+     */
+bool operator == (Matrix3 m1, Matrix3 m2){
+    return m1.c[0][0] == m2.c[0][0] && m1.c[0][1] == m2.c[0][1] && m1.c[0][2] == m2.c[0][2]
+        && m1.c[1][0] == m2.c[1][0] && m1.c[1][1] == m2.c[1][1] && m1.c[1][2] == m2.c[1][2]
+        && m1.c[2][0] == m2.c[2][0] && m1.c[2][1] == m2.c[2][1] && m1.c[2][2] == m2.c[2][2];
+}
+
 

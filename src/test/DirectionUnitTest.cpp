@@ -18,7 +18,7 @@
 
 
 /**
- * Test the Direction vector resulting from substracting the Direction d to the Direction e
+ * Test the Direction vector resulting from adding the Direction d to the Direction e
  * @param d is the first Direction vector
  * @param e is the second Direction vector
  * @param expected is the value of the expected Direction vector
@@ -63,7 +63,7 @@ void testMultiplyOperator(Direction d, float s, Direction expected){
  * @param expected is the value of the expected vector 
  */
 void testDivOperator(Direction d, float s, Direction expected){
-    Direction result = d * s;
+    Direction result = d / s;
     assert(result == expected);
 }
 
@@ -101,10 +101,12 @@ void testDot(Direction d, Direction e, float expected){
  * @param beta is the angle between d and e Direction vectors
  * @param expected is the value of the expected result
  */
+/*
 void testDot(float dmod, float emod, float beta, float expected){
     float result = dot(dmod, emod, beta);
     assert(result == expected);
 }
+*/
 
 
 /**
@@ -114,10 +116,12 @@ void testDot(float dmod, float emod, float beta, float expected){
  * @param beta is the angle between d and e Direction vectors
  * @param expected is the value of the expected result
  */
+/*
 void testCross(Direction d, Direction e, float beta, float expected){
     float result = modCross(d, e, beta);
     assert(result == expected);
 }
+*/
 
 
 
@@ -128,10 +132,12 @@ void testCross(Direction d, Direction e, float beta, float expected){
  * @param beta is the angle between d and e Direction vectors
  * @param expected is the value of the expected result
  */
+/*
 void testCross(float dmod, float emod, float beta, float expected){
     float result = modCross(dmod, emod, beta);
     assert(result == expected);
 }
+*/
 
 
 /**
