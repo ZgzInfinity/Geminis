@@ -1,5 +1,29 @@
+/*
+ *******************************************
+ *** Geminis - Computer Graphics Project ***
+ *** Authors: Name - Surname - NIP *********
+ *** Victor Peñasco EStivalez - 741294 *****
+ *** Ruben Rodriguez Esteban - 737215 ******
+ *** Course: 2019 - 2020 *******************
+ *******************************************
+ */ 
+
+
+/*
+ * Matrix4UnitTest.cpp implementation file of Matrix4UnitTest module
+ */
+
 #include "../../include/test/Matrix4UnitTest.h"
 
+
+
+/**
+ * test the scaling matrix calculation using the coefficients x, y and z
+ * @param x is the first coefficient
+ * @param y is the second coefficient
+ * @param z is the third coefficient
+ * @param expected is the expected escalation matrix
+ */ 
 void testScale(float x, float y, float z, Matrix4 expected){
     Matrix4 result = Matrix4::scale(x, y, z);
     assert(result == expected);
@@ -7,6 +31,11 @@ void testScale(float x, float y, float z, Matrix4 expected){
 
 
 
+/**
+ * test the calculation of the rotation matrix on the x-axis using the rotation angle theta
+ * @param theta is the rotation angle
+ * @param expected is the expected escalation matrix
+ */ 
 void testRotationX(float theta, Matrix4 expected){
     Matrix4 result = Matrix4::rotationX(theta);
     assert(result == expected);
@@ -14,6 +43,11 @@ void testRotationX(float theta, Matrix4 expected){
 
 
 
+/**
+ * test the calculation of the rotation matrix on the y-axis using the rotation angle theta
+ * @param theta is the rotation angle
+ * @param expected is the expected escalation matrix
+ */
 void testRotationY(float theta, Matrix4 expected){
     Matrix4 result = Matrix4::rotationY(theta);
     assert(result == expected);
@@ -21,6 +55,11 @@ void testRotationY(float theta, Matrix4 expected){
 
 
 
+/**
+ * test the calculation of the rotation matrix on the z-axis using the rotation angle theta
+ * @param theta is the rotation angle
+ * @param expected is the expected escalation matrix
+ */
 void testRotationZ(float theta, Matrix4 expected){
     Matrix4 result = Matrix4::rotationZ(theta);
     assert(result == expected);
@@ -28,6 +67,13 @@ void testRotationZ(float theta, Matrix4 expected){
 
 
 
+/**
+ * test the base change matrix calculation using the Direction vectors of the new base i, j and k 
+ * @param i is the first Direction vector of the base
+ * @param j is the second Direction vector of the base
+ * @param k is the third Direction vector of the base
+ * @param expected is the expected matrix of applying the base change
+ */
 void testChangeBase(Direction i, Direction j, Direction k, Point o, Matrix4 expected){
     Matrix4 result = Matrix4::changeBase(i, j, k, o);
     assert(result == expected);
@@ -35,10 +81,17 @@ void testChangeBase(Direction i, Direction j, Direction k, Point o, Matrix4 expe
 
 
 
+/**
+ * test the calculation of an inverse 3x3 matrix
+ * @param a is the 4x4 matrix 
+ * @param expected is the expected inverse matrix
+ */
 void testInverse(Matrix4 a, Matrix4 expected){
     Matrix4 result = Matrix4::inverse(a);
     assert(result == expected);
 }
+
+
 
 /**
  * Test the Matrix4 matrix resulting from muliplying the Matrix4 m1 by the Matrix4 m2

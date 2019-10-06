@@ -39,6 +39,14 @@ Direction operator - (Point p, Point q){
 
 
 
+/**
+ * Obtains the Direction vector result of multiplying the 4x4 transformation matrix t 
+ * by the Direction vector d
+ * @param t is the 4x4 transformation matrix 
+ * @param d is the Direction vector
+ * @returns the Direction vector result of multiplying the 4x4 transformation matrix t 
+ * by the Direction vector d
+ */
 Direction operator * (Matrix4 t, Direction d){
     Direction r = Direction();
     r.c[0] = t.c[0][0] * d.c[0] + t.c[0][1] * d.c[1] + t.c[0][2] * d.c[2];
@@ -48,6 +56,15 @@ Direction operator * (Matrix4 t, Direction d){
 }
 
 
+
+/**
+ * Obtains the Point vector result of multiplying the 4x4 transformation matrix t 
+ * by the Point vector p
+ * @param t is the 4x4 transformation matrix 
+ * @param  is the POint vector
+ * @returns the Point vector result of multiplying the 4x4 transformation matrix t 
+ * by the Point vector p
+ */
 Point operator * (Matrix4 t, Point p){
     Point r = Point();
     r.c[0] = t.c[0][0] * p.c[0] + t.c[0][1] * p.c[1] + t.c[0][2] * p.c[2] + t.c[0][3];
@@ -58,6 +75,14 @@ Point operator * (Matrix4 t, Point p){
 
 
 
+/**
+ * Obtains the Direction vector result of multiplying the 3x3 transformation matrix t 
+ * by the Direction vector d
+ * @param t is the 4x4 transformation matrix 
+ * @param d is the Direction vector
+ * @returns the Direction vector result of multiplying the 4x4 transformation matrix t 
+ * by the Direction vector d
+ */
 Direction operator * (Matrix3 t, Direction d){
     Direction r = Direction();
     r.c[0] = t.c[0][0] * d.c[0] + t.c[0][1] * d.c[1] + t.c[0][2] * d.c[2];
@@ -67,6 +92,15 @@ Direction operator * (Matrix3 t, Direction d){
 }
 
 
+
+/**
+ * Obtains the Point vector result of multiplying the 3x3 transformation matrix t 
+ * by the Point vector p
+ * @param t is the 3x3 transformation matrix 
+ * @param  is the POint vector
+ * @returns the Point vector result of multiplying the 3x3 transformation matrix t 
+ * by the Point vector p
+ */
 Point operator * (Matrix3 t, Point p){
     Point r = Point();
     r.c[0] = t.c[0][0] * p.c[0] + t.c[0][1] * p.c[1] + t.c[0][2] * p.c[2];

@@ -41,16 +41,52 @@ Point operator + (Point p, Direction d);
 Direction operator - (Point p, Point q);
 
 
+
+/**
+ * Obtains the Direction vector result of multiplying the 4x4 transformation matrix t 
+ * by the Direction vector d
+ * @param t is the 4x4 transformation matrix 
+ * @param d is the Direction vector
+ * @returns the Direction vector result of multiplying the 4x4 transformation matrix t 
+ * by the Direction vector d
+ */
 Direction operator * (Matrix4 t, Direction d);
 
 
+
+/**
+ * Obtains the Point vector result of multiplying the 4x4 transformation matrix t 
+ * by the Point vector p
+ * @param t is the 4x4 transformation matrix 
+ * @param  is the POint vector
+ * @returns the Point vector result of multiplying the 4x4 transformation matrix t 
+ * by the Point vector p
+ */
 Point operator * (Matrix4 t, Point p);
 
 
+
+/**
+ * Obtains the Direction vector result of multiplying the 3x3 transformation matrix t 
+ * by the Direction vector d
+ * @param t is the 4x4 transformation matrix 
+ * @param d is the Direction vector
+ * @returns the Direction vector result of multiplying the 4x4 transformation matrix t 
+ * by the Direction vector d
+ */
 Direction operator * (Matrix3 t, Direction d);
 
 
+
+/**
+ * Obtains the Point vector result of multiplying the 3x3 transformation matrix t 
+ * by the Point vector p
+ * @param t is the 3x3 transformation matrix 
+ * @param  is the POint vector
+ * @returns the Point vector result of multiplying the 3x3 transformation matrix t 
+ * by the Point vector p
+ */
 Point operator * (Matrix3 t, Point d);
 
 
-#endif /* SHARED_OPS_H */
+#endif 

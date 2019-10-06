@@ -9,7 +9,7 @@
  */ 
 
 /*
- * Matrix.h interface file of the Matrix module
+ * Matrix3.h interface file of the Matrix3 module
  */
 
 #ifndef MATRIX3_H
@@ -19,13 +19,8 @@
 #include "Direction.h"
 #include "Point.h"
 
-struct Matrix3
-{
-private:
-    
-    
+struct Matrix3{
 
-public:
 
     float c[3][3];
 
@@ -36,33 +31,72 @@ public:
 
 
 
+     /**
+      * Obtains the scaling 3x3 matrix using the coefficients x,y and z
+      * @param x is the first coefficient
+      * @param y is the second coefficient
+      * @param z is the third coefficient
+      * returns the scaling 3x3 matrix using the coefficients x,y and z
+      */
      static Matrix3 scale(float x, float y, float z);
 
 
 
-
+    /**
+     * Gets the rotation matrix on the x-axis with angle theta
+     * @param theta is the angle
+     * @returns the rotation matrix on the x-axis with angle theta
+     */
      static Matrix3 rotationX(float theta);
 
 
 
-
+    /**
+     * Gets the rotation matrix on the y-axis with angle theta
+     * @param theta is the angle
+     * @returns the rotation matrix on the y-axis with angle theta
+     */
      static Matrix3 rotationY(float theta);
 
 
 
-
+     /**
+      * Gets the rotation matrix on the z-axis with angle theta
+      * @param theta is the angle
+      * @returns the rotation matrix on the z-axis with angle theta
+      */
      static Matrix3 rotationZ(float theta);
 
 
 
+     /**
+      * Gets the base change matrix using the address vectors i, j and k 
+      * @param i is the first Direction vector
+      * @param j is the second Direction vector
+      * @param k is the third Direction vector
+      * @returns the base change matrix using the address vectors i, j and k
+      */
      static Matrix3 changeBase(Direction i, Direction j, Direction k);
 
 
 
+     /**
+      * Gets the inverse of a matrix
+      * @param a is the matrix 
+      * @returns the inverse matrix of the matrix a
+      */
      static Matrix3 inverse(Matrix3 a);
      
 
-     friend Matrix3 operator* (Matrix3 a, Matrix3 b);
+
+     /**
+      * Gets the 3x3 matrix resulting from multiplying matrices a and b
+      * @param a is the first 3x3 matrix
+      * @param b is the second 3x3 matrix
+      * @returns the 3x3 matrix resulting from multiplying matrices a and b
+      */
+     friend Matrix3 operator * (Matrix3 a, Matrix3 b);
+
 
 
      /**
@@ -74,6 +108,10 @@ public:
      */
     friend bool operator == (Matrix3 m1, Matrix3 m2);
 
+
+    /**
+     * Checks all the operations that work with Direction and Point vectors
+     */
     friend void runSharedOpsUnitTests();
 
 };

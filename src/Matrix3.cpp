@@ -1,9 +1,34 @@
+/*
+ *******************************************
+ *** Geminis - Computer Graphics Project ***
+ *** Authors: Name - Surname - NIP *********
+ *** Victor Peñasco EStivalez - 741294 *****
+ *** Ruben Rodriguez Esteban - 737215 ******
+ *** Course: 2019 - 2020 *******************
+ *******************************************
+ */ 
+
+/*
+ * Matrix3.cpp implementation file of the Matrix3 module
+ */
+
 #include "../include/Matrix3.h"
 
 
+/**
+ * Default builder without parameters
+ */
 Matrix3::Matrix3(){}
     
 
+
+/**
+ * Obtains the scaling 3x3 matrix using the coefficients x,y and z
+ * @param x is the first coefficient
+ * @param y is the second coefficient
+ * @param z is the third coefficient
+ * returns the scaling 3x3 matrix using the coefficients x,y and z
+ */
 Matrix3 Matrix3::scale(float x, float y, float z){
     Matrix3 m;
     m.c[0][0] = x;  m.c[0][1] = 0;  m.c[0][2] = 0;
@@ -14,8 +39,11 @@ Matrix3 Matrix3::scale(float x, float y, float z){
 
 
 
-
-
+/**
+ * Gets the rotation matrix on the x-axis with angle theta
+ * @param theta is the angle
+ * @returns the rotation matrix on the x-axis with angle theta
+ */
 Matrix3 Matrix3::rotationX(float t){
     Matrix3 m;
     m.c[0][0] = 1;  m.c[0][1] = 0;       m.c[0][2] = 0;
@@ -26,8 +54,11 @@ Matrix3 Matrix3::rotationX(float t){
 
 
 
-
-
+/**
+ * Gets the rotation matrix on the y-axis with angle theta
+ * @param theta is the angle
+ * @returns the rotation matrix on the y-axis with angle theta
+ */
 Matrix3 Matrix3::rotationY(float t){
     Matrix3 m;
     m.c[0][0] = cos(t);   m.c[0][1] = 0;  m.c[0][2] = sin(t);
@@ -38,8 +69,11 @@ Matrix3 Matrix3::rotationY(float t){
 
 
 
-
-
+/**
+ * Gets the rotation matrix on the z-axis with angle theta
+ * @param theta is the angle
+ * @returns the rotation matrix on the z-axis with angle theta
+ */
 Matrix3 Matrix3::rotationZ(float t){
     Matrix3 m;
     m.c[0][0] = cos(t);  m.c[0][1] = -sin(t);  m.c[0][2] = 0;
@@ -50,6 +84,13 @@ Matrix3 Matrix3::rotationZ(float t){
 
 
 
+/**
+ * Gets the base change matrix using the address vectors i, j and k 
+ * @param i is the first Direction vector
+ * @param j is the second Direction vector
+ * @param k is the third Direction vector
+ * @returns the base change matrix using the address vectors i, j and k
+ */
 Matrix3 Matrix3::changeBase(Direction i, Direction j, Direction k){
     Matrix3 m;
     m.c[0][0] = i.c[0];  m.c[0][1] = j.c[0];  m.c[0][2] = k.c[0];
@@ -60,6 +101,11 @@ Matrix3 Matrix3::changeBase(Direction i, Direction j, Direction k){
 
 
 
+/**
+ * Gets the inverse of a matrix
+ * @param a is the matrix 
+ * @returns the inverse matrix of the matrix a
+ */
 Matrix3 Matrix3::inverse(Matrix3 m){
     float det = m.c[0][0] * m.c[1][1] * m.c[2][2] - m.c[2][1] * m.c[1][2] -
                 m.c[0][1] * m.c[1][0] * m.c[2][2] - m.c[1][2] * m.c[2][0] +
@@ -81,6 +127,14 @@ Matrix3 Matrix3::inverse(Matrix3 m){
 }
 
 
+
+/**
+ * Gets the 3x3 matrix resulting from multiplying matrices a and b
+ * @param a is the first 3x3 matrix
+ * @param b is the second 3x3 matrix
+ * @returns the 3x3 matrix resulting from multiplying matrices a and b
+ *
+ */
 Matrix3 operator* (Matrix3 a, Matrix3 b){
     Matrix3 r;
     for(int i = 0; i < 3; i++){
@@ -93,6 +147,7 @@ Matrix3 operator* (Matrix3 a, Matrix3 b){
     }
     return r;
 }
+
 
 
 /**
