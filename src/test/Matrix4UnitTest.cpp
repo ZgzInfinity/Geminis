@@ -82,12 +82,25 @@ void testChangeBase(Direction i, Direction j, Direction k, Point o, Matrix4 expe
 
 
 /**
- * test the calculation of an inverse 3x3 matrix
+ * test the calculation of an inverse 4x4 matrix
  * @param a is the 4x4 matrix 
  * @param expected is the expected inverse matrix
  */
+/*
 void testInverse(Matrix4 a, Matrix4 expected){
     Matrix4 result = Matrix4::inverse(a);
+    assert(result == expected);
+}
+*/
+
+
+/**
+ * test the calculation of 4x4 transpose matrix
+ * @param a is the 4x4 matrix 
+ * @param expected is the expected transpose matrix
+ */
+void testTrans(Matrix4 a, Matrix4 expected){
+    Matrix4 result = Matrix4::trans(a);
     assert(result == expected);
 }
 

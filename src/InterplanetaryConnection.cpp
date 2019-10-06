@@ -7,9 +7,9 @@ InterplanetaryConnection::InterplanetaryConnection(PlanetaryStation _origin,
     origin = _origin;
     destination = _destination;
     connectionUCS = _origin.stationUCS -  _destination.stationUCS;
-    connectionFromOrigin = Matrix3::inverse(Matrix3::changeBase(_origin.longitudeTangent, _origin.latitudeTangent,
+    connectionFromOrigin = Matrix3::trans(Matrix3::changeBase(_origin.longitudeTangent, _origin.latitudeTangent,
      _origin.surfaceNormal)) * connectionUCS;
-    connectionFromDestination = Matrix3::inverse(Matrix3::changeBase(_destination.longitudeTangent,
+    connectionFromDestination = Matrix3::trans(Matrix3::changeBase(_destination.longitudeTangent,
      _destination.latitudeTangent, _destination.surfaceNormal)) * connectionUCS;
 }
 

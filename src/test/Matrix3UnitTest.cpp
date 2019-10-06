@@ -86,11 +86,23 @@ void testChangeBase(Direction i, Direction j, Direction k, Matrix3 expected){
  * @param a is the 3x3 matrix 
  * @param expected is the expected inverse matrix
  */
+/*
 void testInverse(Matrix3 a, Matrix3 expected){
     Matrix3 result = Matrix3::inverse(a);
     assert(result == expected);
 }
+*/
 
+
+/**
+ * test the calculation of 3x3 transpose matrix
+ * @param a is the 3x3 matrix 
+ * @param expected is the expected transpose matrix
+ */
+void testTrans(Matrix3 a, Matrix3 expected){
+    Matrix3 result = Matrix3::trans(a);
+    assert(result == expected);
+}
 
 
 /**

@@ -131,6 +131,7 @@ Matrix4 Matrix4::changeBase(Direction i, Direction j, Direction k, Point o){
  * @param a is the matrix 
  * @returns the inverse matrix of the matrix a
  */
+/*
 Matrix4 Matrix4::inverse(Matrix4 m){
     Matrix4 r;
     r.c[0][0] = m.c[1][1] * m.c[2][2] * m.c[3][3] - m.c[1][1] * m.c[2][3] * m.c[3][2] - m.c[2][1] * m.c[1][2] * m.c[3][3] 
@@ -177,6 +178,20 @@ Matrix4 Matrix4::inverse(Matrix4 m){
     return r;
 }
 
+*/
+/**
+ * Gets the transpose of a matrix
+ * @param a is the matrix 
+ * @returns the transpose matrix of the matrix a
+ */
+Matrix4 Matrix4::trans(Matrix4 a){
+    Matrix4 r;
+    r.c[0][0] = a.c[0][0]; r.c[0][1] = a.c[1][0]; r.c[0][2] = a.c[2][0]; r.c[0][3] = a.c[3][0];
+    r.c[1][0] = a.c[0][1]; r.c[1][1] = a.c[1][1]; r.c[1][2] = a.c[2][1]; r.c[1][3] = a.c[3][1];
+    r.c[2][0] = a.c[0][2]; r.c[2][1] = a.c[1][2]; r.c[2][2] = a.c[2][2]; r.c[2][3] = a.c[3][2];
+    r.c[3][0] = a.c[0][3]; r.c[3][1] = a.c[1][3]; r.c[3][2] = a.c[2][3]; r.c[3][3] = a.c[3][3];
+    return r;
+}
 
 
 /**

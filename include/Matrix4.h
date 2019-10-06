@@ -96,7 +96,16 @@ struct Matrix4{
      * @param a is the matrix 
      * @returns the inverse matrix of the matrix a
      */
-     static Matrix4 inverse(Matrix4 a);
+     //static Matrix4 inverse(Matrix4 a);
+
+
+
+     /**
+      * Gets the transpose of a matrix
+      * @param a is the matrix 
+      * @returns the transpose matrix of the matrix a
+      */
+     static Matrix4 trans(Matrix4 a);
      
 
 

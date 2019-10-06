@@ -85,7 +85,15 @@ struct Matrix3{
       * @param a is the matrix 
       * @returns the inverse matrix of the matrix a
       */
-     static Matrix3 inverse(Matrix3 a);
+     //static Matrix3 inverse(Matrix3 a);
+
+
+     /**
+      * Gets the transpose of a matrix
+      * @param a is the matrix 
+      * @returns the transpose matrix of the matrix a
+      */
+     static Matrix3 trans(Matrix3 a);
      
 
 
