@@ -59,7 +59,7 @@ void runSharedOpsUnitTests(){
 /**
  * proves that all operations working with 3x3 transformation matrices work correctly
  */
-void runMatrix3x3Test(){
+void runMatrix3x3Tests(){
     Matrix3 m1;
     m1.c[0][0] = 1;  m1.c[0][1] = 0; m1.c[0][2] = 0; 
     m1.c[1][0] = 0;  m1.c[1][1] = 2; m1.c[1][2] = 0; 
@@ -118,7 +118,7 @@ void runMatrix3x3Test(){
 /**
  * proves that all operations working with 4x4 transformation matrices work correctly
  */
-void runMatrix4x4Test(){
+void runMatrix4x4Tests(){
     Matrix4 m1;
     m1.c[0][0] = 1;  m1.c[0][1] = 0; m1.c[0][2] = 0; m1.c[0][3] = 0;
     m1.c[1][0] = 0;  m1.c[1][1] = 2; m1.c[1][2] = 0; m1.c[1][3] = 0;
@@ -183,7 +183,22 @@ void runMatrix4x4Test(){
     cout << "Matrix4 unit tests passed." << endl;
 }
 
+void runPlanetTests(){
+    Planet p1 = Planet(Point(0,0,0), Direction(0,2,0), Point(0,1,0));
+    testPlanet(p1, 1);
+    Planet p2 = Planet(Point(0,0,0), Direction(0,2,0), Point(1,0,0));
+    testPlanet(p2, 1);
+    cout << "Planet unit tests passed." << endl;
+}
 
+void runPlanetaryStationTests(){
+    Planet p1 = Planet(Point(0,0,0), Direction(0,2,0), Point(1,0,0));
+    testPlanetaryStation(PlanetaryStation(p1, PI/2, PI/2), Point(0,0,-1),
+     Direction(0,0,-1), Direction(-1,0,0), Direction(0,1,0));
+    Planet p2 = Planet(Point(0,0,0), Direction(2,0,0), Point(0,1,0));
+    testPlanetaryStation(PlanetaryStation(p2, PI/2, -PI/2), Point(0,0,-1),
+     Direction(0,0,-1), Direction(0,1,0), Direction(1,0,0));
+}
 
 
 /**
@@ -192,7 +207,9 @@ void runMatrix4x4Test(){
 void runAllUnitTests(){
     runDirectionUnitTests();
     runSharedOpsUnitTests();
-    runMatrix3x3Test();
-    runMatrix4x4Test();    
+    runMatrix3x3Tests();
+    runMatrix4x4Tests();
+    runPlanetTests();
+    runPlanetaryStationTests();
     cout << "ALL UNIT TESTS HAVE PASSED." << endl;
 }

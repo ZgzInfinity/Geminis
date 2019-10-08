@@ -53,6 +53,10 @@ void runMatrix3x3Test();
  */
 void runMatrix4x4Test();
 
+void runPlanetTests();
+
+void runPlanetaryStationTests();
+
 
 
 /**

@@ -40,6 +40,10 @@ Point::Point(){
     c[2] = 0;
 }
 
+string Point::toString(){
+    return "Point(" + to_string(c[0]) + "," + to_string(c[1]) + "," + to_string(c[2]) + ")";
+}
+
 
 /**
  * Checks if two POint vectors are equal
@@ -49,5 +53,6 @@ Point::Point(){
  *          false in any other case
  */
 bool operator == (Point p, Point q){
-    return p.c[0] == q.c[0] && p.c[1] == q.c[1] && p.c[2] == q.c[2];
+    return abs(p.c[0] - q.c[0]) < 1e-5F && abs(p.c[1] - q.c[1]) < 1e-5F && abs(p.c[2] - q.c[2]) < 1e-5F;
 }
+

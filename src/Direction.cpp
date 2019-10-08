@@ -40,6 +40,9 @@ Direction::Direction(){
     c[2] = 0;
 }
 
+string Direction::toString(){
+    return "Direction(" + to_string(c[0]) + "," + to_string(c[1]) + "," + to_string(c[2]) + ")";
+}
 
 
 /**
@@ -103,7 +106,7 @@ Direction operator / (Direction d, float s){
  *          false in any other case
  */
 bool operator == (Direction d, Direction e){
-    return d.c[0] == e.c[0] && d.c[1] == e.c[1] && d.c[2] == e.c[2];
+    return abs(d.c[0] - e.c[0]) < 1e-5F && abs(d.c[1] - e.c[1]) < 1e-5F && abs(d.c[2] - e.c[2]) < 1e-5F;
 }
 
 

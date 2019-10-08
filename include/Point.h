@@ -15,6 +15,10 @@
 #ifndef POINT_H
 #define POINT_H
 
+#include <iostream>
+
+using namespace std;
+
 
 /*
  * Definition of data type Point
@@ -32,7 +36,7 @@ struct Point {
      */
     Point(float x, float y, float z);
 
-
+    string toString();
 
     /**
      * Default builder without parameters
@@ -50,6 +54,7 @@ struct Point {
  *          false in any other case
  */
 bool operator == (Point p, Point q);
+
 
 
 #endif 

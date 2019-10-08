@@ -22,6 +22,10 @@
 #include "../Direction.h"
 #include "../Point.h"
 #include "../SharedOps.h"
+#include "../Planet.h"
+
+
+void testPlanet(Planet p, float expectedRadius);
 
 
 #endif /* PLANET_UNIT_TEST_H */

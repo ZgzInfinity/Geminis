@@ -15,3 +15,6 @@
 
 #include "../../include/test/PlanetUnitTest.h"
 
+void testPlanet(Planet p, float expectedRadius){
+    assert(p.radius == expectedRadius);
+}

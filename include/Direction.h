@@ -17,6 +17,9 @@
 #ifndef DIRECTION_H
 #define DIRECTION_H
 
+#include <iostream>
+
+using namespace std;
 
 /*
  * Definition of data type Direction
@@ -34,7 +37,7 @@ struct Direction {
      */
      Direction(float x, float y, float z);
 
-
+     string toString();
 
     /**
      * Default builder without parameters
