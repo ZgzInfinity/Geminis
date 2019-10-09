@@ -66,10 +66,23 @@ Direction operator * (Matrix4 t, Direction d){
  * by the Point vector p
  */
 Point operator * (Matrix4 t, Point p){
+    float h = t.c[3][0] * p.c[0] + t.c[3][1] * p.c[1] + t.c[3][2] * p.c[2] + t.c[3][3];
     Point r = Point();
-    r.c[0] = t.c[0][0] * p.c[0] + t.c[0][1] * p.c[1] + t.c[0][2] * p.c[2] + t.c[0][3];
-    r.c[1] = t.c[1][0] * p.c[0] + t.c[1][1] * p.c[1] + t.c[1][2] * p.c[2] + t.c[1][3];
-    r.c[2] = t.c[2][0] * p.c[0] + t.c[2][1] * p.c[1] + t.c[2][2] * p.c[2] + t.c[2][3];
+    if (h != 1){
+        if (h != 0){
+            r.c[0] = (t.c[0][0] * p.c[0] + t.c[0][1] * p.c[1] + t.c[0][2] * p.c[2] + t.c[0][3]) / h;
+            r.c[1] = (t.c[1][0] * p.c[0] + t.c[1][1] * p.c[1] + t.c[1][2] * p.c[2] + t.c[1][3]) / h;
+            r.c[2] = (t.c[2][0] * p.c[0] + t.c[2][1] * p.c[1] + t.c[2][2] * p.c[2] + t.c[2][3]) / h;
+        }
+        else {
+            cout << "Homogeneus coordinate equal to zero: cannot be divided " << endl;
+        }
+    }
+    else {
+        r.c[0] = (t.c[0][0] * p.c[0] + t.c[0][1] * p.c[1] + t.c[0][2] * p.c[2] + t.c[0][3]);
+        r.c[1] = (t.c[1][0] * p.c[0] + t.c[1][1] * p.c[1] + t.c[1][2] * p.c[2] + t.c[1][3]);
+        r.c[2] = (t.c[2][0] * p.c[0] + t.c[2][1] * p.c[1] + t.c[2][2] * p.c[2] + t.c[2][3]);
+    }
     return r;
 }
 

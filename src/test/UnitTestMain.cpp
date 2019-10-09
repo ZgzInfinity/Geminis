@@ -183,22 +183,38 @@ void runMatrix4x4Tests(){
     cout << "Matrix4 unit tests passed." << endl;
 }
 
+
+
+/**
+ * proves that all operations working with planets work correctly
+ */
 void runPlanetTests(){
-    Planet p1 = Planet(Point(0,0,0), Direction(0,2,0), Point(0,1,0));
+    Planet p1 = Planet(Point(0, 0, 0), Direction(0,2,0), Point(0, 1, 0));
     testPlanet(p1, 1);
-    Planet p2 = Planet(Point(0,0,0), Direction(0,2,0), Point(1,0,0));
+    Planet p2 = Planet(Point(0, 0, 0), Direction(0, 2, 0), Point(1, 0, 0));
     testPlanet(p2, 1);
     cout << "Planet unit tests passed." << endl;
 }
 
+
+
+/**
+ * proves that all operations working with planetary stations work correctly
+ */
 void runPlanetaryStationTests(){
-    Planet p1 = Planet(Point(0,0,0), Direction(0,2,0), Point(1,0,0));
-    testPlanetaryStation(PlanetaryStation(p1, PI/2, PI/2), Point(0,0,-1),
-     Direction(0,0,-1), Direction(-1,0,0), Direction(0,1,0));
-    Planet p2 = Planet(Point(0,0,0), Direction(2,0,0), Point(0,1,0));
-    testPlanetaryStation(PlanetaryStation(p2, PI/2, -PI/2), Point(0,0,-1),
-     Direction(0,0,-1), Direction(0,1,0), Direction(1,0,0));
+    Planet p1 = Planet(Point(0, 0, 0), Direction(0, 2, 0), Point(1, 0, 0));
+    testPlanetaryStation(PlanetaryStation(p1, PI/2, PI/2), Point(0, 0, -1),
+    Direction(0, 0, -1), Direction(-1, 0, 0), Direction(0, 1, 0));
+
+    Planet p2 = Planet(Point(0,0,0), Direction(2, 0, 0), Point(0, 1, 0));
+    testPlanetaryStation(PlanetaryStation(p2, PI/2, -PI/2), Point(0, 0, -1),
+    Direction(0, 0, -1), Direction(0, 1, 0), Direction(1, 0, 0));
+
+    Planet p3 = Planet(Point(5, 5, 5), Direction(0, -6, 0), Point(8, 5, 5));
+    testPlanetaryStation(PlanetaryStation(p3, PI/2, PI), Point(2, 5, 5),
+    Direction(-1, 0, 0), Direction(0, 0, 1), Direction(0, -1, 0));
 }
+
 
 
 /**

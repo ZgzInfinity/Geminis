@@ -9,7 +9,7 @@ PlanetaryStation::PlanetaryStation(Planet _planet, float _inclination, float _az
             planet = _planet;
             inclination =_inclination;
             azimuth = _azimuth;
-            stationUCS = position(_planet, _inclination,  _azimuth + PI);
+            stationUCS = position(_planet, _inclination, _azimuth + PI);
             surfaceNormal = normal(stationUCS, _planet.center);
             longitudeTangent = longitude(_planet, stationUCS);
             latitudeTangent = cross(surfaceNormal, longitudeTangent);
@@ -27,14 +27,20 @@ PlanetaryStation::PlanetaryStation(Planet _planet, float _inclination, float _az
 PlanetaryStation::PlanetaryStation(){}
 
 Point position(Planet p, float i, float a){
-    /*
-    return p.center +
-        Direction(sin(i) * sin(a), sin(i) * cos(a), cos(i)) * p.radius;
-        */
-    
-    return p.center +
-        Direction(sin(i) * cos(a), cos(i), sin(i) * sin(a)) * p.radius;
-        
+     Point stationLocal = Point(sin(i) * cos(a), cos(i), sin(i) * sin(a));
+     cout << "stationLocal " << stationLocal.toString() << endl;
+     Direction d1 = p.refCity - p.center;
+     d1 = d1 / mod(d1);
+     Direction d2 = p.axis / 2;
+     d2 = d2 / mod(d2);
+     Direction d3 = cross(d1, d2);
+     Direction d4 = cross(d2, d3);
+     Matrix4 b = Matrix4::changeBase(d4 * p.radius, d2 * p.radius, d3 * p.radius, p.center);
+     cout << "d4 " << d4.toString() << endl;
+     cout << "d3 " << d3.toString() << endl;
+     cout << "d2 " << d2.toString() << endl;
+     cout << "d1 " << d1.toString() << endl;
+     return b * stationLocal;
 }
 
 
