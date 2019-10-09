@@ -18,6 +18,11 @@
 #include <cassert>
 
 #include "../PlanetaryStation.h"
+#include "../InterplanetaryConnection.h"
+
+void testInterplanetaryConnection(InterplanetaryConnection ipc, Direction eConnectionUCS,
+     Direction eConnectionOrigin, Direction eConnectionDestination);
+
 
 
 

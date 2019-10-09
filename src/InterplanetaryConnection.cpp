@@ -6,11 +6,14 @@ InterplanetaryConnection::InterplanetaryConnection(PlanetaryStation _origin,
      PlanetaryStation _destination){
     origin = _origin;
     destination = _destination;
-    connectionUCS = _origin.stationUCS -  _destination.stationUCS;
-    connectionFromOrigin = Matrix3::trans(Matrix3::changeBase(_origin.longitudeTangent, _origin.latitudeTangent,
-     _origin.surfaceNormal)) * connectionUCS;
+    connectionUCS = _destination.stationUCS -  _origin.stationUCS;
+    cout << "connectionUCS " << connectionUCS.toString() << endl;
+    connectionFromOrigin = Matrix3::trans(Matrix3::changeBase(_origin.longitudeTangent, _origin.surfaceNormal,
+     _origin.latitudeTangent)) * connectionUCS;
+    cout << "connectionFromOrigin " << connectionFromOrigin.toString() << endl;
     connectionFromDestination = Matrix3::trans(Matrix3::changeBase(_destination.longitudeTangent,
-     _destination.latitudeTangent, _destination.surfaceNormal)) * connectionUCS;
+     _destination.surfaceNormal, _destination.latitudeTangent)) * connectionUCS;
+    cout << "connectionFromDestination " << connectionFromDestination.toString() << endl;
 }
 
 /**

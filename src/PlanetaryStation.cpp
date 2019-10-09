@@ -28,7 +28,7 @@ PlanetaryStation::PlanetaryStation(){}
 
 Point position(Planet p, float i, float a){
      Point stationLocal = Point(sin(i) * -cos(a), cos(i), sin(i) * sin(a));
-     cout << "stationLocal " << stationLocal.toString() << endl;
+     //cout << "stationLocal " << stationLocal.toString() << endl;
      Direction d1 = p.refCity - p.center;
      d1 = d1 / mod(d1);
      Direction d2 = p.axis / 2;
@@ -36,10 +36,10 @@ Point position(Planet p, float i, float a){
      Direction d3 = cross(d1, d2);
      Direction d4 = cross(d2, d3);
      Matrix4 b = Matrix4::changeBase(d4 * p.radius, d2 * p.radius, d3 * p.radius, p.center);
-     cout << "d4 " << d4.toString() << endl;
-     cout << "d3 " << d3.toString() << endl;
-     cout << "d2 " << d2.toString() << endl;
-     cout << "d1 " << d1.toString() << endl;
+     //cout << "d4 " << d4.toString() << endl;
+     //cout << "d3 " << d3.toString() << endl;
+     //cout << "d2 " << d2.toString() << endl;
+     //cout << "d1 " << d1.toString() << endl;
      return b * stationLocal;
 }
 

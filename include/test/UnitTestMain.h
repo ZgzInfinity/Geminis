@@ -57,6 +57,8 @@ void runPlanetTests();
 
 void runPlanetaryStationTests();
 
+void runInterplanetaryConnectionTests();
+
 
 
 /**

@@ -224,6 +224,20 @@ void runPlanetaryStationTests(){
 }
 
 
+/**
+ * proves that all operations working with interplanetary connections work correctly
+ */
+void runInterplanetaryConnectionTests(){
+    Planet p1 = Planet(Point(0, 0, 0), Direction(0, 2, 0), Point(1, 0, 0));
+    PlanetaryStation ps1 = PlanetaryStation(p1, PI/2, 0);
+    Planet p2 = Planet(Point(10, 0, 0), Direction(0, 2, 0), Point(11, 0, 0));
+    PlanetaryStation ps2 = PlanetaryStation(p2, PI/2, PI);
+    
+    testInterplanetaryConnection(InterplanetaryConnection(ps1, ps2), Direction(8, 0, 0),
+     Direction(0, 8, 0), Direction(0, -8, 0));
+}
+
+
 
 /**
  * test that all the tests work correctly
@@ -235,5 +249,6 @@ void runAllUnitTests(){
     runMatrix4x4Tests();
     runPlanetTests();
     runPlanetaryStationTests();
+    runInterplanetaryConnectionTests();
     cout << "ALL UNIT TESTS HAVE PASSED." << endl;
 }
