@@ -27,7 +27,7 @@ PlanetaryStation::PlanetaryStation(Planet _planet, float _inclination, float _az
 PlanetaryStation::PlanetaryStation(){}
 
 Point position(Planet p, float i, float a){
-     Point stationLocal = Point(sin(i) * cos(a), cos(i), sin(i) * sin(a));
+     Point stationLocal = Point(sin(i) * -cos(a), cos(i), sin(i) * sin(a));
      cout << "stationLocal " << stationLocal.toString() << endl;
      Direction d1 = p.refCity - p.center;
      d1 = d1 / mod(d1);

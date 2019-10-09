@@ -206,13 +206,21 @@ void runPlanetaryStationTests(){
     testPlanetaryStation(PlanetaryStation(p1, PI/2, PI/2), Point(0, 0, -1),
     Direction(0, 0, -1), Direction(-1, 0, 0), Direction(0, 1, 0));
 
+    Planet p10 = Planet(Point(0, 0, 0), Direction(0, 2, 0), Point(1, 0, 0));
+    testPlanetaryStation(PlanetaryStation(p10, PI/2, 0), Point(1, 0, 0),
+    Direction(1, 0, 0), Direction(0, 0, -1), Direction(0, 1, 0));
+
+    Planet p11 = Planet(Point(0, 0, 0), Direction(0, 2, 0), Point(1, 0, 0));
+    testPlanetaryStation(PlanetaryStation(p11, PI/2, PI), Point(-1, 0, 0),
+    Direction(-1, 0, 0), Direction(0, 0, 1), Direction(0, 1, 0));
+
     Planet p2 = Planet(Point(0,0,0), Direction(2, 0, 0), Point(0, 1, 0));
     testPlanetaryStation(PlanetaryStation(p2, PI/2, -PI/2), Point(0, 0, -1),
     Direction(0, 0, -1), Direction(0, 1, 0), Direction(1, 0, 0));
 
     Planet p3 = Planet(Point(5, 5, 5), Direction(0, -6, 0), Point(8, 5, 5));
     testPlanetaryStation(PlanetaryStation(p3, PI/2, PI), Point(2, 5, 5),
-    Direction(-1, 0, 0), Direction(0, 0, 1), Direction(0, -1, 0));
+    Direction(-1, 0, 0), Direction(0, 0, -1), Direction(0, -1, 0));
 }
 
 
