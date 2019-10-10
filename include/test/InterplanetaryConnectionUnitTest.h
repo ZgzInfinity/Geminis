@@ -9,17 +9,21 @@
  */ 
 
 /*
- * InterplanetaryConnection.h interface file of the InterplanetaryConnection module
+ * InterplanetaryConnectionUnitTest.h interface file of the InterplanetaryConnectionUnitTest module
  */
 
 #ifndef INTERPLANETARY_CONNECTION_UNIT_TEST_H
 #define INTERPLANETARY_CONNECTION_UNIT_TEST_H
 
 #include <cassert>
-
 #include "../PlanetaryStation.h"
 #include "../InterplanetaryConnection.h"
 
+
+
+/**
+ * proves that all operations working with interplanetary connections work correctly
+ */
 void testInterplanetaryConnection(InterplanetaryConnection ipc, Direction eConnectionUCS,
      Direction eConnectionOrigin, Direction eConnectionDestination);
 

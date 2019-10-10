@@ -53,10 +53,25 @@ void runMatrix3x3Test();
  */
 void runMatrix4x4Test();
 
+
+
+/**
+ * proves that all operations working with planets work correctly
+ */
 void runPlanetTests();
 
+
+
+/**
+ * proves that all operations working with planetary stations work correctly
+ */
 void runPlanetaryStationTests();
 
+
+
+/**
+ * proves that all operations working with interplanetary connections work correctly
+ */
 void runInterplanetaryConnectionTests();
 
 

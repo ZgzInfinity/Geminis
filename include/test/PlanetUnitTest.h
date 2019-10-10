@@ -17,7 +17,6 @@
 #define PLANET_UNIT_TEST_H
 
 #include <cassert>
-
 #include <iostream>
 #include "../Direction.h"
 #include "../Point.h"
@@ -25,7 +24,13 @@
 #include "../Planet.h"
 
 
+
+/**
+ * test if a planet is correct based on its radio
+ * @param p is the planet to validate 
+ * @param expectedRadius is the expected radius od the planet
+ */
 void testPlanet(Planet p, float expectedRadius);
 
 
-#endif /* PLANET_UNIT_TEST_H */
+#endif 

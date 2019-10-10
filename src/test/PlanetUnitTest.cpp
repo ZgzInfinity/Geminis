@@ -15,6 +15,13 @@
 
 #include "../../include/test/PlanetUnitTest.h"
 
+
+
+/**
+ * test if a planet is correct based on its radio
+ * @param p is the planet to validate 
+ * @param expectedRadius is the expected radius od the planet
+ */
 void testPlanet(Planet p, float expectedRadius){
     assert(p.radius == expectedRadius);
 }

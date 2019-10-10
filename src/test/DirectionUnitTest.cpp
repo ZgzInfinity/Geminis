@@ -17,6 +17,7 @@
 #include "../../include/test/DirectionUnitTest.h"
 
 
+
 /**
  * Test the Direction vector resulting from adding the Direction d to the Direction e
  * @param d is the first Direction vector
@@ -91,6 +92,7 @@ void testDot(Direction d, Direction e, float expected){
     float result = dot(d, e);
     assert(result == expected);
 }
+
 
 
 /**

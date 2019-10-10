@@ -16,6 +16,7 @@
 #include "../../include/test/UnitTestMain.h"
 
 
+
 /**
  * proves that all operations working with Direction vectors function correctly
  */
@@ -222,6 +223,7 @@ void runPlanetaryStationTests(){
     testPlanetaryStation(PlanetaryStation(p3, PI/2, PI), Point(2, 5, 5),
     Direction(-1, 0, 0), Direction(0, 0, -1), Direction(0, -1, 0));
 }
+
 
 
 /**

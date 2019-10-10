@@ -36,4 +36,9 @@ Planet::Planet(Point _center, Direction _axis, Point _refCity){
     }
 }
 
+
+
+/**
+ * Default builder without parameters
+ */
 Planet::Planet(){}

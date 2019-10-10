@@ -48,7 +48,12 @@ struct Planet {
      */
     Planet(Point _center, Direction _axis, Point _refCity);
 
+
+
+    /**
+     * Default builder without parameters
+     */
     Planet();
 };
 
-#endif /* PLANET_H */
+#endif 
