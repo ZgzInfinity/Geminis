@@ -253,7 +253,27 @@ void runInterplanetaryConnectionTests(){
     PlanetaryStation ps2 = PlanetaryStation(p2, PI/2, PI);
     
     testInterplanetaryConnection(InterplanetaryConnection(ps1, ps2), Direction(8, 0, 0),
-     Direction(0, 8, 0), Direction(0, -8, 0));
+     Direction(0, 8, 0), Direction(0, -8, 0), false, false);
+
+    testInterplanetaryConnection(InterplanetaryConnection(ps2, ps1), Direction(-8, 0, 0),
+     Direction(0, 8, 0), Direction(0, -8, 0), false, false);
+
+    Planet p3 = Planet(Point(0, 0, 0), Direction(0, 2, 0), Point(1, 0, 0));
+    PlanetaryStation ps3 = PlanetaryStation(p3, PI/2, PI);
+    Planet p4 = Planet(Point(10, 0, 0), Direction(0, 2, 0), Point(11, 0, 0));
+    PlanetaryStation ps4 = PlanetaryStation(p4, PI/2, 0);
+
+    testInterplanetaryConnection(InterplanetaryConnection(ps3, ps4), Direction(12, 0, 0),
+     Direction(0, -12, 0), Direction(0, 12, 0), true, true);
+
+
+    Planet p5 = Planet(Point(0, 0, 0), Direction(0, 2, 0), Point(1, 0, 0));
+    PlanetaryStation ps5 = PlanetaryStation(p5, PI/2, 0);
+    Planet p6 = Planet(Point(10, 2, -1), Direction(0, 2, 0), Point(11, 2, -1));
+    PlanetaryStation ps6 = PlanetaryStation(p6, PI/2, PI);
+
+    testInterplanetaryConnection(InterplanetaryConnection(ps5, ps6), Direction(8, 2, -1),
+     Direction(1, 8, 2), Direction(-1, -8, 2), false, false);
 
 
     cout << "InterplanetaryConnection unit tests passed." << endl;

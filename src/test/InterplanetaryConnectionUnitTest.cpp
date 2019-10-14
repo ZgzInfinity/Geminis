@@ -22,8 +22,10 @@
  * proves that all operations working with interplanetary connections work correctly
  */
 void testInterplanetaryConnection(InterplanetaryConnection ipc, Direction eConnectionUCS,
-    Direction eConnectionOrigin, Direction eConnectionDestination){
+    Direction eConnectionOrigin, Direction eConnectionDestination, bool eCollisionOrigin,
+    bool eCollisionDestination){
     assert(ipc.connectionUCS == eConnectionUCS);
     assert(ipc.connectionFromOrigin == eConnectionOrigin);
-    assert(ipc.connectionFromDestination == eConnectionDestination);
+    assert(ipc.collisionInOrigin() == eCollisionOrigin);
+    assert(ipc.collisionInDestination() == eCollisionDestination);
 }

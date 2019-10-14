@@ -28,13 +28,10 @@ InterplanetaryConnection::InterplanetaryConnection(PlanetaryStation _origin,
     origin = _origin;
     destination = _destination;
     connectionUCS = _destination.stationUCS -  _origin.stationUCS;
-    cout << "connectionUCS " << connectionUCS.toString() << endl;
     connectionFromOrigin = Matrix3::trans(Matrix3::changeBase(_origin.longitudeTangent, _origin.surfaceNormal,
      _origin.latitudeTangent)) * connectionUCS;
-    cout << "connectionFromOrigin " << connectionFromOrigin.toString() << endl;
     connectionFromDestination = Matrix3::trans(Matrix3::changeBase(_destination.longitudeTangent,
      _destination.surfaceNormal, _destination.latitudeTangent)) * connectionUCS;
-    cout << "connectionFromDestination " << connectionFromDestination.toString() << endl;
 }
 
 
@@ -52,8 +49,8 @@ InterplanetaryConnection::InterplanetaryConnection(){}
  * @returns true if and only if there is a collision against the origin planet
  */
 bool InterplanetaryConnection::collisionInOrigin(){
-    return acos(dot(origin.surfaceNormal, connectionFromOrigin) / 
-    (mod(origin.surfaceNormal) * mod(connectionFromOrigin))) > PI / 2; 
+    return acos(dot(Direction(0, 1, 0), connectionFromOrigin) / 
+        mod(connectionFromOrigin)) > PI / 2; 
 }
 
 
@@ -63,6 +60,6 @@ bool InterplanetaryConnection::collisionInOrigin(){
  * @returns true if and only if there is a collision against the destination planet
  */
 bool InterplanetaryConnection::collisionInDestination(){
-    return acos(dot(destination.surfaceNormal, connectionFromDestination) / 
-    (mod(destination.surfaceNormal) * mod(connectionFromDestination))) > PI / 2; 
+    return acos(dot(Direction(0, -1, 0), connectionFromDestination) / 
+        mod(connectionFromDestination)) > PI / 2; 
 }

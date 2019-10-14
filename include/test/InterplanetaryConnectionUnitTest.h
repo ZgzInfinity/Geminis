@@ -25,7 +25,8 @@
  * proves that all operations working with interplanetary connections work correctly
  */
 void testInterplanetaryConnection(InterplanetaryConnection ipc, Direction eConnectionUCS,
-     Direction eConnectionOrigin, Direction eConnectionDestination);
+     Direction eConnectionOrigin, Direction eConnectionDestination, bool eCollisionOrigin,
+     bool eCollisionDestination);
 
 
 
