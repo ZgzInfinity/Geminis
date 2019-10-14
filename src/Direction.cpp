@@ -135,42 +135,6 @@ float dot(Direction d, Direction e){
 
 
 /**
- * Gets the scalar product of the modules dmod and emod and the cosine of the beta angle between them
- * @param d is the direction
- * @param s is the scalar value
- * @param beta is the angle between d and e directions
- * @returns the scalar product of the modules dmod and emod and the cosine of the beta angle between them
- */
-float dot(float dmod, float emod, float beta){
-    return dmod * emod * cos(beta);
-}
-
-
-/**
- * Gets the vector product in module of the Directions d and e and the sine of the beta angle between them
- * @param d is the first direction
- * @param e is the second direction
- * @returns the vector alar product from the Directions d and e
- */
-float modCross(Direction d, Direction e, float beta){
-    return mod(d) * mod(e) * sin(beta);
-}
-
-
-
-/**
- * Gets the vector product of the modules dmod and emod and the cosine of the beta angle between them
- * @param d is the direction
- * @param s is the scalar value
- * @param beta is the angle between d and e directions
- * @returns the vector product of the modules dmod and emod and the cosine of the beta angle between them
- */
-float modCross(float dmod, float emod, float beta){
-    return dmod * emod * sin(beta);
-}
-
-
-/**
  * Gets the vector alar product from the Direction d and e
  * @param d is the first direction
  * @param e is the second direction
