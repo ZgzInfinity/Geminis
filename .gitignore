@@ -1,6 +1,13 @@
 # exclude files inside bin folder
-bin/*
+Geometry/bin/*
+ToneMapping/bin/*
 
 # exclude files inside obj folder
-obj/*
+Geometry/obj/*
+ToneMapping/obj/*
+
+# exclude files inside media folder
+ToneMapping/media/*
+
+# exclude vscode configuration files
 .vscode
