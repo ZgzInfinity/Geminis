@@ -15,6 +15,15 @@
 #ifndef IMAGE_LOADER_PPM_H
 #define IMAGE_LOADER_PPM_H
 
+#include <iostream>
+#include <cstring>
+#include <fstream>
+#include "Image.h"
+#include "Pixel.h"
 
+using namespace std;
+
+
+Image loadImagePPM(string path);
 
 #endif 
