@@ -1,5 +1,5 @@
 # set compiler and compile options
-EXEC = graphics
+EXEC = toneMapping
 CXX = g++             # use the GNU C++ compiler
 OPTS = -O2 -Wall -g   # use some optimization, report all warnings and enable debugging
 CFLAGS = $(OPTS)      # add compile flags
@@ -14,11 +14,11 @@ SRCDIR = ./src
 # set the include folder where the .h files reside
 CFLAGS += -I$(INCDIR) -I$(SRCDIR)
 
-MAINSOURCES = main.cpp Point.cpp Direction.cpp SharedOps.cpp Planet.cpp Matrix3.cpp Matrix4.cpp PlanetaryStation.cpp InterplanetaryConnection.cpp
-TESTSOURCES = test/PointUnitTest.cpp test/DirectionUnitTest.cpp test/SharedOpsUnitTest.cpp test/PlanetUnitTest.cpp test/Matrix3UnitTest.cpp test/Matrix4UnitTest.cpp test/PlanetaryStationUnitTest.cpp test/InterplanetaryConnectionUnitTest.cpp test/UnitTestMain.cpp
+MAINSOURCES = main.cpp Image.cpp ImageLoaderPPM.cpp ToneMapper.cpp
+#TESTSOURCES = 
 
 # add here the source files for the compilation
-SOURCES = $(MAINSOURCES) $(TESTSOURCES)
+SOURCES = $(MAINSOURCES) #$(TESTSOURCES)
 
 # create the obj variable by substituting the extension of the sources
 # and adding a path

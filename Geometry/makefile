@@ -1,5 +1,5 @@
 # set compiler and compile options
-EXEC = graphics
+EXEC = geometry
 CXX = g++             # use the GNU C++ compiler
 OPTS = -O3 -Wall -g   # use some optimization, report all warnings and enable debugging
 CFLAGS = $(OPTS)      # add compile flags
