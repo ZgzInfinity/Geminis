@@ -1,4 +1,5 @@
 #include "../include/ImageLoaderPPM.h"
+#include "../include/ToneMapper.h"
 
 
 int main(int argc, char *argv[]){
@@ -13,6 +14,8 @@ int main(int argc, char *argv[]){
         vector<vector<Pixel>> matrix = image.getImg();
         cout << matrix[0][0].red_pixel << " " << matrix[0][0].green_pixel << " " << matrix[0][0].blue_pixel << endl;
         cout << "Task finished" << endl;
+        ToneMapper tm = ToneMapper(image);
+        tm.equalization();
         return 0;
     }
     else{
