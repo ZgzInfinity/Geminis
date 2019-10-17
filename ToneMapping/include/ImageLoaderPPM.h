@@ -18,6 +18,7 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
+#include <vector>
 #include "Image.h"
 #include "Pixel.h"
 

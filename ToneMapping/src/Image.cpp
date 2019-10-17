@@ -22,7 +22,7 @@
  * Default constructor
  */
 Image::Image(const bool _isHDR, const int _width, const int _height, const float _rc,
-             const float _m, Pixel **_img)
+             const float _m, vector<vector<Pixel>> _img)
 {
     isHDR = _isHDR;
     width = _width;

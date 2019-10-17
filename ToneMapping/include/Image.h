@@ -16,7 +16,10 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+#include <vector>
 #include "Pixel.h"
+
+using namespace std;
 
 class Image {
 
@@ -29,13 +32,13 @@ class Image {
   // Real maximun value of the image
   float m;
   // Matrix of pixels that represents the image
-  Pixel **img;
+  vector<vector<Pixel>> img;
 
   public:
 
 
     Image(const bool _isHDR, const int _width, const int _height, const float _rc,
-          const float _m, Pixel **_img);
+          const float _m, vector<vector<Pixel>> _img);
 
 
 

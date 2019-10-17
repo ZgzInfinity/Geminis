@@ -41,7 +41,8 @@ Image loadImagePPM(string path){
             }
         }
         // Start to read the matrix of the image
-        Pixel **matrix;
+        //Pixel *matrix = new Pixel[width];
+        vector<vector<Pixel>> matrix(height, vector<Pixel>(width));
         // Pixels of the three colors in RGB
         float red_pixel, green_pixel, blue_pixel;
         // Actual indexes of the image matrix
