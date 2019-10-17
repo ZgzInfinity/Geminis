@@ -12,15 +12,16 @@ Image loadImagePPM(string path){
         int numResources = 0;
         int width, height;
         float rc, m = 0;
+        string str;
+        getline(f, str);
         while (!f.eof() && (numResources < 4 || f.peek() == '#')){
             if (f.peek() == '#'){
                 // Read the line
-                string str;
                 getline(f, str);
                 // Control if the line stores the real maximum value of the image
                 if (str.size() > 5 && str.substr(0, 5) == "#MAX="){
                     // Keeps the value 
-                    m = stof(str.substr(6, str.size()));
+                    m = stof(str.substr(5, str.size()));
                 }
             }
             else {

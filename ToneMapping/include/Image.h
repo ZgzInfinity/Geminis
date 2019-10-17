@@ -43,6 +43,14 @@ class Image {
 
 
     Image();
+
+    bool getIsHDR();
+    int getWidth();
+    int getHeight();
+    float getRc();
+    float getM();
+    vector<vector<Pixel>> getImg();
+
 };
 
 #endif 

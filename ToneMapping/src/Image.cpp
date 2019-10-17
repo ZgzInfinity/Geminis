@@ -34,3 +34,26 @@ Image::Image(const bool _isHDR, const int _width, const int _height, const float
 
 Image::Image(){}
 
+bool Image::getIsHDR(){
+    return isHDR;
+}
+
+int Image::getWidth(){
+    return width;
+}
+
+int Image::getHeight(){
+    return height;
+}
+
+float Image::getRc(){
+    return rc;
+}
+
+float Image::getM(){
+    return m;
+}
+
+vector<vector<Pixel>> Image::getImg(){
+    return img;
+}
