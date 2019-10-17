@@ -11,7 +11,7 @@ Image loadImagePPM(string path){
         // Correct
         int numResources = 0;
         int width, height;
-        float rc, m = 0;
+        float rc, m = 1;
         string str;
         getline(f, str);
         while (!f.eof() && (numResources < 4 || f.peek() == '#')){
@@ -46,13 +46,15 @@ Image loadImagePPM(string path){
         vector<vector<Pixel>> matrix(height, vector<Pixel>(width));
         // Pixels of the three colors in RGB
         float red_pixel, green_pixel, blue_pixel;
+        float convFactor = m / rc;
         // Actual indexes of the image matrix
         for (int i = 0; i < height; i++){
             for (int j = 0; j < width; j++){
                 // Reading a pixel of the matrix
                 f >> red_pixel >> green_pixel >> blue_pixel;
-                // Creation of the pixel
-                matrix [i][j] = Pixel(red_pixel, green_pixel, blue_pixel);
+                // Creation of the pixel (and convert to maximum m)
+                matrix [i][j] = Pixel(red_pixel * convFactor, green_pixel * convFactor,
+                                      blue_pixel * convFactor);
             }
         }
         f.close();

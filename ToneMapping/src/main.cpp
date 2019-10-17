@@ -1,7 +1,8 @@
 #include "../include/ImageLoaderPPM.h"
 
+
 int main(int argc, char *argv[]){
-    if(argc == 1){
+    if(argc == 2){
         Image image = loadImagePPM(argv[1]);
         // Small test
         cout << image.getIsHDR() << endl;

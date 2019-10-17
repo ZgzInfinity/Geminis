@@ -15,6 +15,26 @@
 #ifndef TONE_MAPPER_H
 #define TONE_MAPPER_H
 
+#include "Image.h"
+
+class ToneMapper{
+	Image image;
+
+	public:
+
+	ToneMapper(Image _image);
+
+	void clamping();
+
+	void equalization();
+
+	void equalizeClamp(const float v);
+
+	void gammaCurve();
+
+	void clampGamma(const float v);
+
+};
 
 
 #endif 
