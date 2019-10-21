@@ -47,11 +47,11 @@ void ToneMapper::equalization(){
     float factor = rc / m;
     for (int i = 0; i < image.getHeight(); i++){
         for (int j = 0; j < image.getWidth(); j++){
-            matrix [i][j].red_pixel *= factor;
+            matrix [i][j].red_pixel = matrix [i][j].red_pixel * factor * 0.2126;
             f << matrix [i][j].red_pixel << " ";
-            matrix [i][j].green_pixel *= factor;
+            matrix [i][j].green_pixel = matrix [i][j].green_pixel * factor * 0.7152;
             f << matrix [i][j].red_pixel << " ";
-            matrix [i][j].blue_pixel *= factor;
+            matrix [i][j].blue_pixel = matrix [i][j].blue_pixel * factor * 0.0722;
             f << matrix [i][j].red_pixel << "     ";
         }
     }
