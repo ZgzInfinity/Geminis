@@ -15,6 +15,7 @@
 #ifndef TONE_MAPPER_H
 #define TONE_MAPPER_H
 
+#include <iostream>
 #include "Image.h"
 #include "LAB.h"
 

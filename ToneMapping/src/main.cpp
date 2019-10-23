@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
         cout << matrix[0][0].red << " " << matrix[0][0].green << " " << matrix[0][0].blue << endl;
         cout << "Task finished" << endl;
         ToneMapper tm = ToneMapper(image);
-        tm.equalization();
+        tm.clamping();
         return 0;
     }
     else{

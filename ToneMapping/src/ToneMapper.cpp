@@ -8,11 +8,11 @@ ToneMapper::ToneMapper(Image _image){
 }
 // https://stackoverflow.com/questions/7880264/convert-lab-color-to-rgb
 // http://www.easyrgb.com/index.php?X=MATH&H=01#text1
-LAB rgb2lab(RGB rgb)
+LAB rgb2lab(RGB rgb, float m)
 {
-    float var_R = rgb.red / 255.0;
-    float var_G = rgb.green / 255.0;
-    float var_B = rgb.blue / 255.0;
+    float var_R = rgb.red / m;
+    float var_G = rgb.green / m;
+    float var_B = rgb.blue / m;
 
     if ( var_R > 0.04045 ) var_R = pow( (( var_R + 0.055 ) / 1.055 ), 2.4 );
     else                   var_R = var_R / 12.92;
@@ -89,28 +89,28 @@ RGB lab2rgb(LAB lab)
 
 void ToneMapper::clamping(){
     vector<vector<RGB>> matrix = image.getImg();
+    LAB lab;
+    RGB rgb;
     ofstream f;
     f.open("media/example.ppm");
     f << "P3" << endl;
     f << image.getWidth() << " " << image.getHeight() << endl;
     f << "255" << endl;
-    //float rc = 255;
-    //float m = image.getM();
-    //float factor = rc / m;
+    float v = 25500.f / image.getM();
     for (int i = 0; i < image.getHeight(); i++){
         for (int j = 0; j < image.getWidth(); j++){
-            if(matrix [i][j].red > 1.f){
-                matrix [i][j].red = 1.f;
+            lab = rgb2lab(matrix[i][j], image.getM());
+            if (lab.l > v){
+                lab.l = 100;
+                lab.a = 0;
+                lab.b = 0;
             }
-            f << matrix [i][j].red << " ";
-            if(matrix [i][j].green > 1.f){
-                matrix [i][j].green = 1.f;
+            else {
+                lab.l = (lab.l * 100.f) / v;
+                // lab.l = 100.f - (((100.f - lab.l) * 100.f) / (100.f - v));
             }
-            f << matrix [i][j].red << " ";
-            if(matrix [i][j].blue > 1.f){
-                matrix [i][j].blue = 1.f;
-            }
-            f << matrix [i][j].red << "     ";
+            rgb = lab2rgb(lab);
+            f << rgb.red << " " << rgb.green << " " << rgb.blue << "     ";
         }
     }
     f.close();
@@ -118,33 +118,55 @@ void ToneMapper::clamping(){
 
 void ToneMapper::equalization(){
     vector<vector<RGB>> matrix = image.getImg();
+    LAB lab;
+    RGB rgb;
     ofstream f;
     f.open("media/example.ppm");
     f << "P3" << endl;
     f << image.getWidth() << " " << image.getHeight() << endl;
     f << "255" << endl;
-    float rc = 255;
-    float m = image.getM();
-    float factor = rc / m;
     for (int i = 0; i < image.getHeight(); i++){
         for (int j = 0; j < image.getWidth(); j++){
-            matrix [i][j].red = matrix [i][j].red * factor * 0.2126;
-            f << matrix [i][j].red << " ";
-            matrix [i][j].green = matrix [i][j].green * factor * 0.7152;
-            f << matrix [i][j].red << " ";
-            matrix [i][j].blue = matrix [i][j].blue * factor * 0.0722;
-            f << matrix [i][j].red << "     ";
+            lab = rgb2lab(matrix[i][j], image.getM());
+            rgb = lab2rgb(lab);
+            f << rgb.red << " " << rgb.green << " " << rgb.blue << "     ";
         }
     }
     f.close();
 }
 
-void ToneMapper::equalizeClamp(const float v){
 
+
+void ToneMapper::equalizeClamp(const float v){
+    vector<vector<RGB>> matrix = image.getImg();
+    LAB lab;
+    RGB rgb;
+    ofstream f;
+    f.open("media/example.ppm");
+    f << "P3" << endl;
+    f << image.getWidth() << " " << image.getHeight() << endl;
+    f << "255" << endl;
+    for (int i = 0; i < image.getHeight(); i++){
+        for (int j = 0; j < image.getWidth(); j++){
+            lab = rgb2lab(matrix[i][j], image.getM());
+            if (lab.l > v){
+                lab.l = 100;
+                lab.a = 0;
+                lab.b = 0;
+            }
+            else {
+                lab.l = (lab.l * 100.f) / v;
+                // lab.l = 100.f - (((100.f - lab.l) * 100.f) / (100.f - v));
+            }
+            rgb = lab2rgb(lab);
+            f << rgb.red << " " << rgb.green << " " << rgb.blue << "     ";
+        }
+    }
+    f.close();
 }
 
 void ToneMapper::gammaCurve(){
-
+    
 }
 
 void ToneMapper::clampGamma(const float v){
