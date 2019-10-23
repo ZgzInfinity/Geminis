@@ -165,10 +165,52 @@ void ToneMapper::equalizeClamp(const float v){
     f.close();
 }
 
+
+
 void ToneMapper::gammaCurve(){
-    
+    vector<vector<RGB>> matrix = image.getImg();
+    LAB lab;
+    RGB rgb;
+    ofstream f;
+    f.open("media/example.ppm");
+    f << "P3" << endl;
+    f << image.getWidth() << " " << image.getHeight() << endl;
+    f << "255" << endl;
+    for (int i = 0; i < image.getHeight(); i++){
+        for (int j = 0; j < image.getWidth(); j++){
+            lab = rgb2lab(matrix[i][j], image.getM());
+            lab.l = 100.f * pow((lab.l / 100.f), 2.2);
+            rgb = lab2rgb(lab);
+            f << rgb.red << " " << rgb.green << " " << rgb.blue << "     ";
+        }
+    }
+    f.close();
 }
 
 void ToneMapper::clampGamma(const float v){
-
+    vector<vector<RGB>> matrix = image.getImg();
+    LAB lab;
+    RGB rgb;
+    ofstream f;
+    f.open("media/example.ppm");
+    f << "P3" << endl;
+    f << image.getWidth() << " " << image.getHeight() << endl;
+    f << "255" << endl;
+    for (int i = 0; i < image.getHeight(); i++){
+        for (int j = 0; j < image.getWidth(); j++){
+            lab = rgb2lab(matrix[i][j], image.getM());
+            if (lab.l > v){
+                lab.l = 100;
+                lab.a = 0;
+                lab.b = 0;
+            }
+            else {
+                lab.l = (lab.l * 100.f) / v;
+                lab.l = 100.f * pow((lab.l / 100.f), 2.2);
+            }
+            rgb = lab2rgb(lab);
+            f << rgb.red << " " << rgb.green << " " << rgb.blue << "     ";
+        }
+    }
+    f.close();
 }
