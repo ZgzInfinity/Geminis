@@ -6,10 +6,13 @@
 ToneMapper::ToneMapper(Image _image){
     image = _image;
 }
+
+
+
 // https://stackoverflow.com/questions/7880264/convert-lab-color-to-rgb
 // http://www.easyrgb.com/index.php?X=MATH&H=01#text1
-LAB rgb2lab(RGB rgb, float m)
-{
+LAB rgb2lab(RGB rgb, float m){
+
     float var_R = rgb.red / m;
     float var_G = rgb.green / m;
     float var_B = rgb.blue / m;
@@ -49,8 +52,8 @@ LAB rgb2lab(RGB rgb, float m)
 
 // https://stackoverflow.com/questions/7880264/convert-lab-color-to-rgb
 // http://www.easyrgb.com/index.php?X=MATH&H=01#text1
-RGB lab2rgb(LAB lab)
-{
+RGB lab2rgb(LAB lab){
+
     float var_Y = ( lab.l + 16. ) / 116.;
     float var_X = lab.a / 500. + var_Y;
     float var_Z = var_Y - lab.b / 200.;
@@ -87,12 +90,14 @@ RGB lab2rgb(LAB lab)
 
 
 
-void ToneMapper::clamping(){
+void ToneMapper::clamping(string outputFile){
+    outputFile = outputFile.substr(0, outputFile.size() - 4);
+    outputFile += "Clamping.ppm";
     vector<vector<RGB>> matrix = image.getImg();
     LAB lab;
     RGB rgb;
     ofstream f;
-    f.open("media/example.ppm");
+    f.open(outputFile);
     f << "P3" << endl;
     f << image.getWidth() << " " << image.getHeight() << endl;
     f << "255" << endl;
@@ -116,12 +121,16 @@ void ToneMapper::clamping(){
     f.close();
 }
 
-void ToneMapper::equalization(){
+
+
+void ToneMapper::equalization(string outputFile){
+    outputFile = outputFile.substr(0, outputFile.size() - 4);
+    outputFile += "Equalization.ppm";
     vector<vector<RGB>> matrix = image.getImg();
     LAB lab;
     RGB rgb;
     ofstream f;
-    f.open("media/example.ppm");
+    f.open(outputFile);
     f << "P3" << endl;
     f << image.getWidth() << " " << image.getHeight() << endl;
     f << "255" << endl;
@@ -137,12 +146,14 @@ void ToneMapper::equalization(){
 
 
 
-void ToneMapper::equalizeClamp(const float v){
+void ToneMapper::equalizeClamp(const float v, string outputFile){
+    outputFile = outputFile.substr(0, outputFile.size() - 4);
+    outputFile += "EqualizeClamp.ppm";
     vector<vector<RGB>> matrix = image.getImg();
     LAB lab;
     RGB rgb;
     ofstream f;
-    f.open("media/example.ppm");
+    f.open(outputFile);
     f << "P3" << endl;
     f << image.getWidth() << " " << image.getHeight() << endl;
     f << "255" << endl;
@@ -167,12 +178,14 @@ void ToneMapper::equalizeClamp(const float v){
 
 
 
-void ToneMapper::gammaCurve(){
+void ToneMapper::gammaCurve(string outputFile){
+    outputFile = outputFile.substr(0, outputFile.size() - 4);
+    outputFile += "GammaCurve.ppm";
     vector<vector<RGB>> matrix = image.getImg();
     LAB lab;
     RGB rgb;
     ofstream f;
-    f.open("media/example.ppm");
+    f.open(outputFile);
     f << "P3" << endl;
     f << image.getWidth() << " " << image.getHeight() << endl;
     f << "255" << endl;
@@ -187,12 +200,16 @@ void ToneMapper::gammaCurve(){
     f.close();
 }
 
-void ToneMapper::clampGamma(const float v){
+
+
+void ToneMapper::clampGamma(const float v, string outputFile){
+    outputFile = outputFile.substr(0, outputFile.size() - 4);
+    outputFile += "ClampGamma.ppm";
     vector<vector<RGB>> matrix = image.getImg();
     LAB lab;
     RGB rgb;
     ofstream f;
-    f.open("media/example.ppm");
+    f.open(outputFile);
     f << "P3" << endl;
     f << image.getWidth() << " " << image.getHeight() << endl;
     f << "255" << endl;

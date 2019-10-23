@@ -7,10 +7,10 @@ using namespace std;
 
 
 int main(int argc, char *argv[]){
-    
     if(argc == 2){
+        string fileName;
+        fileName.assign(argv[1]);
         Image image = loadImagePPM(argv[1]);
-        // Small test
         cout << image.getIsHDR() << endl;
         cout << image.getWidth() << endl;
         cout << image.getHeight() << endl;
@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
         cout << matrix[0][0].red << " " << matrix[0][0].green << " " << matrix[0][0].blue << endl;
         cout << "Task finished" << endl;
         ToneMapper tm = ToneMapper(image);
-        tm.clampGamma(98);
+        tm.gammaCurve(fileName);
         return 0;
     }
     else{

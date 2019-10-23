@@ -28,15 +28,15 @@ class ToneMapper{
 
 	ToneMapper(Image _image);
 
-	void clamping();
+	void clamping(string outputFile );
 
-	void equalization();
+	void equalization(string outputFile);
 
-	void equalizeClamp(const float v);
+	void equalizeClamp(const float v, string outputFile);
 
-	void gammaCurve();
+	void gammaCurve(string outputFile);
 
-	void clampGamma(const float v);
+	void clampGamma(const float v, string outputFile);
 
 };
 
