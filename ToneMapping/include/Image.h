@@ -17,7 +17,7 @@
 #define IMAGE_H
 
 #include <vector>
-#include "Pixel.h"
+#include "RGB.h"
 
 using namespace std;
 
@@ -32,13 +32,13 @@ class Image {
   // Real maximun value of the image
   float m;
   // Matrix of pixels that represents the image
-  vector<vector<Pixel>> img;
+  vector<vector<RGB>> img;
 
   public:
 
 
     Image(const bool _isHDR, const int _width, const int _height, const float _rc,
-          const float _m, vector<vector<Pixel>> _img);
+          const float _m, vector<vector<RGB>> _img);
 
 
 
@@ -49,7 +49,7 @@ class Image {
     int getHeight();
     float getRc();
     float getM();
-    vector<vector<Pixel>> getImg();
+    vector<vector<RGB>> getImg();
 
 };
 

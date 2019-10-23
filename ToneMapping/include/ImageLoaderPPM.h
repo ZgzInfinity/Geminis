@@ -20,7 +20,7 @@
 #include <fstream>
 #include <vector>
 #include "Image.h"
-#include "Pixel.h"
+#include "RGB.h"
 
 using namespace std;
 

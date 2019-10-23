@@ -43,7 +43,7 @@ Image loadImagePPM(string path){
         }
         // Start to read the matrix of the image
         //Pixel *matrix = new Pixel[width];
-        vector<vector<Pixel>> matrix(height, vector<Pixel>(width));
+        vector<vector<RGB>> matrix(height, vector<RGB>(width));
         // Pixels of the three colors in RGB
         float red_pixel, green_pixel, blue_pixel;
         float convFactor = m / rc;
@@ -53,7 +53,7 @@ Image loadImagePPM(string path){
                 // Reading a pixel of the matrix
                 f >> red_pixel >> green_pixel >> blue_pixel;
                 // Creation of the pixel (and convert to maximum m)
-                matrix [i][j] = Pixel(red_pixel * convFactor, green_pixel * convFactor,
+                matrix [i][j] = RGB(red_pixel * convFactor, green_pixel * convFactor,
                                       blue_pixel * convFactor);
             }
         }

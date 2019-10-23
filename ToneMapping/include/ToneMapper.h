@@ -16,6 +16,9 @@
 #define TONE_MAPPER_H
 
 #include "Image.h"
+#include "LAB.h"
+
+using namespace std;
 
 class ToneMapper{
 	Image image;

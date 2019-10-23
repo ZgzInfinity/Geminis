@@ -14,7 +14,7 @@ SRCDIR = ./src
 # set the include folder where the .h files reside
 CFLAGS += -I$(INCDIR) -I$(SRCDIR)
 
-MAINSOURCES = main.cpp Image.cpp ImageLoaderPPM.cpp ToneMapper.cpp Pixel.cpp
+MAINSOURCES = main.cpp Image.cpp ImageLoaderPPM.cpp ToneMapper.cpp RGB.cpp LAB.cpp
 #TESTSOURCES = 
 
 # add here the source files for the compilation
