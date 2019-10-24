@@ -46,7 +46,7 @@ int main(int argc, char *argv[]){
 
         // Creation of the tone mapper 
         ToneMapper tm = ToneMapper(image);
-        tm.clampGamma(98, fileName);
+        tm.equalizeClamp(98, fileName);
         return 0;
     }
     else{

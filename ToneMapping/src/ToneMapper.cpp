@@ -152,9 +152,17 @@ void ToneMapper::clamping(string outputFile){
             }
             else {
                 lab.l = (lab.l * 100.f) / v;
-                // lab.l = 100.f - (((100.f - lab.l) * 100.f) / (100.f - v));
             }
             rgb = lab2rgb(lab);
+            if (rgb.red > 255){
+                rgb.red = 255;
+            }
+            if (rgb.green > 255){
+                rgb.green = 255;
+            }
+            if (rgb.blue > 255){
+                rgb.blue = 255;
+            }
             f << rgb.red << " " << rgb.green << " " << rgb.blue << "     ";
         }
     }
@@ -220,9 +228,17 @@ void ToneMapper::equalizeClamp(const float v, string outputFile){
             }
             else {
                 lab.l = (lab.l * 100.f) / v;
-                // lab.l = 100.f - (((100.f - lab.l) * 100.f) / (100.f - v));
             }
             rgb = lab2rgb(lab);
+            if (rgb.red > 255){
+                rgb.red = 255;
+            }
+            if (rgb.green > 255){
+                rgb.green = 255;
+            }
+            if (rgb.blue > 255){
+                rgb.blue = 255;
+            }
             f << rgb.red << " " << rgb.green << " " << rgb.blue << "     ";
         }
     }
@@ -292,6 +308,15 @@ void ToneMapper::clampGamma(const float v, string outputFile){
                 lab.l = 100.f * pow((lab.l / 100.f), 2.2);
             }
             rgb = lab2rgb(lab);
+            if (rgb.red > 255){
+                rgb.red = 255;
+            }
+            if (rgb.green > 255){
+                rgb.green = 255;
+            }
+            if (rgb.blue > 255){
+                rgb.blue = 255;
+            }
             f << rgb.red << " " << rgb.green << " " << rgb.blue << "     ";
         }
     }
