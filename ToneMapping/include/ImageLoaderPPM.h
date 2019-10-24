@@ -12,6 +12,8 @@
  /*
   * ImageLoaderPPM.h interface file of ImageLoaderPPM module
   */
+
+
 #ifndef IMAGE_LOADER_PPM_H
 #define IMAGE_LOADER_PPM_H
 
@@ -25,6 +27,11 @@
 using namespace std;
 
 
+/**
+ * Builds an image in rgb format from a file in ppm format
+ * @param path is the destination of the ppm file which contains the image
+ * @returns an image in rgb format from a file in ppm format
+ */
 Image loadImagePPM(string path);
 
 #endif 

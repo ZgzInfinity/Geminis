@@ -30,6 +30,14 @@ ToneMapper::ToneMapper(Image _image){
 
 // https://stackoverflow.com/questions/7880264/convert-lab-color-to-rgb
 // http://www.easyrgb.com/index.php?X=MATH&H=01#text1
+
+
+/*
+ * Builds an image with lab format equivalent to the image in rgb format
+ * @param rgb is the image in rgb format
+ * @param m is the real maximun value of the image
+ * @returns an image with lab format equivalent to the image in rgb format
+ */
 LAB rgb2lab(RGB rgb, float m){
 
     float var_R = rgb.red / m;
@@ -47,15 +55,14 @@ LAB rgb2lab(RGB rgb, float m){
     var_G = var_G * 100.;
     var_B = var_B * 100.;
 
-    //Observer. = 2°, Illuminant = D65
     float X = var_R * 0.4124 + var_G * 0.3576 + var_B * 0.1805;
     float Y = var_R * 0.2126 + var_G * 0.7152 + var_B * 0.0722;
     float Z = var_R * 0.0193 + var_G * 0.1192 + var_B * 0.9505;
 
 
-    float var_X = X / 95.047 ;         //ref_X =  95.047   Observer= 2°, Illuminant= D65
-    float var_Y = Y / 100.000;          //ref_Y = 100.000
-    float var_Z = Z / 108.883;          //ref_Z = 108.883
+    float var_X = X / 95.047 ;
+    float var_Y = Y / 100.000;          
+    float var_Z = Z / 108.883;          
 
     if ( var_X > 0.008856 ) var_X = pow(var_X , ( 1./3. ) );
     else                    var_X = ( 7.787 * var_X ) + ( 16. / 116. );
@@ -71,6 +78,14 @@ LAB rgb2lab(RGB rgb, float m){
 
 // https://stackoverflow.com/questions/7880264/convert-lab-color-to-rgb
 // http://www.easyrgb.com/index.php?X=MATH&H=01#text1
+
+
+/*
+ * Builds an image with rgb format equivalent to the image in lab format
+ * @param rgb is the image in rgb format
+ * @param m is the real maximun value of the image
+ * @returns an image with rgb format equivalent to the image in rgb format
+ */
 RGB lab2rgb(LAB lab){
 
     float var_Y = ( lab.l + 16. ) / 116.;
@@ -84,14 +99,14 @@ RGB lab2rgb(LAB lab){
     if ( pow(var_Z,3) > 0.008856 ) var_Z = pow(var_Z,3);
     else                      var_Z = ( var_Z - 16. / 116. ) / 7.787;
 
-    float X = 95.047 * var_X ;    //ref_X =  95.047     Observer= 2°, Illuminant= D65
-    float Y = 100.000 * var_Y  ;   //ref_Y = 100.000
-    float Z = 108.883 * var_Z ;    //ref_Z = 108.883
+    float X = 95.047 * var_X ;    
+    float Y = 100.000 * var_Y  ;   
+    float Z = 108.883 * var_Z ;    
 
 
-    var_X = X / 100. ;       //X from 0 to  95.047      (Observer = 2°, Illuminant = D65)
-    var_Y = Y / 100. ;       //Y from 0 to 100.000
-    var_Z = Z / 100. ;      //Z from 0 to 108.883
+    var_X = X / 100. ;       
+    var_Y = Y / 100. ;       
+    var_Z = Z / 100. ;      
 
     float var_R = var_X *  3.2406 + var_Y * -1.5372 + var_Z * -0.4986;
     float var_G = var_X * -0.9689 + var_Y *  1.8758 + var_Z *  0.0415;
@@ -110,11 +125,10 @@ RGB lab2rgb(LAB lab){
 
 
 /*
- * Pre: <<outputFile>> is the name of the file resulting 
- * 		from applying the clamping technique to the image
- * Post: It has applied the clamping technique to the image and
- *       it has generated a ppm file name <<outputfile>>
- *       which stores the new image
+ * Applies the clamping technique to the image and it has generated 
+ * a ppm file name <<outputfile>> which stores the new image
+ * @param outputFile is the name of the file resulting from applying 
+ *         the clamping technique to the image
  */
 void ToneMapper::clamping(string outputFile){
     outputFile = outputFile.substr(0, outputFile.size() - 4);
@@ -150,11 +164,10 @@ void ToneMapper::clamping(string outputFile){
 
 
 /*
- * Pre: <<outputFile>> is the name of the file resulting 
- * 		from applying the equalization technique to the image
- * Post: It has applied the equalization technique to the image and
- *       it has generated a ppm file name <<outputfile>>
- *       which stores the new image
+ * Applies the equalization technique to the image and it has generated 
+ * a ppm file name <<outputfile>> which stores the new image
+ * @param outputFile is the name of the file resulting from applying 
+ *        the equalization technique to the image
  */
 void ToneMapper::equalization(string outputFile){
     outputFile = outputFile.substr(0, outputFile.size() - 4);
@@ -180,12 +193,11 @@ void ToneMapper::equalization(string outputFile){
 
 
 /*
- * Pre: <<outputFile>> is the name of the file resulting 
- * 		from applying the clamping technique to the image and <<v>>
- *      is the dimendion value for clampling
- * Post: It has applied the clamping and equalization techniques 
- *       to the image and it has generated a ppm file name <<outputfile>>
- *       which stores the new image
+ * Applies the equalization and clamping techniques to the image and it has generated 
+ * a ppm file name <<outputfile>> which stores the new image
+ * @param outputFile is the name of the file resulting from applying 
+ *        the equalization and clamping techniques to the image
+ * @param v is the dimension value for the clamping
  */
 void ToneMapper::equalizeClamp(const float v, string outputFile){
     outputFile = outputFile.substr(0, outputFile.size() - 4);
@@ -220,11 +232,10 @@ void ToneMapper::equalizeClamp(const float v, string outputFile){
 
 
 /*
- * Pre: <<outputFile>> is the name of the file resulting 
- * 		from applying the clamping technique to the image
- * Post: It has applied the clamping technique to the image and
- *       it has generated a ppm file name <<outputfile>>
- *       which stores the new image
+ * Applies the gamma curve technique to the image and it has generated 
+ * a ppm file name <<outputfile>> which stores the new image
+ * @param outputFile is the name of the file resulting from applying 
+ *        the curve gamma technique to the image
  */
 void ToneMapper::gammaCurve(string outputFile){
     outputFile = outputFile.substr(0, outputFile.size() - 4);
@@ -251,12 +262,11 @@ void ToneMapper::gammaCurve(string outputFile){
 
 
 /*
- * Pre: <<outputFile>> is the name of the file resulting 
- * 		from applying the curve gamma and clamping techniques
- *      to the image and <<v>> is the dimension value for clamping
- * Post: It has applied the curve gamma and clamping techniques 
- *       to the image and it has generated a ppm file name <<outputfile>>
- *       which stores the new image
+ * Applies the clamping and gamma curve techniques to the image and it has generated 
+ * a ppm file name <<outputfile>> which stores the new image
+ * @param outputFile is the name of the file resulting from applying 
+ *        the clamping and gamma curve technique to the image
+ * @param v is the dimension value for the clamping
  */
 void ToneMapper::clampGamma(const float v, string outputFile){
     outputFile = outputFile.substr(0, outputFile.size() - 4);

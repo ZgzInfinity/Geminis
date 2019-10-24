@@ -43,58 +43,53 @@ class ToneMapper{
 
 
 	/*
-	 * Pre: <<outputFile>> is the name of the file resulting 
-	 * 		from applying the clamping technique to the image
-	 * Post: It has applied the clamping technique to the image and
-	 *       it has generated a ppm file name <<outputfile>>
-	 *       which stores the new image
-	 */
+     * Applies the clamping technique to the image and it has generated 
+ 	 * a ppm file name <<outputfile>> which stores the new image
+ 	 * @param outputFile is the name of the file resulting from applying 
+ 	 *         the clamping technique to the image
+ 	 */
 	void clamping(string outputFile );
 
 
 
-	/*
-	 * Pre: <<outputFile>> is the name of the file resulting 
-	 * 		from applying the equalization technique to the image
-	 * Post: It has applied the equalization technique to the image and
-	 *       it has generated a ppm file name <<outputfile>>
-	 *       which stores the new image
-	 */
+   /*
+    * Applies the equalization technique to the image and it has generated 
+    * a ppm file name <<outputfile>> which stores the new image
+    * @param outputFile is the name of the file resulting from applying 
+    *        the equalization technique to the image
+    */
 	void equalization(string outputFile);
 
 
 
-	/*
-	 * Pre: <<outputFile>> is the name of the file resulting 
-	 * 		from applying the clamping technique to the image and <<v>>
-	 *      is the dimendion value for clampling
-	 * Post: It has applied the clamping and equalization techniques 
-	 *       to the image and it has generated a ppm file name <<outputfile>>
-	 *       which stores the new image
-	 */
+   /*
+    * Applies the equalization and clamping techniques to the image and it has generated 
+    * a ppm file name <<outputfile>> which stores the new image
+    * @param outputFile is the name of the file resulting from applying 
+    *        the equalization and clamping techniques to the image
+    * @param v is the dimension value for the clamping
+    */
 	void equalizeClamp(const float v, string outputFile);
 
 
 
-	/*
-	 * Pre: <<outputFile>> is the name of the file resulting 
-	 * 		from applying the clamping technique to the image
-	 * Post: It has applied the clamping technique to the image and
-	 *       it has generated a ppm file name <<outputfile>>
-	 *       which stores the new image
-	 */
+   /*
+ 	* Applies the gamma curve technique to the image and it has generated 
+ 	* a ppm file name <<outputfile>> which stores the new image
+ 	* @param outputFile is the name of the file resulting from applying 
+ 	*        the curve gamma technique to the image
+ 	*/
 	void gammaCurve(string outputFile);
 
 
 
-	/*
-	 * Pre: <<outputFile>> is the name of the file resulting 
-	 * 		from applying the curve gamma and clamping techniques
-	 *      to the image and <<v>> is the dimension value for clamping
-	 * Post: It has applied the curve gamma and clamping techniques 
-	 *       to the image and it has generated a ppm file name <<outputfile>>
-	 *       which stores the new image
-	 */
+   /*
+    * Applies the clamping and gamma curve techniques to the image and it has generated 
+    * a ppm file name <<outputfile>> which stores the new image
+    * @param outputFile is the name of the file resulting from applying 
+    *        the clamping and gamma curve technique to the image
+    * @param v is the dimension value for the clamping
+    */
 	void clampGamma(const float v, string outputFile);
 
 };

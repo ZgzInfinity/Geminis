@@ -1,6 +1,27 @@
+/*
+ *******************************************
+ *** Geminis - Computer Graphics Project ***
+ *** Authors: Name - Surname - NIP *********
+ *** Victor Peñasco EStivalez - 741294 *****
+ *** Ruben Rodriguez Esteban - 737215 ******
+ *** Course: 2019 - 2020 *******************
+ *******************************************
+ */ 
+
+ 
+ /*
+  * ImageLoaderPPM.cpp implementation file of ImageLoaderPPM module
+  */
+
 #include "../include/ImageLoaderPPM.h"
 
 
+
+/**
+ * Builds an image in rgb format from a file in ppm format
+ * @param path is the destination of the ppm file which contains the image
+ * @returns an image in rgb format from a file in ppm format
+ */
 Image loadImagePPM(string path){
     // Reading flow of the file which contains the image
     ifstream f;
@@ -57,6 +78,7 @@ Image loadImagePPM(string path){
                                       blue_pixel * convFactor);
             }
         }
+        // Close the writting flow and return of the image
         f.close();
         return Image(true, width, height, rc, m, matrix);
     }
