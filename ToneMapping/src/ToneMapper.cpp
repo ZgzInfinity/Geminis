@@ -1,8 +1,27 @@
-#include "../include/ToneMapper.h"
+/*
+ *******************************************
+ *** Geminis - Computer Graphics Project ***
+ *** Authors: Name - Surname - NIP *********
+ *** Victor Peñasco EStivalez - 741294 *****
+ *** Ruben Rodriguez Esteban - 737215 ******
+ *** Course: 2019 - 2020 *******************
+ *******************************************
+ */ 
+
+ 
+ /*
+  * ToneMapper.cpp implementation file of ToneMapper module
+  */
 
 #include <fstream>
 #include <cmath>
+#include "../include/ToneMapper.h"
 
+
+
+/*
+ * Constructor of the ToneMapper
+ */
 ToneMapper::ToneMapper(Image _image){
     image = _image;
 }
@@ -90,6 +109,13 @@ RGB lab2rgb(LAB lab){
 
 
 
+/*
+ * Pre: <<outputFile>> is the name of the file resulting 
+ * 		from applying the clamping technique to the image
+ * Post: It has applied the clamping technique to the image and
+ *       it has generated a ppm file name <<outputfile>>
+ *       which stores the new image
+ */
 void ToneMapper::clamping(string outputFile){
     outputFile = outputFile.substr(0, outputFile.size() - 4);
     outputFile += "Clamping.ppm";
@@ -123,6 +149,13 @@ void ToneMapper::clamping(string outputFile){
 
 
 
+/*
+ * Pre: <<outputFile>> is the name of the file resulting 
+ * 		from applying the equalization technique to the image
+ * Post: It has applied the equalization technique to the image and
+ *       it has generated a ppm file name <<outputfile>>
+ *       which stores the new image
+ */
 void ToneMapper::equalization(string outputFile){
     outputFile = outputFile.substr(0, outputFile.size() - 4);
     outputFile += "Equalization.ppm";
@@ -146,6 +179,14 @@ void ToneMapper::equalization(string outputFile){
 
 
 
+/*
+ * Pre: <<outputFile>> is the name of the file resulting 
+ * 		from applying the clamping technique to the image and <<v>>
+ *      is the dimendion value for clampling
+ * Post: It has applied the clamping and equalization techniques 
+ *       to the image and it has generated a ppm file name <<outputfile>>
+ *       which stores the new image
+ */
 void ToneMapper::equalizeClamp(const float v, string outputFile){
     outputFile = outputFile.substr(0, outputFile.size() - 4);
     outputFile += "EqualizeClamp.ppm";
@@ -178,6 +219,13 @@ void ToneMapper::equalizeClamp(const float v, string outputFile){
 
 
 
+/*
+ * Pre: <<outputFile>> is the name of the file resulting 
+ * 		from applying the clamping technique to the image
+ * Post: It has applied the clamping technique to the image and
+ *       it has generated a ppm file name <<outputfile>>
+ *       which stores the new image
+ */
 void ToneMapper::gammaCurve(string outputFile){
     outputFile = outputFile.substr(0, outputFile.size() - 4);
     outputFile += "GammaCurve.ppm";
@@ -202,6 +250,14 @@ void ToneMapper::gammaCurve(string outputFile){
 
 
 
+/*
+ * Pre: <<outputFile>> is the name of the file resulting 
+ * 		from applying the curve gamma and clamping techniques
+ *      to the image and <<v>> is the dimension value for clamping
+ * Post: It has applied the curve gamma and clamping techniques 
+ *       to the image and it has generated a ppm file name <<outputfile>>
+ *       which stores the new image
+ */
 void ToneMapper::clampGamma(const float v, string outputFile){
     outputFile = outputFile.substr(0, outputFile.size() - 4);
     outputFile += "ClampGamma.ppm";
