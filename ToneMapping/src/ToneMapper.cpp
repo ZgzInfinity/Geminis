@@ -28,10 +28,6 @@ ToneMapper::ToneMapper(Image _image){
 
 
 
-// https://stackoverflow.com/questions/7880264/convert-lab-color-to-rgb
-// http://www.easyrgb.com/index.php?X=MATH&H=01#text1
-
-
 /*
  * Builds an image with lab format equivalent to the image in rgb format
  * @param rgb is the image in rgb format
@@ -74,10 +70,6 @@ LAB rgb2lab(RGB rgb, float m){
     return LAB(( 116. * var_Y ) - 16., 500. * ( var_X - var_Y ), 200. * ( var_Y - var_Z ));
 }
 
-
-
-// https://stackoverflow.com/questions/7880264/convert-lab-color-to-rgb
-// http://www.easyrgb.com/index.php?X=MATH&H=01#text1
 
 
 /*
