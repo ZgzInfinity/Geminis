@@ -85,6 +85,6 @@ Image loadImagePPM(string path){
     else {
         // Error
         cerr << "Error while trying to open the file " << path << endl;
-        return Image();
+        exit(1);
     }
 }

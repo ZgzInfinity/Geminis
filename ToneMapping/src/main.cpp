@@ -33,20 +33,13 @@ int main(int argc, char *argv[]){
         string fileName;
         fileName.assign(argv[1]);
         Image image = loadImagePPM(argv[1]);
-
-        // Shows the attributes of the image
-        cout << image.getIsHDR() << endl;
-        cout << image.getWidth() << endl;
-        cout << image.getHeight() << endl;
-        cout << image.getRc() << endl;
-        cout << image.getM() << endl;
-
+        cout << "Image loaded succesfully" << endl;
         // Construction on the image 
         vector<vector<RGB>> matrix = image.getImg();
-
         // Creation of the tone mapper 
         ToneMapper tm = ToneMapper(image);
-        tm.equalizeClamp(98, fileName);
+        tm.clampGamma(98, fileName, 1.5);
+        cout << "Image tone mapped" << endl;
         return 0;
     }
     else{

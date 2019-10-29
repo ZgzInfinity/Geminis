@@ -78,8 +78,9 @@ class ToneMapper{
  	* a ppm file name <<outputfile>> which stores the new image
  	* @param outputFile is the name of the file resulting from applying 
  	*        the curve gamma technique to the image
+   * @param g is the gamma correction value
  	*/
-	void gammaCurve(string outputFile);
+	void gammaCurve(string outputFile, const float g);
 
 
 
@@ -89,8 +90,9 @@ class ToneMapper{
     * @param outputFile is the name of the file resulting from applying 
     *        the clamping and gamma curve technique to the image
     * @param v is the dimension value for the clamping
+    * @param g is the gamma correction value
     */
-	void clampGamma(const float v, string outputFile);
+	void clampGamma(const float v, string outputFile, const float g);
 
 };
 

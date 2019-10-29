@@ -147,8 +147,6 @@ void ToneMapper::clamping(string outputFile){
             lab = rgb2lab(matrix[i][j], image.getM());
             if (lab.l > v){
                 lab.l = 100;
-                lab.a = 0;
-                lab.b = 0;
             }
             else {
                 lab.l = (lab.l * 100.f) / v;
@@ -223,8 +221,6 @@ void ToneMapper::equalizeClamp(const float v, string outputFile){
             lab = rgb2lab(matrix[i][j], image.getM());
             if (lab.l > v){
                 lab.l = 100;
-                lab.a = 0;
-                lab.b = 0;
             }
             else {
                 lab.l = (lab.l * 100.f) / v;
@@ -252,8 +248,9 @@ void ToneMapper::equalizeClamp(const float v, string outputFile){
  * a ppm file name <<outputfile>> which stores the new image
  * @param outputFile is the name of the file resulting from applying 
  *        the curve gamma technique to the image
+ * @param g is the gamma correction value
  */
-void ToneMapper::gammaCurve(string outputFile){
+void ToneMapper::gammaCurve(string outputFile, const float g){
     outputFile = outputFile.substr(0, outputFile.size() - 4);
     outputFile += "GammaCurve.ppm";
     vector<vector<RGB>> matrix = image.getImg();
@@ -267,7 +264,7 @@ void ToneMapper::gammaCurve(string outputFile){
     for (int i = 0; i < image.getHeight(); i++){
         for (int j = 0; j < image.getWidth(); j++){
             lab = rgb2lab(matrix[i][j], image.getM());
-            lab.l = 100.f * pow((lab.l / 100.f), 2.2);
+            lab.l = 100.f * pow((lab.l / 100.f), g);
             rgb = lab2rgb(lab);
             f << rgb.red << " " << rgb.green << " " << rgb.blue << "     ";
         }
@@ -283,8 +280,9 @@ void ToneMapper::gammaCurve(string outputFile){
  * @param outputFile is the name of the file resulting from applying 
  *        the clamping and gamma curve technique to the image
  * @param v is the dimension value for the clamping
+ * @param g is the gamma correction value
  */
-void ToneMapper::clampGamma(const float v, string outputFile){
+void ToneMapper::clampGamma(const float v, string outputFile, const float g){
     outputFile = outputFile.substr(0, outputFile.size() - 4);
     outputFile += "ClampGamma.ppm";
     vector<vector<RGB>> matrix = image.getImg();
@@ -300,12 +298,10 @@ void ToneMapper::clampGamma(const float v, string outputFile){
             lab = rgb2lab(matrix[i][j], image.getM());
             if (lab.l > v){
                 lab.l = 100;
-                lab.a = 0;
-                lab.b = 0;
             }
             else {
                 lab.l = (lab.l * 100.f) / v;
-                lab.l = 100.f * pow((lab.l / 100.f), 2.2);
+                lab.l = 100.f * pow((lab.l / 100.f), g);
             }
             rgb = lab2rgb(lab);
             if (rgb.red > 255){
