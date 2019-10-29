@@ -8,6 +8,7 @@ Please, go to the [Wiki](https://github.com/ZgzInfinity/Geminis/wiki) in order t
 Theme | End date| Status 
 ------| --------------------| ------
 Geometry |14-10-2019 | ![tic_correcto](https://i.ibb.co/48JQg0R/tic-1.png)
+Imaging  |29-10-2019 | ![tic_correcto](https://i.ibb.co/48JQg0R/tic-1.png)
 
 # Authors
 
