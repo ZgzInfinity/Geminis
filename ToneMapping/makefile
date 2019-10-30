@@ -1,7 +1,7 @@
 # set compiler and compile options
 EXEC = toneMapping
 CXX = g++             # use the GNU C++ compiler
-OPTS = -O2 -Wall -g   # use some optimization, report all warnings and enable debugging
+OPTS = -O3 -Wall -g   # use some optimization, report all warnings and enable debugging
 CFLAGS = $(OPTS)      # add compile flags
 LDFLAGS =             # specify link flags here
 
