@@ -89,4 +89,13 @@ Direction operator * (Matrix3 t, Direction d);
 Point operator * (Matrix3 t, Point d);
 
 
+
+/**
+ * Gets the scalar product from the Point p and Direction d
+ * @param p is the direction
+ * @param d is the direction
+ * @returns he scalar product from the Point p and Direction d
+ */
+float dot(Point p, Direction d);
+
 #endif 

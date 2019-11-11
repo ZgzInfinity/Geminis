@@ -35,4 +35,8 @@ RGB::RGB(const float _red, const float _green, const float _blue){
 /**
  * Default builder without parameters
  */
-RGB::RGB(){}
+RGB::RGB(){
+    red = 0.f;
+    green = 0.f;
+    blue = 0.f;
+}

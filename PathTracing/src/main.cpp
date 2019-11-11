@@ -14,6 +14,7 @@
 #include <cstring>
 #include <list>
 #include <iomanip>
+#include <cfloat>
 #include "../include/Matrix4.h"
 #include "../include/SharedOps.h"
 #include "../include/Plane.h"
@@ -24,6 +25,8 @@ using namespace std;
 
 const int NUMBER_PARAMETERS = 2;
 const int RC = 255;
+const int DIM_PLANE = 1;
+const int DIM_SPHERE = 1;
 
 int main(int argc, char* argv[]){
 
@@ -50,8 +53,8 @@ int main(int argc, char* argv[]){
         Direction leftPP = Direction(0, 0, -1);
         Direction upPP = Direction(0, 1, 0);
 
-        list <Sphere> sphereList;
-        list <Plane> planeList;
+        Sphere sphereList[DIM_SPHERE];
+        Plane planeList[DIM_PLANE];
 
         float pixelSize = mod(leftPP) / (width / 2.f);
 
@@ -67,13 +70,29 @@ int main(int argc, char* argv[]){
             Point upperLeftCorner = origin + d_k + d_i;
             Point pixelCenter;
             float pixelOffset = pixelSize / 2.f;
+            Direction rayDir;
+            float denom;
+            float tMin = FLT_MAX;
+            float t;
 
             for(int row = 0; row < height; row++){
                 for(int col = 0; col <width; col++){
                     pixelCenter = Point(upperLeftCorner.c[0],
                          upperLeftCorner.c[1] - row*pixelSize + pixelOffset,
-                         upperLeftCorner.c[2] - col*pixelSize + pixelOffset);
-
+                         upperLeftCorner.c[2] + col*pixelSize + pixelOffset);
+                    rayDir = pixelCenter - origin;
+                    img[row][col] = RGB();
+                    for(int i = 0; i < DIM_PLANE; i++){
+                        if(abs(denom = dot(rayDir, planeList[i].normal)) > 0.00001f){
+                            t = - (dot(origin, planeList[i].normal) + planeList[i].distance2origin) / denom;
+                            if(t > 0.f){
+                                if((dot(origin, planeList[i].normal) + planeList[i].distance2origin) / denom < tMin){
+                                    tMin = t;
+                                    img[row][col] = planeList[i].emission;
+                                }
+                            }
+                        }
+                    }
 
 
 
