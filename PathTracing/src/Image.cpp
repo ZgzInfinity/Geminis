@@ -106,3 +106,19 @@ float Image::getM(){
 vector<vector<RGB>> Image::getImg(){
     return img;
 }
+
+
+void Image::printImage(string outputFile){
+    ofstream f;
+    f.open(outputFile);
+    f << "P3" << endl;
+    f << width << " " << height << endl;
+    f << rc << endl;
+    for (int i = 0; i < height; i++){
+        for (int j = 0; j < width; j++){
+            f << img[i][j].red << " " << img[i][j].green 
+            << " " << img[i][j].blue << "     ";
+        }
+    }
+    f.close();
+}

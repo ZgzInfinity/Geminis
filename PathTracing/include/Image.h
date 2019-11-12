@@ -17,6 +17,8 @@
 #define IMAGE_H
 
 #include <vector>
+#include <cstring>
+#include <fstream>
 #include "RGB.h"
 
 using namespace std;
@@ -108,6 +110,9 @@ class Image {
      * @returns the image
      */   
     vector<vector<RGB>> getImg();
+
+
+    void printImage(string outputFile);
 
 };
 

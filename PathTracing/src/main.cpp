@@ -25,7 +25,7 @@ using namespace std;
 
 const int NUMBER_PARAMETERS = 2;
 const int RC = 255;
-const int DIM_PLANE = 1;
+const int DIM_PLANE = 2;
 const int DIM_SPHERE = 1;
 
 int main(int argc, char* argv[]){
@@ -55,7 +55,11 @@ int main(int argc, char* argv[]){
 
         Sphere sphereList[DIM_SPHERE];
         Plane planeList[DIM_PLANE];
-
+        //Plane p1 = Plane(Direction(-1,0,0), 2, RGB(155, 89, 182));
+        Plane p1 = Plane(Direction(-0.5,1,0), 5, RGB(155, 89, 182));
+        Plane p2 = Plane(Direction(-0.5,-1,0), 5, RGB(46, 204, 113));
+        planeList[0] = p2;
+        planeList[1] = p1;
         float pixelSize = mod(leftPP) / (width / 2.f);
 
         if(pixelSize != mod(upPP) / (height / 2.f)){
@@ -65,34 +69,40 @@ int main(int argc, char* argv[]){
         else {
             // Correct
             cout << "The pixel is square with dimension " << pixelSize << endl;
-            vector<vector<RGB>> img(height, vector<RGB>(width));;
+            vector<vector<RGB>> img(height, vector<RGB>(width));
+            vector<vector<float>> distances(height, vector<float>(width));
 
-            Point upperLeftCorner = origin + d_k + d_i;
+            Point upperLeftCorner = origin + d_k + d_i + d_j;
             Point pixelCenter;
             float pixelOffset = pixelSize / 2.f;
             Direction rayDir;
             float denom;
-            float tMin = FLT_MAX;
             float t;
 
             for(int row = 0; row < height; row++){
                 for(int col = 0; col <width; col++){
                     pixelCenter = Point(upperLeftCorner.c[0],
-                         upperLeftCorner.c[1] - row*pixelSize + pixelOffset,
+                         upperLeftCorner.c[1] - (row*pixelSize + pixelOffset),
                          upperLeftCorner.c[2] + col*pixelSize + pixelOffset);
                     rayDir = pixelCenter - origin;
                     img[row][col] = RGB();
+                    distances[row][col] = FLT_MAX;
+
+                    // Plane intersection
                     for(int i = 0; i < DIM_PLANE; i++){
-                        if(abs(denom = dot(rayDir, planeList[i].normal)) > 0.00001f){
+                        if(abs(denom = dot(rayDir, planeList[i].normal)) > 0.000001f){
                             t = - (dot(origin, planeList[i].normal) + planeList[i].distance2origin) / denom;
                             if(t > 0.f){
-                                if((dot(origin, planeList[i].normal) + planeList[i].distance2origin) / denom < tMin){
-                                    tMin = t;
+                                if(t < distances[row][col]){
+                                    distances[row][col] = t;
                                     img[row][col] = planeList[i].emission;
                                 }
                             }
                         }
                     }
+
+                    // Sphere intersection
+
 
 
 
@@ -101,16 +111,9 @@ int main(int argc, char* argv[]){
 
                 }
             }
-            
-            
-            
-            
-            
-            
-            
-            
-            
+
             Image image = Image(true, width, height, RC, RC, img);
+            image.printImage("media/image.ppm");
         }
 
 

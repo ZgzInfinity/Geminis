@@ -10,6 +10,7 @@ PathTracing/obj/*
 
 # exclude files inside media folder
 ToneMapping/media/*
+PathTracing/media/*
 
 # exclude vscode configuration files
 .vscode
