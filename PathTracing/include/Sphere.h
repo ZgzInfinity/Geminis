@@ -19,15 +19,35 @@
 #include "RGB.h"
 
 
+/*
+ * Definition of data type Sphere
+ */
 struct Sphere {
-
+    // Center of the sphere
     Point center;
+    // Radius of the sphere
     float radius;
+    // Color emission ray
     RGB emission;
 
+
+
+    /**
+     * Default builder without parameters
+     */
     Sphere();
 
+
+
+    /**
+     * Build a Sphere type object
+     * @param _center is the center of the sphere
+     * @param _radius is the radius of the sphere
+     * @param _emission is a color emission ray
+     * @returns a Sphere type object
+     */
     Sphere(const Point _center, const float _radius, const RGB _emission);
+    
 };
 
 #endif
