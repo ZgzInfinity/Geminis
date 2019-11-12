@@ -28,6 +28,8 @@ const int RC = 255;
 const int DIM_PLANE = 2;
 const int DIM_SPHERE = 1;
 
+// http://viclw17.github.io/2018/07/16/raytracing-ray-sphere-intersection/
+
 int main(int argc, char* argv[]){
 
     if (argc != NUMBER_PARAMETERS){
@@ -58,8 +60,11 @@ int main(int argc, char* argv[]){
         //Plane p1 = Plane(Direction(-1,0,0), 2, RGB(155, 89, 182));
         Plane p1 = Plane(Direction(-0.5,1,0), 5, RGB(155, 89, 182));
         Plane p2 = Plane(Direction(-0.5,-1,0), 5, RGB(46, 204, 113));
+        Sphere s1 = Sphere(Point(3, 0, 0), 1 , RGB(241, 196, 15));
+
         planeList[0] = p2;
         planeList[1] = p1;
+        sphereList[0] = s1;
         float pixelSize = mod(leftPP) / (width / 2.f);
 
         if(pixelSize != mod(upPP) / (height / 2.f)){
@@ -75,9 +80,9 @@ int main(int argc, char* argv[]){
             Point upperLeftCorner = origin + d_k + d_i + d_j;
             Point pixelCenter;
             float pixelOffset = pixelSize / 2.f;
-            Direction rayDir;
+            Direction rayDir, oc;
             float denom;
-            float t;
+            float t, a, b, c, discriminant;
 
             for(int row = 0; row < height; row++){
                 for(int col = 0; col <width; col++){
@@ -102,7 +107,23 @@ int main(int argc, char* argv[]){
                     }
 
                     // Sphere intersection
-
+                    for(int i = 0; i < DIM_SPHERE; i++){
+                        oc = origin - sphereList[i].center;
+                        rayDir = pixelCenter - origin;
+                        a = dot(rayDir, rayDir);
+                        b = 2.f * dot(oc, rayDir);
+                        c = dot(oc, oc) - (sphereList[i].radius * sphereList[i].radius);
+                        discriminant = b * b - 4 * a * c;
+                        if (discriminant >= 0.f){
+                              t = (-b -sqrt(discriminant)) / 2.f * a;
+                              if(t > 0.f){
+                                if(t < distances[row][col]){
+                                    distances[row][col] = t;
+                                    img[row][col] = sphereList[i].emission;
+                                }
+                            }
+                        }
+                    }
 
 
 
