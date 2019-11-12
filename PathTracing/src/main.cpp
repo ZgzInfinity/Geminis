@@ -48,36 +48,42 @@ int main(int argc, char* argv[]){
         Matrix4 camera = Matrix4::changeBase(d_i, d_j, d_k, origin);
 
         // Image resolution
-        float width = 100;
-        float height = 100;
+        float width = 1280;
+        float height = 720;
+        float pixelSize;
 
         // Projection plane
-        Direction leftPP = Direction(0, 0, -1);
-        Direction upPP = Direction(0, 1, 0);
+        Direction leftPP, upPP;
+        
+        if (width > height){
+            leftPP = Direction(0, 0, - width / height);
+            upPP = Direction(0, 1, 0);
+            pixelSize = mod(upPP) / (height / 2.f);
+        }
+        else {
+            leftPP = Direction(0, 0, -1);
+            upPP = Direction(0, height / width, 0);
+            pixelSize = mod(leftPP) / (width / 2.f);
+        }
+         
 
         Sphere sphereList[DIM_SPHERE];
         Plane planeList[DIM_PLANE];
         //Plane p1 = Plane(Direction(-1,0,0), 2, RGB(155, 89, 182));
-        Plane p1 = Plane(Direction(-0.5,1,0), 5, RGB(155, 89, 182));
-        Plane p2 = Plane(Direction(-0.5,-1,0), 5, RGB(46, 204, 113));
+        Plane p1 = Plane(Direction(0, 0, 1), 5, RGB(155, 89, 182));
+        Plane p2 = Plane(Direction(0, 0,-1), 5, RGB(46, 204, 113));
         Sphere s1 = Sphere(Point(3, 0, 0), 1 , RGB(241, 196, 15));
 
         planeList[0] = p2;
         planeList[1] = p1;
         sphereList[0] = s1;
-        float pixelSize = mod(leftPP) / (width / 2.f);
 
-        if(pixelSize != mod(upPP) / (height / 2.f)){
-            // Incorrect
-            cerr << "Bad resolution and Project plane configuration" << endl;
-        }
-        else {
-            // Correct
+        
             cout << "The pixel is square with dimension " << pixelSize << endl;
             vector<vector<RGB>> img(height, vector<RGB>(width));
             vector<vector<float>> distances(height, vector<float>(width));
 
-            Point upperLeftCorner = origin + d_k + d_i + d_j;
+            Point upperLeftCorner = origin + d_k + leftPP + upPP;
             Point pixelCenter;
             float pixelOffset = pixelSize / 2.f;
             Direction rayDir, oc;
@@ -132,15 +138,8 @@ int main(int argc, char* argv[]){
 
                 }
             }
-
             Image image = Image(true, width, height, RC, RC, img);
             image.printImage("media/image.ppm");
-        }
-
-
-
-
-
     }
 
     return 0;
