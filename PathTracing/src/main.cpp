@@ -23,7 +23,7 @@
 
 using namespace std;
 
-const int NUMBER_PARAMETERS = 2;
+const int NUMBER_PARAMETERS = 5;
 const int RC = 255;
 const int DIM_PLANE = 2;
 const int DIM_SPHERE = 1;
@@ -35,7 +35,8 @@ int main(int argc, char* argv[]){
     if (argc != NUMBER_PARAMETERS){
         // Incorret
         cerr << "Wrong number of parameters" << endl;
-        cerr << "Invoke like pathTracing <rays per pixel>" << endl;
+        cerr << "Invoke like pathTracing <rays per pixel> <width of image> <height of image" 
+             << "path of the file" << endl;
     }
     else {
         // Correct
@@ -52,8 +53,8 @@ int main(int argc, char* argv[]){
         Matrix4 camera = Matrix4::changeBase(d_i, d_j, d_k, origin);
 
         // Image resolution
-        float width = 1280;
-        float height = 720;
+        float width = atof(argv[2]);
+        float height = atof(argv[3]);
         float pixelSize;
 
         // Projection plane direction vectors
@@ -153,7 +154,7 @@ int main(int argc, char* argv[]){
         }
         // Creation of the image and saving in a ppm format file
         Image image = Image(true, width, height, RC, RC, img);
-        image.printImage("media/image.ppm");
+        image.printImage(argv[4]);
     }
     // Final execution of the programm
     return 0;
