@@ -26,7 +26,7 @@ using namespace std;
 
 const int NUMBER_PARAMETERS = 5;
 const int RC = 255;
-const int DIM_PLANE = 2;
+const int DIM_PLANE = 5;
 const int DIM_SPHERE = 1;
 const int DIM_TRIANGLE = 2;
 const float EPSILON = 0.0000001;
@@ -84,15 +84,21 @@ int main(int argc, char* argv[]){
         Triangle triangleList[DIM_TRIANGLE];
         
         // Definition of the planes and spheres which are going to appear in the scene 
-        Plane p1 = Plane(Direction(0, 0, 1), 5, RGB(155, 89, 182));
-        Plane p2 = Plane(Direction(0, 0,-1), 5, RGB(46, 204, 113));
+        Plane p1 = Plane(Direction(0, 0, 1), 7, RGB(155, 89, 182));
+        Plane p2 = Plane(Direction(0, 0,-1), 7, RGB(46, 204, 113));
+        Plane p3 = Plane(Direction(0, -1, 0), 5, RGB(236, 240, 241));
+        Plane p4 = Plane(Direction(0, 1, 0), 5, RGB(52, 73, 94));
+        Plane p5 = Plane(Direction(-1, 0, 0), 7, RGB(192, 57, 43));
         Sphere s1 = Sphere(Point(3, 0, 0), 1 , RGB(241, 196, 15));
         Triangle t1 = Triangle(Point(2, -1, -1), Point(2, -1, 0), Point(2, 0, 0), RGB(52, 152, 219));
         Triangle t2 = Triangle(Point(2, 0, 0), Point(2, 1, 1), Point(2, 1, 0), RGB(230, 126, 34));
 
         // Stored the elements in the correct lists
-        planeList[0] = p2;
-        planeList[1] = p1;
+        planeList[0] = p1;
+        planeList[1] = p2;
+        planeList[2] = p3;
+        planeList[3] = p4;
+        planeList[4] = p5;
         sphereList[0] = s1;
         triangleList[0] = t1;
         triangleList[1] = t2;
