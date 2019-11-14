@@ -94,30 +94,28 @@ int main(int argc, char* argv[]){
         Plane planeList[DIM_PLANE];
         Triangle triangleList[DIM_TRIANGLE];
         
-        // Definition of the planes and spheres which are going to appear in the scene 
+        // Definition of the planes which are going to appear in the scene 
         Plane p1 = Plane(Direction(0, 0, 1), 7, RGB(155, 89, 182));
-        Plane p2 = Plane(Direction(0, 0,-1), 7, RGB(46, 204, 113));
-        Plane p3 = Plane(Direction(0, -1, 0), 5, RGB(236, 240, 241));
-        Plane p4 = Plane(Direction(0, 1, 0), 5, RGB(52, 73, 94));
-        Plane p5 = Plane(Direction(-1, 0, 0), 7, RGB(192, 57, 43));
-        Sphere s1 = Sphere(Point(3, 0, 0), 1 , RGB(241, 196, 15));
-        // Triangle t1 = Triangle(Point(2, -1, -1), Point(2, -1, 0), Point(2, 0, 0), RGB(52, 152, 219));
-        // Triangle t2 = Triangle(Point(2, 0, 0), Point(2, 1, 1), Point(2, 1, 0), RGB(230, 126, 34));
-        Triangle t1 = Triangle(Point(2, -1, -1), Point(2, -1, 0), Point(2, 0, 0), &brickTexture,
-        0, 1, 1, 0, 0, 1);
-        Triangle t2 = Triangle(Point(2, 0, 0), Point(2, 1, 1), Point(2, 1, 0), &brickTexture,
-        0, 1, 0, 0, 1, 1);
-
-
-
-        // Stored the elements in the correct lists
         planeList[0] = p1;
+        Plane p2 = Plane(Direction(0, 0,-1), 7, RGB(46, 204, 113));
         planeList[1] = p2;
+        Plane p3 = Plane(Direction(0, -1, 0), 5, RGB(236, 240, 241));
         planeList[2] = p3;
+        Plane p4 = Plane(Direction(0, 1, 0), 5, RGB(52, 73, 94));
         planeList[3] = p4;
+        Plane p5 = Plane(Direction(-1, 0, 0), 7, RGB(192, 57, 43));
         planeList[4] = p5;
+
+        // Definition of the spheres which are going to appear in the scene 
+        Sphere s1 = Sphere(Point(3, 0, 0), 1 , RGB(241, 196, 15));
         sphereList[0] = s1;
+
+        // Definition of the triangles which are going to appear in the scene 
+        Triangle t1 = Triangle(Point(2, -1, -1), Point(2, -1, 0), 
+                               Point(2, 0, 0), &brickTexture, 0, 1, 1, 0, 0, 1);
         triangleList[0] = t1;
+        Triangle t2 = Triangle(Point(2, 0, 0), Point(2, 1, 1), 
+                               Point(2, 1, 0), &brickTexture, 0, 1, 0, 0, 1, 1);
         triangleList[1] = t2;
 
         // Matrix of the image that is going to be built
@@ -146,8 +144,7 @@ int main(int argc, char* argv[]){
                 // Direction of the ray with an emission 
                 rayDir = pixelCenter - origin;
                 img[row][col] = RGB();
-                //For each pixel the starting distance is the biggest value and it is
-                // going reduced
+                //For each pixel the starting distance is the biggest value and it is going reduced
                 distances[row][col] = FLT_MAX;
 
                 // Plane intersection
@@ -165,6 +162,7 @@ int main(int argc, char* argv[]){
                         }
                     }
                 }
+
                 // Sphere intersection
                 for(int i = 0; i < DIM_SPHERE; i++){
                     oc = origin - sphereList[i].center;
@@ -186,7 +184,6 @@ int main(int argc, char* argv[]){
                         }
                     }
                 }
-
 
                 // Triangle intersection
                 for(int i = 0; i < DIM_TRIANGLE; i++){
