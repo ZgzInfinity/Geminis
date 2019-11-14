@@ -32,7 +32,7 @@ Image loadImagePPM(string path){
         // Correct
         int numResources = 0;
         int width, height;
-        float rc, m = 1;
+        float rc, m = -1;
         string str;
         getline(f, str);
         while (!f.eof() && (numResources < 4 || f.peek() == '#')){
@@ -67,7 +67,10 @@ Image loadImagePPM(string path){
         vector<vector<RGB>> matrix(height, vector<RGB>(width));
         // Pixels of the three colors in RGB
         float red_pixel, green_pixel, blue_pixel;
-        float convFactor = m / rc;
+        float convFactor = 1;
+        if(m != -1){
+            convFactor = m / rc;
+        }
         // Actual indexes of the image matrix
         for (int i = 0; i < height; i++){
             for (int j = 0; j < width; j++){

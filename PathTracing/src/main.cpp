@@ -83,6 +83,9 @@ int main(int argc, char* argv[]){
 
 
         Image brickTexture = loadImagePPM("textures/brick_wall.ppm");
+        vector<vector<RGB>> textureImg = brickTexture.getImg();
+        int textureH = brickTexture.getHeight();
+        int textureW = brickTexture.getWidth();
 
 
 
@@ -226,7 +229,7 @@ int main(int argc, char* argv[]){
 
                                 x = bary.c[0]*triangleList[i].s0 + bary.c[1]*triangleList[i].su + bary.c[2]*triangleList[i].sv;
                                 y = bary.c[0]*triangleList[i].t0 + bary.c[1]*triangleList[i].tu + bary.c[2]*triangleList[i].tv;
-                                img[row][col] = triangleList[i].texture->getImg()[triangleList[i].texture->getHeight()*(1.f - y)][triangleList[i].texture->getWidth()*x];
+                                img[row][col] = textureImg[(int)(textureH*(1.f - y))][(int)(textureW*x)];
                                 
                             }
                         }
