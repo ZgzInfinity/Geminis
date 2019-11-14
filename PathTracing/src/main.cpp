@@ -21,6 +21,7 @@
 #include "../include/Sphere.h"
 #include "../include/Triangle.h"
 #include "../include/Image.h"
+#include "../include/ImageLoaderPPM.h"
 
 using namespace std;
 
@@ -34,6 +35,8 @@ const float EPSILON = 0.0000001;
 // http://viclw17.github.io/2018/07/16/raytracing-ray-sphere-intersection/
 
 // https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
+
+// https://gamedev.stackexchange.com/questions/23743/whats-the-most-efficient-way-to-find-barycentric-coordinates
 
 int main(int argc, char* argv[]){
     // Verification of the number of parameters
@@ -78,6 +81,11 @@ int main(int argc, char* argv[]){
             pixelSize = mod(leftPP) / (width / 2.f);
         }
 
+
+        Image brickTexture = loadImagePPM("textures/brick_wall.ppm");
+
+
+
         // Vectors with the planes and spheres represented in the scene
         Sphere sphereList[DIM_SPHERE];
         Plane planeList[DIM_PLANE];
@@ -90,8 +98,14 @@ int main(int argc, char* argv[]){
         Plane p4 = Plane(Direction(0, 1, 0), 5, RGB(52, 73, 94));
         Plane p5 = Plane(Direction(-1, 0, 0), 7, RGB(192, 57, 43));
         Sphere s1 = Sphere(Point(3, 0, 0), 1 , RGB(241, 196, 15));
-        Triangle t1 = Triangle(Point(2, -1, -1), Point(2, -1, 0), Point(2, 0, 0), RGB(52, 152, 219));
-        Triangle t2 = Triangle(Point(2, 0, 0), Point(2, 1, 1), Point(2, 1, 0), RGB(230, 126, 34));
+        // Triangle t1 = Triangle(Point(2, -1, -1), Point(2, -1, 0), Point(2, 0, 0), RGB(52, 152, 219));
+        // Triangle t2 = Triangle(Point(2, 0, 0), Point(2, 1, 1), Point(2, 1, 0), RGB(230, 126, 34));
+        Triangle t1 = Triangle(Point(2, -1, -1), Point(2, -1, 0), Point(2, 0, 0), &brickTexture,
+        0, 1, 1, 0, 0, 1);
+        Triangle t2 = Triangle(Point(2, 0, 0), Point(2, 1, 1), Point(2, 1, 0), &brickTexture,
+        0, 1, 0, 0, 1, 1);
+
+
 
         // Stored the elements in the correct lists
         planeList[0] = p1;
@@ -112,7 +126,10 @@ int main(int argc, char* argv[]){
         Point pixelCenter;
         float pixelOffset = pixelSize / 2.f;
         Direction rayDir, oc, h, s, q;
-        float denom, t, a, b, c, d, discriminant;
+        float denom, t, a, b, c, d, discriminant, x, y;
+        Point contactPoint;
+        Point bary;
+        float area0uv, areaPuv, areaPv0;
 
         // Loop that calculates for each pixel the thrown ray and the intersections
         // between it and the spheres and planes stored in the scene
@@ -190,11 +207,28 @@ int main(int argc, char* argv[]){
                     float t = b * dot(triangleList[i].edge2, q);
                     if (t > EPSILON && t < 1/EPSILON) // ray intersection
                     {
-                        //outIntersectionPoint = origin + rayDir * t;
                         if(t < distances[row][col]){
                             // Its a near intersection and it is saved with the correct emission
-                            distances[row][col] = t;
-                            img[row][col] = triangleList[i].emission;
+                            if(triangleList[i].texture == nullptr){
+                                distances[row][col] = t;
+                                img[row][col] = triangleList[i].emission;
+                            }
+                            else{
+                                contactPoint = origin + rayDir * t;
+                                // The area of a triangle is 
+                                area0uv = dot( triangleList[i].normal, cross( (triangleList[i].pu - triangleList[i].p0), (triangleList[i].pv - triangleList[i].p0) )  ) ;
+                                areaPuv = dot( triangleList[i].normal, cross( (triangleList[i].pu - contactPoint), (triangleList[i].pv - contactPoint) )  ) ;
+                                areaPv0 = dot( triangleList[i].normal, cross( (triangleList[i].pv - contactPoint), (triangleList[i].p0 - contactPoint) )  ) ;
+
+                                bary.c[0] = areaPuv / area0uv ; // alpha
+                                bary.c[1] = areaPv0 / area0uv ; // beta
+                                bary.c[2] = 1.0f - bary.c[0] - bary.c[1] ; // gamma
+
+                                x = bary.c[0]*triangleList[i].s0 + bary.c[1]*triangleList[i].su + bary.c[2]*triangleList[i].sv;
+                                y = bary.c[0]*triangleList[i].t0 + bary.c[1]*triangleList[i].tu + bary.c[2]*triangleList[i].tv;
+                                img[row][col] = triangleList[i].texture->getImg()[triangleList[i].texture->getHeight()*(1.f - y)][triangleList[i].texture->getWidth()*x];
+                                
+                            }
                         }
                     }
                 }
