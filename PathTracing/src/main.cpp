@@ -29,7 +29,7 @@ const int NUMBER_PARAMETERS = 5;
 const int RC = 255;
 const int DIM_PLANE = 5;
 const int DIM_SPHERE = 1;
-const int DIM_TRIANGLE = 2;
+const int DIM_TRIANGLE = 4;
 const float EPSILON = 0.0000001;
 
 // http://viclw17.github.io/2018/07/16/raytracing-ray-sphere-intersection/
@@ -52,13 +52,13 @@ int main(int argc, char* argv[]){
         cout << "Number of rays per pixel " << raysPerPixel << endl;
 
         // Definition of the vectors of the space with the origin point
-        Direction d_i = Direction(0, 0, -1);
-        Direction d_j = Direction(0, 1, 0);
+        // Direction d_i = Direction(0, 0, -1);
+        // Direction d_j = Direction(0, 1, 0);
         Direction d_k = Direction(1, 0, 0);
         Point origin = Point(0, 0, 0);
 
         // Creation of the base
-        Matrix4 camera = Matrix4::changeBase(d_i, d_j, d_k, origin);
+        // Matrix4 camera = Matrix4::changeBase(d_i, d_j, d_k, origin);
 
         // Image resolution
         float width = atof(argv[2]);
@@ -117,6 +117,12 @@ int main(int argc, char* argv[]){
         Triangle t2 = Triangle(Point(2, 0, 0), Point(2, 1, 1), 
                                Point(2, 1, 0), &brickTexture, 0, 1, 0, 0, 1, 1);
         triangleList[1] = t2;
+        Triangle t3 = Triangle(Point(2, -2, 0), Point(2, -2, 1),
+                               Point(3, -2, 0), &brickTexture, 0, 1, 1, 0, 0, 1);
+        triangleList[2] = t3;
+        Triangle t4 = Triangle(Point(2, -2, 1), Point(3, -2, 1), 
+                               Point(3, -2, 0), &brickTexture, 0, 1, 0, 0, 1, 1);
+        triangleList[3] = t4;
 
         // Matrix of the image that is going to be built
         vector<vector<RGB>> img(height, vector<RGB>(width));
