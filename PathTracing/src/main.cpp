@@ -32,6 +32,135 @@ const int DIM_SPHERE = 1;
 const int DIM_TRIANGLE = 4;
 const float EPSILON = 0.0000001;
 
+
+inline void intersectionRayPlane(const Point& origin, const Direction& rayDir, const int& row, 
+                                 const int& col, vector<vector<float>>& distances, vector<vector<RGB>>& img,
+                                 Plane planeList[])
+{
+    float denom, t;
+    // Plane intersection
+    for(int i = 0; i < DIM_PLANE; i++){
+        if(abs(denom = dot(rayDir, planeList[i].normal)) > EPSILON){
+            // Calculation of the distance between 
+            t = - (dot(origin, planeList[i].normal) + planeList[i].distance2origin) / denom;
+            // Control of dividing by zerp
+            if(t > 0.f){
+                if(t < distances[row][col]){
+                    // Its a near intersection and it is saved with the correct emission
+                    distances[row][col] = t;
+                    img[row][col] = planeList[i].emission;
+                }
+            }
+        }
+    }
+}
+
+
+inline void intersectionRaySphere(const Point& origin, Direction& rayDir, const int& row, const int& col,
+                                  const Point& pixelCenter, vector<vector<float>>& distances, 
+                                  vector<vector<RGB>>& img, Sphere sphereList[])
+{
+    Direction oc;
+    float t, a, b, c, discriminant;
+    // Sphere intersection
+    for(int i = 0; i < DIM_SPHERE; i++){
+        oc = origin - sphereList[i].center;
+        rayDir = pixelCenter - origin;
+        // Calculation of the coefficients to resolve a second grade equation
+        a = dot(rayDir, rayDir);
+        b = 2.f * dot(oc, rayDir);
+        c = dot(oc, oc) - (sphereList[i].radius * sphereList[i].radius);
+        discriminant = b * b - 4 * a * c;
+        if (discriminant >= 0.f){
+            t = (-b -sqrt(discriminant)) / 2.f * a;
+            // Control of dividing by zero
+            if(t > 0.f){
+                if(t < distances[row][col]){
+                   // Its a near intersection and it is saved with the correct emission
+                    distances[row][col] = t;
+                   img[row][col] = sphereList[i].emission;
+                }
+            }
+        }
+    }
+}
+
+
+inline void calculateBaricentricCordinates(const Point& origin, const Direction& rayDir, const float& t,const int& i, 
+                                           const int& texH, const int & texW, int& rowTex, int& colTex,
+                                           Triangle triangleList[])
+{
+    Point contactPoint, bary;
+    float area0uv, areaPuv, areaPv0, x, y;
+    contactPoint = origin + rayDir * t;
+
+    // The area of a triangle is 
+    area0uv = dot(triangleList[i].normal, cross((triangleList[i].pu - triangleList[i].p0), 
+                 (triangleList[i].pv - triangleList[i].p0)));
+    areaPuv = dot(triangleList[i].normal, cross((triangleList[i].pu - contactPoint), 
+                 (triangleList[i].pv - contactPoint)));
+    areaPv0 = dot(triangleList[i].normal, cross((triangleList[i].pv - contactPoint), 
+                 (triangleList[i].p0 - contactPoint)));
+
+    bary.c[0] = areaPuv / area0uv ; // alpha
+    bary.c[1] = areaPv0 / area0uv ; // beta
+    bary.c[2] = 1.0f - bary.c[0] - bary.c[1] ; // gamma
+
+    x = bary.c[0] * triangleList[i].s0 + bary.c[1] * triangleList[i].su + bary.c[2] * triangleList[i].sv;
+    y = bary.c[0] * triangleList[i].t0 + bary.c[1] * triangleList[i].tu + bary.c[2] * triangleList[i].tv;
+
+    rowTex = int((texH * (1.f - y)));
+    colTex = int(texW * x);
+}
+
+
+inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction& rayDir, const int& row, const int& col,
+                                    const int& texH, const int& texW, const Point& pixelCenter, 
+                                    vector<vector<float>>& distances, vector<vector<RGB>>& textureImg,
+                                    vector<vector<RGB>>& img, Triangle triangleList[])
+{
+    Direction h, s, q;
+    float a, b, c, d;
+    // Triangle intersection
+    for(int i = 0; i < DIM_TRIANGLE; i++){
+        h = cross(rayDir, triangleList[i].edge2);
+        a = dot(triangleList[i].edge1, h);
+        if (a > -EPSILON && a < EPSILON){
+            continue;    // This ray is parallel to this triangle.
+        }
+        b = 1.0/a;
+        s = origin - triangleList[i].p0;
+        c = b * dot(s, h);
+        if (c < 0.0 || c > 1.0){
+            continue;
+        }
+        q = cross(s, triangleList[i].edge1);
+        d = b * dot(rayDir, q);
+        if (d < 0.0 || c + d > 1.0){
+            continue;
+        }
+        // At this stage we can compute t to find out where the intersection point is on the line.
+        float t = b * dot(triangleList[i].edge2, q);
+        if (t > EPSILON && t < 1/EPSILON) // ray intersection
+        {
+            if(t < distances[row][col]){
+                // Its a near intersection and it is saved with the correct emission
+                if(triangleList[i].texture == nullptr){
+                    distances[row][col] = t;
+                    img[row][col] = triangleList[i].emission;
+                }
+                else{
+                    int rowTex, colTex;
+                    calculateBaricentricCordinates(origin, rayDir, t, i, texH, texW, rowTex, colTex, triangleList);
+                    img[row][col] = textureImg[rowTex][colTex]; 
+                }
+            }
+        }
+    }
+}
+
+
+
 // http://viclw17.github.io/2018/07/16/raytracing-ray-sphere-intersection/
 
 // https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
@@ -49,7 +178,6 @@ int main(int argc, char* argv[]){
     else {
         // Correct
         int raysPerPixel = atoi(argv[1]);
-        cout << "Number of rays per pixel " << raysPerPixel << endl;
 
         // Definition of the vectors of the space with the origin point
         // Direction d_i = Direction(0, 0, -1);
@@ -81,13 +209,11 @@ int main(int argc, char* argv[]){
             pixelSize = mod(leftPP) / (width / 2.f);
         }
 
-
+        // Load of the file which contains the texture format
         Image brickTexture = loadImagePPM("textures/brick_wall.ppm");
         vector<vector<RGB>> textureImg = brickTexture.getImg();
         int textureH = brickTexture.getHeight();
         int textureW = brickTexture.getWidth();
-
-
 
         // Vectors with the planes and spheres represented in the scene
         Sphere sphereList[DIM_SPHERE];
@@ -132,11 +258,8 @@ int main(int argc, char* argv[]){
         Point upperLeftCorner = origin + d_k + leftPP + upPP;
         Point pixelCenter;
         float pixelOffset = pixelSize / 2.f;
-        Direction rayDir, oc, h, s, q;
-        float denom, t, a, b, c, d, discriminant, x, y;
-        Point contactPoint;
+        Direction rayDir;
         Point bary;
-        float area0uv, areaPuv, areaPv0;
 
         // Loop that calculates for each pixel the thrown ray and the intersections
         // between it and the spheres and planes stored in the scene
@@ -153,93 +276,15 @@ int main(int argc, char* argv[]){
                 //For each pixel the starting distance is the biggest value and it is going reduced
                 distances[row][col] = FLT_MAX;
 
-                // Plane intersection
-                for(int i = 0; i < DIM_PLANE; i++){
-                   if(abs(denom = dot(rayDir, planeList[i].normal)) > EPSILON){
-                        // Calculation of the distance between 
-                        t = - (dot(origin, planeList[i].normal) + planeList[i].distance2origin) / denom;
-                        // Control of dividing by zerp
-                        if(t > 0.f){
-                            if(t < distances[row][col]){
-                                // Its a near intersection and it is saved with the correct emission
-                                distances[row][col] = t;
-                                img[row][col] = planeList[i].emission;
-                            }
-                        }
-                    }
-                }
+                // Calculation of intersections between ray and planes
+                intersectionRayPlane(origin, rayDir, row, col, distances, img, planeList);
+ 
+                // Calculation of intersections between ray and spheres
+                intersectionRaySphere(origin, rayDir, row, col, pixelCenter, distances, img, sphereList);
 
-                // Sphere intersection
-                for(int i = 0; i < DIM_SPHERE; i++){
-                    oc = origin - sphereList[i].center;
-                    rayDir = pixelCenter - origin;
-                    // Calculation of the coefficients to resolve a second grade equation
-                    a = dot(rayDir, rayDir);
-                    b = 2.f * dot(oc, rayDir);
-                    c = dot(oc, oc) - (sphereList[i].radius * sphereList[i].radius);
-                    discriminant = b * b - 4 * a * c;
-                    if (discriminant >= 0.f){
-                          t = (-b -sqrt(discriminant)) / 2.f * a;
-                          // Control of dividing by zero
-                          if(t > 0.f){
-                            if(t < distances[row][col]){
-                                // Its a near intersection and it is saved with the correct emission
-                                distances[row][col] = t;
-                                img[row][col] = sphereList[i].emission;
-                            }
-                        }
-                    }
-                }
-
-                // Triangle intersection
-                for(int i = 0; i < DIM_TRIANGLE; i++){
-                    h = cross(rayDir, triangleList[i].edge2);
-                    a = dot(triangleList[i].edge1, h);
-                    if (a > -EPSILON && a < EPSILON){
-                        continue;    // This ray is parallel to this triangle.
-                    }
-                    b = 1.0/a;
-                    s = origin - triangleList[i].p0;
-                    c = b * dot(s, h);
-                    if (c < 0.0 || c > 1.0){
-                        continue;
-                    }
-                    q = cross(s, triangleList[i].edge1);
-                    d = b * dot(rayDir, q);
-                    if (d < 0.0 || c + d > 1.0){
-                        continue;
-                    }
-                    // At this stage we can compute t to find out where the intersection point is on the line.
-                    float t = b * dot(triangleList[i].edge2, q);
-                    if (t > EPSILON && t < 1/EPSILON) // ray intersection
-                    {
-                        if(t < distances[row][col]){
-                            // Its a near intersection and it is saved with the correct emission
-                            if(triangleList[i].texture == nullptr){
-                                distances[row][col] = t;
-                                img[row][col] = triangleList[i].emission;
-                            }
-                            else{
-                                contactPoint = origin + rayDir * t;
-                                // The area of a triangle is 
-                                area0uv = dot( triangleList[i].normal, cross( (triangleList[i].pu - triangleList[i].p0), (triangleList[i].pv - triangleList[i].p0) )  ) ;
-                                areaPuv = dot( triangleList[i].normal, cross( (triangleList[i].pu - contactPoint), (triangleList[i].pv - contactPoint) )  ) ;
-                                areaPv0 = dot( triangleList[i].normal, cross( (triangleList[i].pv - contactPoint), (triangleList[i].p0 - contactPoint) )  ) ;
-
-                                bary.c[0] = areaPuv / area0uv ; // alpha
-                                bary.c[1] = areaPv0 / area0uv ; // beta
-                                bary.c[2] = 1.0f - bary.c[0] - bary.c[1] ; // gamma
-
-                                x = bary.c[0]*triangleList[i].s0 + bary.c[1]*triangleList[i].su + bary.c[2]*triangleList[i].sv;
-                                y = bary.c[0]*triangleList[i].t0 + bary.c[1]*triangleList[i].tu + bary.c[2]*triangleList[i].tv;
-                                img[row][col] = textureImg[(int)(textureH*(1.f - y))][(int)(textureW*x)];
-                                
-                            }
-                        }
-                    }
-                }
-
-
+                // Calculation of intersections between ray and triangles
+                intersectionRayTriangle(origin, bary, rayDir, row, col, textureH, textureW, pixelCenter, 
+                                        distances, textureImg, img, triangleList);
             }
         }
         // Creation of the image and saving in a ppm format file
