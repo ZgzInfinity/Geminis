@@ -11,8 +11,8 @@
 
 
 /*
-  * Sphere.cpp implementation file of Sphere module
-  */
+ * Sphere.cpp implementation file of Sphere module
+ */
 
 
 #include "../include/Sphere.h"

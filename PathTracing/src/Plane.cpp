@@ -10,10 +10,12 @@
 
 
 /*
-  * Plane.cpp implementation file of Plane module
-  */
+ * Plane.cpp implementation file of Plane module
+ */
 
+#include <vector>
 #include "../include/Plane.h"
+#include "../include/Point.h"
 
 
 /**
@@ -35,3 +37,5 @@ Plane::Plane(const Direction _normal, const float _distance2origin, const RGB _e
     distance2origin = _distance2origin;
     emission = _emission;
 }
+
+

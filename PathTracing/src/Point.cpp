@@ -10,8 +10,8 @@
 
 
 /*
-  * Point.cpp implementation file of Point module
-  */
+ * Point.cpp implementation file of Point module
+ */
 
  
 #include "../include/Point.h"
