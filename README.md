@@ -9,6 +9,7 @@ Theme | End date| Status
 ------| --------------------| ------
 Geometry |14-10-2019 | ![tic_correcto](https://i.ibb.co/48JQg0R/tic-1.png)
 Imaging  |29-10-2019 | ![tic_correcto](https://i.ibb.co/48JQg0R/tic-1.png)
+Ray Tracing |15-11-2019 |![tic_correcto](https://i.ibb.co/48JQg0R/tic-1.png)
 
 # Authors
 
