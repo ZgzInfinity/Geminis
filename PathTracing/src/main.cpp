@@ -54,7 +54,7 @@ int main(int argc, char* argv[]){
         //Direction d_k = Direction(1, 0, 0);
         Direction d_k = Direction(0, 0, -1);
         //Point origin = Point(-1.5, 2, 2);
-        Point origin = Point(2, 1, 5);
+        Point origin = Point(0, 0, 5);
 
         // Creation of the base
         // Matrix4 camera = Matrix4::changeBase(d_i, d_j, d_k, origin);

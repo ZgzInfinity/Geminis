@@ -133,8 +133,8 @@ inline void calculateBaricentricCordinates(const Point& origin, const Direction&
     y = bary.c[0] * triangleList[i].t0 + bary.c[1] * triangleList[i].tu + bary.c[2] * triangleList[i].tv;
 
     // Coordinates in the texture image
-    rowTex = int((texH * (1.f - y)));
-    colTex = int(texW * x);
+    rowTex = int(((texH - 1) * (1.f - y)));
+    colTex = int((texW - 1) * x);
 }
 
 
@@ -165,7 +165,6 @@ inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction&
     float a, b, c, d;
     // Triangle intersection
     for(int i = 0; i < DIM_TRIANGLE; i++){
-        
         h = cross(rayDir, triangleList[i].edge2);
         a = dot(triangleList[i].edge1, h);
         if (a > -LIMIT && a < LIMIT){
@@ -185,10 +184,10 @@ inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction&
         // At this stage we can compute t to find out where the intersection point is on the line.
         float t = b * dot(triangleList[i].edge2, q);
 
-        
         if (t > LIMIT && t < 1 / LIMIT) // ray intersection
         {
             if(t < distances[row][col]){
+                //cout << "op" << i << endl;
                 // Its a near intersection and it is saved with the correct emission
                 if(triangleList[i].texture == nullptr){
                     distances[row][col] = t;
@@ -197,7 +196,7 @@ inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction&
                 else{
                     int rowTex, colTex;
                     calculateBaricentricCordinates(origin, rayDir, t, i, texH, texW, rowTex, colTex, triangleList);
-                    img[row][col] = textureImg[rowTex][colTex]; 
+                    img[row][col] = textureImg[rowTex][colTex];
                 }
             }
         }
