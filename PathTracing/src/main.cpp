@@ -51,8 +51,10 @@ int main(int argc, char* argv[]){
         // Definition of the vectors of the space with the origin point
         // Direction d_i = Direction(0, 0, -1);
         // Direction d_j = Direction(0, 1, 0);
-        Direction d_k = Direction(1, 0, 0);
-        Point origin = Point(-1, 2, -2);
+        //Direction d_k = Direction(1, 0, 0);
+        Direction d_k = Direction(0, 0, -1);
+        //Point origin = Point(-1.5, 2, 2);
+        Point origin = Point(2, 1, 5);
 
         // Creation of the base
         // Matrix4 camera = Matrix4::changeBase(d_i, d_j, d_k, origin);
@@ -68,7 +70,8 @@ int main(int argc, char* argv[]){
         // Calculation of the components of the vectors that form the projection plane
         // The smallest vector is taken as a reference in function of the width and height values
         if (width > height){
-            leftPP = Direction(0, 0, - width / height);
+            // leftPP = Direction(0, 0, - width / height);
+            leftPP = Direction(- width / height, 0, 0);
             upPP = Direction(0, 1, 0);
             pixelSize = mod(upPP) / (height / 2.f);
         }
@@ -100,12 +103,17 @@ int main(int argc, char* argv[]){
         planeList[2] = p3;
         Plane p4 = Plane(Direction(0, 1, 0), 5, RGB(52, 73, 94));
         planeList[3] = p4;
-        Plane p5 = Plane(Direction(-1, 0, 0), 7, RGB(192, 57, 43));
+        Plane p5 = Plane(Direction(-1, 0, 0), 20, RGB(192, 57, 43));
         planeList[4] = p5;
 
         // Definition of the spheres which are going to appear in the scene 
         Sphere s1 = Sphere(Point(3, 0, 0), 1 , RGB(241, 196, 15));
+        
+        Sphere s2 = Sphere(Point(5, 0, 0), 1 , RGB(74, 105, 189));
+        Sphere s3 = Sphere(Point(3, 1, 0), 0.5 , RGB(56, 173, 169));
         sphereList[0] = s1;
+        sphereList[1] = s2;
+        sphereList[2] = s3;
 
         // Definition of the triangles which are going to appear in the scene 
         Triangle t1 = Triangle(Point(2, -1, -1), Point(2, -1, 0), 
@@ -138,12 +146,19 @@ int main(int argc, char* argv[]){
         for(int row = 0; row < height; row++){
             for(int col = 0; col <width; col++){
                 // Calculation of the center of each pixel where the ray is going to be thrown
+                /*
                 pixelCenter = Point(upperLeftCorner.c[0],
                                     upperLeftCorner.c[1] - (row * pixelSize + pixelOffset),
                                     upperLeftCorner.c[2] + col * pixelSize + pixelOffset);
+                */
+                pixelCenter = Point(upperLeftCorner.c[0] + col * pixelSize + pixelOffset,
+                                    upperLeftCorner.c[1] - (row * pixelSize + pixelOffset),
+                                    upperLeftCorner.c[2]);
 
                 // Direction of the ray with an emission 
                 rayDir = pixelCenter - origin;
+                rayDir = rayDir / mod(rayDir);
+                //cout << rayDir.toString() << endl;
                 img[row][col] = RGB();
                 //For each pixel the starting distance is the biggest value and it is going reduced
                 distances[row][col] = FLT_MAX;

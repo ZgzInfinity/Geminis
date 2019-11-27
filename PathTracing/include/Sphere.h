@@ -24,7 +24,7 @@
 #include "../include/SharedOps.h"
 
 
-const int DIM_SPHERE = 1;
+const int DIM_SPHERE = 3;
 
 /*
  * Definition of data type Sphere
@@ -80,40 +80,21 @@ inline void intersectionRaySphere(const Point& origin, Direction& rayDir, const 
     float t, a, b, c, discriminant, t0, t1;
     // Sphere intersection
     for(int i = 0; i < DIM_SPHERE; i++){
-        // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection
         oc = origin - sphereList[i].center;
-        rayDir = pixelCenter - origin; // normalize rayDir?
         // Calculation of the coefficients to resolve a second grade equation
         a = dot(rayDir, rayDir);
         b = 2.f * dot(oc, rayDir);
         c = dot(oc, oc) - (sphereList[i].radius * sphereList[i].radius);
         discriminant = b * b - 4 * a * c;
-        if(discriminant < 0.f){
-            break;
-        }
-        else if (discriminant == 0.f) t0 = t1 = - 0.5 * b / a; 
-        else { 
-            float q = (b > 0.f) ? 
-                -0.5 * (b + sqrt(discriminant)) : 
-                -0.5 * (b - sqrt(discriminant)); 
-            t0 = q / a; 
-            t1 = c / q; 
-        } 
-        if (t0 > t1) std::swap(t0, t1); 
-
-        if (t0 < 0.f) { 
-            t0 = t1; // if t0 is negative, let's use t1 instead 
-            if (t0 < 0.f){
-                break; // both t0 and t1 are negative 
-            } 
-        } 
- 
-        t = t0;
-        if(t > 0.f){
-            if(t < distances[row][col]){
-                // Its a near intersection and it is saved with the correct emission
-                distances[row][col] = t;
-                img[row][col] = sphereList[i].emission;
+        if (discriminant >= 0.f){
+            t = (-b -sqrt(discriminant)) / 2.f * a;
+            // Control of dividing by zero
+            if(t > 0.f){
+                if(t < distances[row][col]){
+                    // Its a near intersection and it is saved with the correct emission
+                    distances[row][col] = t;
+                    img[row][col] = sphereList[i].emission;
+                }
             }
         }
     }

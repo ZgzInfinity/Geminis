@@ -165,6 +165,7 @@ inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction&
     float a, b, c, d;
     // Triangle intersection
     for(int i = 0; i < DIM_TRIANGLE; i++){
+        
         h = cross(rayDir, triangleList[i].edge2);
         a = dot(triangleList[i].edge1, h);
         if (a > -LIMIT && a < LIMIT){
@@ -183,6 +184,8 @@ inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction&
         }
         // At this stage we can compute t to find out where the intersection point is on the line.
         float t = b * dot(triangleList[i].edge2, q);
+
+        
         if (t > LIMIT && t < 1 / LIMIT) // ray intersection
         {
             if(t < distances[row][col]){
