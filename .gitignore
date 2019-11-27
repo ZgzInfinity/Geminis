@@ -1,15 +1,18 @@
 # exclude files inside bin folder
 Geometry/bin/*
 ToneMapping/bin/*
+RayTracing/bin/*
 PathTracing/bin/*
 
 # exclude files inside obj folder
 Geometry/obj/*
 ToneMapping/obj/*
+RayTracing/obj/*
 PathTracing/obj/*
 
 # exclude files inside media folder
 ToneMapping/media/*
+RayTracing/media/*
 PathTracing/media/*
 
 # exclude vscode configuration files

@@ -77,7 +77,7 @@ inline void intersectionRaySphere(const Point& origin, Direction& rayDir, const 
                                   vector<vector<RGB>>& img, Sphere sphereList[])
 {
     Direction oc;
-    float t, a, b, c, discriminant, t0, t1;
+    float t, a, b, c, discriminant;
     // Sphere intersection
     for(int i = 0; i < DIM_SPHERE; i++){
         oc = origin - sphereList[i].center;
