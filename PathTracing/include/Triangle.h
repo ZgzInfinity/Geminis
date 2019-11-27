@@ -49,6 +49,13 @@ struct Triangle {
     // Texture coordinates
     float s0, su, sv, t0, tu, tv;
 
+    // is it a light source?
+    bool emitsLight;
+
+    // Material properties
+    // Diffuse coefficient by RGB channel
+    float kdr, kdg, kdb;
+
 
 
     /**
@@ -67,6 +74,10 @@ struct Triangle {
      * @returns a Triangle type object
      */
     Triangle(const Point _p0, const Point _pu, const Point _pv, const RGB _emission);
+
+
+
+    Triangle(const Point _p0, const Point _pu, const Point _pv,  float _kdr, float _kdg, float _kdb);
 
 
 

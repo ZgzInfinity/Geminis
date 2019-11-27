@@ -36,6 +36,12 @@ struct Sphere {
     float radius;
     // Color emission ray
     RGB emission;
+    // is it a light source?
+    bool emitsLight;
+
+    // Material properties
+    // Diffuse coefficient by RGB channel
+    float kdr, kdg, kdb;
 
 
 
@@ -54,6 +60,9 @@ struct Sphere {
      * @returns a Sphere type object
      */
     Sphere(const Point _center, const float _radius, const RGB _emission);
+
+
+    Sphere(const Point _center, const float _radius, float _kdr, float _kdg, float _kdb);
     
 };
 

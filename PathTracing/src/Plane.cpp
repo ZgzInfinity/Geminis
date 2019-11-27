@@ -36,6 +36,14 @@ Plane::Plane(const Direction _normal, const float _distance2origin, const RGB _e
     normal = _normal;
     distance2origin = _distance2origin;
     emission = _emission;
+    emitsLight = true;
 }
 
-
+// Not emiting plane
+Plane::Plane(const Direction _normal, const float _distance2origin,
+             float _kdr, float _kdg, float _kdb){
+    normal = _normal;
+    distance2origin = _distance2origin;
+    kdr = _kdr; kdg = _kdg; kdb = _kdb;
+    emitsLight = false;
+}

@@ -39,8 +39,20 @@ Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv, const RGB 
   normal = cross(edge1, edge2);
   emission = _emission;
   texture = nullptr;
+  emitsLight = true;
 }
 
+
+Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv,
+                   float _kdr, float _kdg, float _kdb){
+  p0 = _p0; pu = _pu; pv = _pv;
+  edge1 = (_pu - _p0);
+  edge2 = (_pv - _p0);
+  normal = cross(edge1, edge2);
+  kdr = _kdr; kdg = _kdg; kdb = _kdb;
+  emitsLight = false;
+  texture = nullptr;
+}
 
 
 /**
@@ -66,4 +78,7 @@ Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv, Image* _te
   edge2 = (_pv - _p0);
   normal = cross(edge1, edge2);
   texture = _texture;
+  emitsLight = true;
 }
+
+
