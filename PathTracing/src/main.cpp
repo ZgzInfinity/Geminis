@@ -52,7 +52,7 @@ int main(int argc, char* argv[]){
         // Direction d_i = Direction(0, 0, -1);
         // Direction d_j = Direction(0, 1, 0);
         Direction d_k = Direction(1, 0, 0);
-        Point origin = Point(0, 0, 0);
+        Point origin = Point(-1, 2, -2);
 
         // Creation of the base
         // Matrix4 camera = Matrix4::changeBase(d_i, d_j, d_k, origin);
