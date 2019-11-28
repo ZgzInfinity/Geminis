@@ -37,6 +37,15 @@ Sphere::Sphere(const Point _center, const float _radius, const RGB _emission){
     center = _center;
     radius = _radius;
     emission = _emission;
+    emitsLight = true;
+}
+
+
+Sphere::Sphere(const Point _center, const float _radius, float _kdr, float _kdg, float _kdb){
+    center = _center;
+    radius = _radius;
+    kdr = _kdr; kdg = _kdg; kdb = _kdb;
+    emitsLight = false;
 }
 
 

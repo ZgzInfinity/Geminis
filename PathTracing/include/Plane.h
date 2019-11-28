@@ -36,6 +36,12 @@ struct Plane {
     float distance2origin;
     // Color emission ray
     RGB emission;
+    // is it a light source?
+    bool emitsLight;
+
+    // Material properties
+    // Diffuse coefficient by RGB channel
+    float kdr, kdg, kdb;
 
 
 
@@ -54,6 +60,9 @@ struct Plane {
      * @returns a Point type object
      */
     Plane(const Direction _normal, const float _distance2origin, const RGB _emission);
+
+
+    Plane(const Direction _normal, const float _distance2origin, float _kdr, float _kdg, float _kdb);
 
 };
 
