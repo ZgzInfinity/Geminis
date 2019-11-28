@@ -69,11 +69,12 @@ struct Plane {
  * @param distances is the matrix which stores de distances between the rays and the 
  *        pixels of the image
  * @param img is the matrix which contains the image 
- * @planeList is the list which stores all the planes in the scene
+ * @param planeList is the list which stores all the planes in the scene
+ * @param randomRR is the random value for russian roulette
  */
 inline void intersectionRayPlane(const Point& origin, const Direction& rayDir, const int& row, 
                                  const int& col, vector<vector<float>>& distances, vector<vector<RGB>>& img,
-                                 Plane planeList[])
+                                 Plane planeList[], float& randomRR)
 {
     float denom, t;
     // Plane intersection

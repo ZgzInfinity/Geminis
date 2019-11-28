@@ -104,6 +104,7 @@ struct Triangle {
  * @param rowTex is the row index in the texture image
  * @param colTex is the column index in the texture image
  * @param triangleList is the list which stores all the triangle in the scene
+ * @param randomRR is the random value for russian roulette
  */
 inline void calculateBaricentricCordinates(const Point& origin, const Direction& rayDir, const float& t,const int& i, 
                                            const int& texH, const int & texW, int& rowTex, int& colTex,
@@ -159,7 +160,7 @@ inline void calculateBaricentricCordinates(const Point& origin, const Direction&
 inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction& rayDir, const int& row, const int& col,
                                     const int& texH, const int& texW, const Point& pixelCenter, 
                                     vector<vector<float>>& distances, vector<vector<RGB>>& textureImg,
-                                    vector<vector<RGB>>& img, Triangle triangleList[])
+                                    vector<vector<RGB>>& img, Triangle triangleList[], float& randomRR)
 {
     Direction h, s, q;
     float a, b, c, d;

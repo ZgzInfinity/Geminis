@@ -16,6 +16,8 @@
 #include <list>
 #include <iomanip>
 #include <cfloat>
+#include <random>
+#include <chrono>
 #include "../include/Matrix4.h"
 #include "../include/SharedOps.h"
 #include "../include/Plane.h"
@@ -58,6 +60,12 @@ int main(int argc, char* argv[]){
 
         // Creation of the base
         // Matrix4 camera = Matrix4::changeBase(d_i, d_j, d_k, origin);
+
+        // Generation random numbers
+        mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+
+        // Number of rays per pixel
+        int PPP = atoi(argv[1]);
 
         // Image resolution
         float width = atof(argv[2]);
@@ -136,42 +144,59 @@ int main(int argc, char* argv[]){
 
         // Calculation of the upper left corner of the proyection plane 
         Point upperLeftCorner = origin + d_k + leftPP + upPP;
-        Point pixelCenter;
+        Point pixelPoint;
         float pixelOffset = pixelSize / 2.f;
         Direction rayDir;
         Point bary;
+
+        // Aleatory number for the rays and russian roulette
+        float random1, random2, randomRR;
+
+        // S
+        float acumR, acumG, acumB;
+
 
         // Loop that calculates for each pixel the thrown ray and the intersections
         // between it and the spheres and planes stored in the scene
         for(int row = 0; row < height; row++){
             for(int col = 0; col <width; col++){
-                // Calculation of the center of each pixel where the ray is going to be thrown
-                /*
-                pixelCenter = Point(upperLeftCorner.c[0],
-                                    upperLeftCorner.c[1] - (row * pixelSize + pixelOffset),
-                                    upperLeftCorner.c[2] + col * pixelSize + pixelOffset);
-                */
-                pixelCenter = Point(upperLeftCorner.c[0] + col * pixelSize + pixelOffset,
-                                    upperLeftCorner.c[1] - (row * pixelSize + pixelOffset),
-                                    upperLeftCorner.c[2]);
+                // Inicialization
+                acumR = 0, acumG = 0, acumB = 0;
+                for (int i = 0; i < PPP; i++){
 
-                // Direction of the ray with an emission 
-                rayDir = pixelCenter - origin;
-                rayDir = rayDir / mod(rayDir);
-                //cout << rayDir.toString() << endl;
-                img[row][col] = RGB();
-                //For each pixel the starting distance is the biggest value and it is going reduced
-                distances[row][col] = FLT_MAX;
+                    /*
+                    pixelCenter = Point(upperLeftCorner.c[0],
+                                        upperLeftCorner.c[1] - (row * pixelSize + pixelOffset),
+                                        upperLeftCorner.c[2] + col * pixelSize + pixelOffset);
+                    */
 
-                // Calculation of intersections between ray and planes
-                intersectionRayPlane(origin, rayDir, row, col, distances, img, planeList);
- 
-                // Calculation of intersections between ray and spheres
-                intersectionRaySphere(origin, rayDir, row, col, pixelCenter, distances, img, sphereList);
+                    // Generation of the random values for the path direction 
+                    random1 = uniform_real_distribution<float>(0, 1)(rng);
+                    random2 = uniform_real_distribution<float>(0, 1)(rng);
 
-                // Calculation of intersections between ray and triangles
-                intersectionRayTriangle(origin, bary, rayDir, row, col, textureH, textureW, pixelCenter, 
-                                        distances, textureImg, img, triangleList);
+                    // Calculation of the center of each pixel where the ray is going to be thrown
+                    pixelPoint = Point(upperLeftCorner.c[0] + col * pixelSize + (pixelSize * random1),
+                                        upperLeftCorner.c[1] - (row * pixelSize + (pixelSize * random2)),
+                                        upperLeftCorner.c[2]);
+
+                    // Direction of the ray with an emission 
+                    rayDir = pixelPoint - origin;
+                    rayDir = rayDir / mod(rayDir);
+                    //cout << rayDir.toString() << endl;
+                    img[row][col] = RGB();
+                    //For each pixel the starting distance is the biggest value and it is going reduced
+                    distances[row][col] = FLT_MAX;
+
+                    // Calculation of intersections between ray and planes
+                    intersectionRayPlane(origin, rayDir, row, col, distances, img, planeList, randomRR);
+    
+                    // Calculation of intersections between ray and spheres
+                    intersectionRaySphere(origin, rayDir, row, col, pixelPoint, distances, img, sphereList, randomRR);
+
+                    // Calculation of intersections between ray and triangles
+                    intersectionRayTriangle(origin, bary, rayDir, row, col, textureH, textureW, pixelPoint, 
+                                            distances, textureImg, img, triangleList, randomRR);
+                }
             }
         }
         // Creation of the image and saving in a ppm format file

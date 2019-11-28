@@ -70,11 +70,12 @@ struct Sphere {
  * @param distances is the matrix which stores de distances between the rays and the 
  *        pixels of the image
  * @param img is the matrix which contains the image 
- * @sphereList is the list which stores all the spheres in the scene
+ * @param sphereList is the list which stores all the spheres in the scene
+ * @param randomRR is the random value for russian roulette
  */
 inline void intersectionRaySphere(const Point& origin, Direction& rayDir, const int& row, const int& col,
                                   const Point& pixelCenter, vector<vector<float>>& distances, 
-                                  vector<vector<RGB>>& img, Sphere sphereList[])
+                                  vector<vector<RGB>>& img, Sphere sphereList[], float& randomRR)
 {
     Direction oc;
     float t, a, b, c, discriminant;
