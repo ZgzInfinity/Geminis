@@ -155,6 +155,13 @@ int main(int argc, char* argv[]){
         // S
         float acumR, acumG, acumB;
 
+        // Nearest objects found in path intersection (0 is no intersection)
+        Plane nearestPlane; // Object code = 1
+        Sphere nearestSphere; // Object code = 2
+        Triangle nearestTriangle; // Object code = 3
+        int nearestObject; // Code of the nearest object (0, 1, 2 or 3)
+
+
 
         // Loop that calculates for each pixel the thrown ray and the intersections
         // between it and the spheres and planes stored in the scene
@@ -163,14 +170,13 @@ int main(int argc, char* argv[]){
                 // Inicialization
                 acumR = 0, acumG = 0, acumB = 0;
                 for (int i = 0; i < PPP; i++){
-
                     /*
                     pixelCenter = Point(upperLeftCorner.c[0],
                                         upperLeftCorner.c[1] - (row * pixelSize + pixelOffset),
                                         upperLeftCorner.c[2] + col * pixelSize + pixelOffset);
                     */
 
-                    // Generation of the random values for the path direction 
+                    // Generation of the random values for the path direction inside pixel box
                     random1 = uniform_real_distribution<float>(0, 1)(rng);
                     random2 = uniform_real_distribution<float>(0, 1)(rng);
 
@@ -187,15 +193,36 @@ int main(int argc, char* argv[]){
                     //For each pixel the starting distance is the biggest value and it is going reduced
                     distances[row][col] = FLT_MAX;
 
+                    // Initialize nearest object code to 0 (no intersection)
+                    nearestObject = 0;
+
                     // Calculation of intersections between ray and planes
-                    intersectionRayPlane(origin, rayDir, row, col, distances, img, planeList, randomRR);
+                    intersectionRayPlane(origin, rayDir, row, col, distances, img, planeList, randomRR, nearestPlane, nearestObject);
     
                     // Calculation of intersections between ray and spheres
-                    intersectionRaySphere(origin, rayDir, row, col, pixelPoint, distances, img, sphereList, randomRR);
+                    intersectionRaySphere(origin, rayDir, row, col, pixelPoint, distances, img, sphereList, randomRR, nearestSphere, nearestObject);
 
                     // Calculation of intersections between ray and triangles
                     intersectionRayTriangle(origin, bary, rayDir, row, col, textureH, textureW, pixelPoint, 
-                                            distances, textureImg, img, triangleList, randomRR);
+                                            distances, textureImg, img, triangleList, randomRR, nearestTriangle, nearestObject);
+
+                    switch (nearestObject)
+                    {
+                        case 0:
+                            // No intersection
+                            break;
+                        case 1:
+                            // Nearest intersection: plane
+                            
+                            break;
+                        case 2:
+                            // Nearest intersection: sphere
+                            
+                            break;
+                        case 3:
+                            // Nearest intersection: triangle
+                            
+                    }
                 }
             }
         }

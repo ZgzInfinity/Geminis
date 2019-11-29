@@ -166,12 +166,16 @@ inline void calculateBaricentricCordinates(const Point& origin, const Direction&
  *        pixels of the image
  * @param textureImg is a matrix that contains the texture image
  * @param img is the matrix which contains the image 
- * @triangleList is the list which stores all the triangles in the scene
+ * @param triangleList is the list which stores all the triangles in the scene
+ * @param randomRR // TODO
+ * @param nearestTriangle is the nearest object found in path intersection
+ * @param nearestObject is the code for the nearest object found in path intersection
  */
 inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction& rayDir, const int& row, const int& col,
                                     const int& texH, const int& texW, const Point& pixelCenter, 
                                     vector<vector<float>>& distances, vector<vector<RGB>>& textureImg,
-                                    vector<vector<RGB>>& img, Triangle triangleList[], float& randomRR)
+                                    vector<vector<RGB>>& img, Triangle triangleList[], float& randomRR,
+                                    Triangle& nearestTriangle, int& nearestObject)
 {
     Direction h, s, q;
     float a, b, c, d;
@@ -210,6 +214,10 @@ inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction&
                     calculateBaricentricCordinates(origin, rayDir, t, i, texH, texW, rowTex, colTex, triangleList);
                     img[row][col] = textureImg[rowTex][colTex];
                 }
+
+                // Update nearest object
+                nearestTriangle = triangleList[i];
+                nearestObject =  3;
             }
         }
     }

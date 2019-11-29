@@ -80,10 +80,12 @@ struct Plane {
  * @param img is the matrix which contains the image 
  * @param planeList is the list which stores all the planes in the scene
  * @param randomRR is the random value for russian roulette
+ * @param nearestPlane is the nearest object found in path intersection
+ * @param nearestObject is the code for the nearest object found in path intersection
  */
 inline void intersectionRayPlane(const Point& origin, const Direction& rayDir, const int& row, 
                                  const int& col, vector<vector<float>>& distances, vector<vector<RGB>>& img,
-                                 Plane planeList[], float& randomRR)
+                                 Plane planeList[], float& randomRR, Plane& nearestPlane, int& nearestObject)
 {
     float denom, t;
     // Plane intersection
@@ -98,6 +100,10 @@ inline void intersectionRayPlane(const Point& origin, const Direction& rayDir, c
                     distances[row][col] = t;
                     // Stores the color of the ray
                     img[row][col] = planeList[i].emission;
+
+                    // Update nearest object
+                    nearestPlane = planeList[i];
+                    nearestObject =  1;
                 }
             }
         }

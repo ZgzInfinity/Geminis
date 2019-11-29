@@ -81,10 +81,13 @@ struct Sphere {
  * @param img is the matrix which contains the image 
  * @param sphereList is the list which stores all the spheres in the scene
  * @param randomRR is the random value for russian roulette
+ * @param nearestSphere is the nearest object found in path intersection
+ * @param nearestObject is the code for the nearest object found in path intersection
  */
 inline void intersectionRaySphere(const Point& origin, Direction& rayDir, const int& row, const int& col,
                                   const Point& pixelCenter, vector<vector<float>>& distances, 
-                                  vector<vector<RGB>>& img, Sphere sphereList[], float& randomRR)
+                                  vector<vector<RGB>>& img, Sphere sphereList[], float& randomRR,
+                                  Sphere& nearestSphere, int& nearestObject)
 {
     Direction oc;
     float t, a, b, c, discriminant;
@@ -104,6 +107,10 @@ inline void intersectionRaySphere(const Point& origin, Direction& rayDir, const 
                     // Its a near intersection and it is saved with the correct emission
                     distances[row][col] = t;
                     img[row][col] = sphereList[i].emission;
+
+                    // Update nearest object
+                    nearestSphere = sphereList[i];
+                    nearestObject =  2;
                 }
             }
         }
