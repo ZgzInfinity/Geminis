@@ -45,5 +45,10 @@ Plane::Plane(const Direction _normal, const float _distance2origin,
     normal = _normal;
     distance2origin = _distance2origin;
     kdr = _kdr; kdg = _kdg; kdb = _kdb;
+    // Store maximun kd in maxkd
+    kdr > kdg ? maxkd = kdr : maxkd = kdg;
+    if(maxkd < kdb){
+    maxkd = kdb;
+    }
     emitsLight = false;
 }

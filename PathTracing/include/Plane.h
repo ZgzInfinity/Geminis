@@ -41,7 +41,7 @@ struct Plane {
 
     // Material properties
     // Diffuse coefficient by RGB channel
-    float kdr, kdg, kdb;
+    float kdr, kdg, kdb, maxkd;
 
 
 
@@ -85,7 +85,7 @@ struct Plane {
  */
 inline void intersectionRayPlane(const Point& origin, const Direction& rayDir, const int& row, 
                                  const int& col, vector<vector<float>>& distances, vector<vector<RGB>>& img,
-                                 Plane planeList[], float& randomRR, Plane& nearestPlane, int& nearestObject)
+                                 Plane planeList[], Plane& nearestPlane, int& nearestObject)
 {
     float denom, t;
     // Plane intersection

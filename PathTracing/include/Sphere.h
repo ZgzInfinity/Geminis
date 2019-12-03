@@ -41,7 +41,7 @@ struct Sphere {
 
     // Material properties
     // Diffuse coefficient by RGB channel
-    float kdr, kdg, kdb;
+    float kdr, kdg, kdb, maxkd;
 
 
 
@@ -86,7 +86,7 @@ struct Sphere {
  */
 inline void intersectionRaySphere(const Point& origin, Direction& rayDir, const int& row, const int& col,
                                   const Point& pixelCenter, vector<vector<float>>& distances, 
-                                  vector<vector<RGB>>& img, Sphere sphereList[], float& randomRR,
+                                  vector<vector<RGB>>& img, Sphere sphereList[],
                                   Sphere& nearestSphere, int& nearestObject)
 {
     Direction oc;

@@ -50,6 +50,11 @@ Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv,
   edge2 = (_pv - _p0);
   normal = cross(edge1, edge2);
   kdr = _kdr; kdg = _kdg; kdb = _kdb;
+  // Store maximun kd in maxkd
+  kdr > kdg ? maxkd = kdr : maxkd = kdg;
+  if(maxkd < kdb){
+    maxkd = kdb;
+  }
   emitsLight = false;
   texture = nullptr;
 }

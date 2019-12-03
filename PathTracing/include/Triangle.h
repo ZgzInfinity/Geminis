@@ -54,7 +54,7 @@ struct Triangle {
 
     // Material properties
     // Diffuse coefficient by RGB channel
-    float kdr, kdg, kdb;
+    float kdr, kdg, kdb, maxkd;
 
 
 
@@ -174,7 +174,7 @@ inline void calculateBaricentricCordinates(const Point& origin, const Direction&
 inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction& rayDir, const int& row, const int& col,
                                     const int& texH, const int& texW, const Point& pixelCenter, 
                                     vector<vector<float>>& distances, vector<vector<RGB>>& textureImg,
-                                    vector<vector<RGB>>& img, Triangle triangleList[], float& randomRR,
+                                    vector<vector<RGB>>& img, Triangle triangleList[],
                                     Triangle& nearestTriangle, int& nearestObject)
 {
     Direction h, s, q;

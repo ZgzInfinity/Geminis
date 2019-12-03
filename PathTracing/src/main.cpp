@@ -155,6 +155,9 @@ int main(int argc, char* argv[]){
         // S
         float acumR, acumG, acumB;
 
+        // Upper bounds for russian roullete probabilities
+        float diffuseUB, specularUB, perfectSpecularUB, refractionUB;
+
         // Nearest objects found in path intersection (0 is no intersection)
         Plane nearestPlane; // Object code = 1
         Sphere nearestSphere; // Object code = 2
@@ -197,14 +200,14 @@ int main(int argc, char* argv[]){
                     nearestObject = 0;
 
                     // Calculation of intersections between ray and planes
-                    intersectionRayPlane(origin, rayDir, row, col, distances, img, planeList, randomRR, nearestPlane, nearestObject);
+                    intersectionRayPlane(origin, rayDir, row, col, distances, img, planeList, nearestPlane, nearestObject);
     
                     // Calculation of intersections between ray and spheres
-                    intersectionRaySphere(origin, rayDir, row, col, pixelPoint, distances, img, sphereList, randomRR, nearestSphere, nearestObject);
+                    intersectionRaySphere(origin, rayDir, row, col, pixelPoint, distances, img, sphereList, nearestSphere, nearestObject);
 
                     // Calculation of intersections between ray and triangles
                     intersectionRayTriangle(origin, bary, rayDir, row, col, textureH, textureW, pixelPoint, 
-                                            distances, textureImg, img, triangleList, randomRR, nearestTriangle, nearestObject);
+                                            distances, textureImg, img, triangleList, nearestTriangle, nearestObject);
 
                     switch (nearestObject)
                     {
@@ -213,16 +216,47 @@ int main(int argc, char* argv[]){
                             break;
                         case 1:
                             // Nearest intersection: plane
+                            diffuseUB = nearestPlane.maxkd;
+                            // specularUB = diffuseUB + nearestPlane.maxks;
+                            // perfectSpecularUB = specularUB + nearestPlane.maxkps;
+                            // refractionUB = perfectSpecularUB + nearestPlane.maxkrf;
                             
                             break;
                         case 2:
                             // Nearest intersection: sphere
+                            diffuseUB = nearestSphere.maxkd;
+                            // specularUB = diffuseUB + nearestSphere.maxks;
+                            // perfectSpecularUB = specularUB + nearestSphere.maxkps;
+                            // refractionUB = perfectSpecularUB + nearestSphere.maxkrf;
                             
                             break;
                         case 3:
                             // Nearest intersection: triangle
-                            
+                            diffuseUB = nearestTriangle.maxkd;
+                            // specularUB = diffuseUB + nearestTriangle.maxks;
+                            // perfectSpecularUB = specularUB + nearestTriangle.maxkps;
+                            // refractionUB = perfectSpecularUB + nearestTriangle.maxkrf;     
                     }
+                    randomRR = uniform_real_distribution<float>(0, 1)(rng);
+                    if(randomRR <= diffuseUB){
+                        // Russian roulette: diffuse
+                        
+                    }
+                    /*
+                    else if(randomRR <= specularUB){
+                        // Russian roulette: specular
+
+                    }
+                    else if(randomRR <= perfectSpecularUB){
+                        // Russian roulette: perfect specular
+
+                    }
+                    else if(randomRR <= refractionUB){
+                        // Russian roulette: refraction
+
+                    }
+                    */
+                    
                 }
             }
         }

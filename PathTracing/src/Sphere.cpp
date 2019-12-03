@@ -45,6 +45,11 @@ Sphere::Sphere(const Point _center, const float _radius, float _kdr, float _kdg,
     center = _center;
     radius = _radius;
     kdr = _kdr; kdg = _kdg; kdb = _kdb;
+    // Store maximun kd in maxkd
+    kdr > kdg ? maxkd = kdr : maxkd = kdg;
+    if(maxkd < kdb){
+    maxkd = kdb;
+    }
     emitsLight = false;
 }
 
