@@ -163,6 +163,7 @@ int main(int argc, char* argv[]){
         Sphere nearestSphere; // Object code = 2
         Triangle nearestTriangle; // Object code = 3
         int nearestObject; // Code of the nearest object (0, 1, 2 or 3)
+        Direction x, y, normal; // Intersected object base directions (unitary)
 
 
 
@@ -221,6 +222,11 @@ int main(int argc, char* argv[]){
                             // perfectSpecularUB = specularUB + nearestPlane.maxkps;
                             // refractionUB = perfectSpecularUB + nearestPlane.maxkrf;
                             
+                            normal = nearestPlane.normal / mod(nearestPlane.normal);
+                            // Get tangent to plane using arbitraty unitary direction
+                            x = cross(normal, Direction(1, 0, 0));
+                            y = cross(x, normal);
+                            
                             break;
                         case 2:
                             // Nearest intersection: sphere
@@ -228,14 +234,19 @@ int main(int argc, char* argv[]){
                             // specularUB = diffuseUB + nearestSphere.maxks;
                             // perfectSpecularUB = specularUB + nearestSphere.maxkps;
                             // refractionUB = perfectSpecularUB + nearestSphere.maxkrf;
-                            
+                            normal = (origin - nearestSphere.center) / mod(origin - nearestSphere.center);
+                            x = cross(normal, Direction(1, 0, 0));
+                            y = cross(x, normal);
                             break;
                         case 3:
                             // Nearest intersection: triangle
                             diffuseUB = nearestTriangle.maxkd;
                             // specularUB = diffuseUB + nearestTriangle.maxks;
                             // perfectSpecularUB = specularUB + nearestTriangle.maxkps;
-                            // refractionUB = perfectSpecularUB + nearestTriangle.maxkrf;     
+                            // refractionUB = perfectSpecularUB + nearestTriangle.maxkrf; 
+                            normal = nearestTriangle.normal / mod(nearestTriangle.normal);
+                            x = nearestTriangle.edge1 / mod(nearestTriangle.edge1);
+                            y = cross(x, normal);
                     }
                     randomRR = uniform_real_distribution<float>(0, 1)(rng);
                     if(randomRR <= diffuseUB){
