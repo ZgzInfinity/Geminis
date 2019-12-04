@@ -144,7 +144,7 @@ int main(int argc, char* argv[]){
         Point upperLeftCorner = origin + d_k + leftPP + upPP;
         Point pixelPoint;
         float pixelOffset = pixelSize / 2.f;
-        Direction rayDir;
+        Direction rayDir, oldRayDir;
         Point bary;
 
         // Aleatory number for the rays and russian roulette
@@ -218,6 +218,9 @@ int main(int argc, char* argv[]){
                         // Calculation of intersections between ray and triangles
                         intersectionRayTriangle(origin, bary, rayDir, textureH, textureW, pixelPoint, 
                                                 minDistance, textureImg, img, triangleList, nearestTriangle, nearestObject);
+                        
+                        // Save rayDir for next origin point
+                        oldRayDir = rayDir;
 
                         switch (nearestObject){
                         case 0:
@@ -259,6 +262,7 @@ int main(int argc, char* argv[]){
                                     float y_ = sinTheta * sinf(phi);
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, 1);
+                                    rayDir = rayDir / mod(rayDir);
                                     pgeoFactor =  abs(dot(normal, rayDir)) * 2 * M_PI;
                                     productR *= (nearestPlane.kdr / M_PI) * pgeoFactor;
                                     productG *= (nearestPlane.kdg / M_PI) * pgeoFactor;
@@ -318,10 +322,11 @@ int main(int argc, char* argv[]){
                                     float y_ = sinTheta * sinf(phi);
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, 1);
+                                    rayDir = rayDir / mod(rayDir);
                                     pgeoFactor =  abs(dot(normal, rayDir)) * 2 * M_PI;
-                                    productR *= (nearestPlane.kdr / M_PI) * pgeoFactor;
-                                    productG *= (nearestPlane.kdg / M_PI) * pgeoFactor;
-                                    productB *= (nearestPlane.kdb / M_PI) * pgeoFactor;
+                                    productR *= (nearestSphere.kdr / M_PI) * pgeoFactor;
+                                    productG *= (nearestSphere.kdg / M_PI) * pgeoFactor;
+                                    productB *= (nearestSphere.kdb / M_PI) * pgeoFactor;
                                 }
                                 /*
                                 else if(randomRR <= specularUB){
@@ -377,10 +382,11 @@ int main(int argc, char* argv[]){
                                     float y_ = sinTheta * sinf(phi);
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, 1);
+                                    rayDir = rayDir / mod(rayDir);
                                     pgeoFactor =  abs(dot(normal, rayDir)) * 2 * M_PI;
-                                    productR *= (nearestPlane.kdr / M_PI) * pgeoFactor;
-                                    productG *= (nearestPlane.kdg / M_PI) * pgeoFactor;
-                                    productB *= (nearestPlane.kdb / M_PI) * pgeoFactor;
+                                    productR *= (nearestTriangle.kdr / M_PI) * pgeoFactor;
+                                    productG *= (nearestTriangle.kdg / M_PI) * pgeoFactor;
+                                    productB *= (nearestTriangle.kdb / M_PI) * pgeoFactor;
                                 }
                                 /*
                                 else if(randomRR <= specularUB){
@@ -405,6 +411,8 @@ int main(int argc, char* argv[]){
                                 }
                             }
                         }
+                        // Update origin point
+                        origin =  origin + oldRayDir * minDistance;
                     }
                     acumR += productR;
                     acumG += productG;
