@@ -84,8 +84,8 @@ struct Sphere {
  * @param nearestSphere is the nearest object found in path intersection
  * @param nearestObject is the code for the nearest object found in path intersection
  */
-inline void intersectionRaySphere(const Point& origin, Direction& rayDir, const int& row, const int& col,
-                                  const Point& pixelCenter, vector<vector<float>>& distances, 
+inline void intersectionRaySphere(const Point& origin, Direction& rayDir,
+                                  const Point& pixelCenter, float& minDistance, 
                                   vector<vector<RGB>>& img, Sphere sphereList[],
                                   Sphere& nearestSphere, int& nearestObject)
 {
@@ -103,10 +103,9 @@ inline void intersectionRaySphere(const Point& origin, Direction& rayDir, const 
             t = (-b -sqrt(discriminant)) / 2.f * a;
             // Control of dividing by zero
             if(t > 0.f){
-                if(t < distances[row][col]){
-                    // Its a near intersection and it is saved with the correct emission
-                    distances[row][col] = t;
-                    img[row][col] = sphereList[i].emission;
+                if(t < minDistance){
+                    // Its a near intersection
+                    minDistance = t;
 
                     // Update nearest object
                     nearestSphere = sphereList[i];

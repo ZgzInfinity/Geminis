@@ -139,8 +139,6 @@ int main(int argc, char* argv[]){
 
         // Matrix of the image that is going to be built
         vector<vector<RGB>> img(height, vector<RGB>(width));
-        // Matrix which stores the intersection distance for each pixel
-        vector<vector<float>> distances(height, vector<float>(width));
 
         // Calculation of the upper left corner of the proyection plane 
         Point upperLeftCorner = origin + d_k + leftPP + upPP;
@@ -152,8 +150,10 @@ int main(int argc, char* argv[]){
         // Aleatory number for the rays and russian roulette
         float random1, random2, randomRR;
 
-        // S
+        // Acumulated radiance for each pixel
         float acumR, acumG, acumB;
+        // Acumulated product for each path
+        float productR, productG, productB;
 
         // Upper bounds for russian roullete probabilities
         float diffuseUB, specularUB, perfectSpecularUB, refractionUB;
@@ -164,6 +164,9 @@ int main(int argc, char* argv[]){
         Triangle nearestTriangle; // Object code = 3
         int nearestObject; // Code of the nearest object (0, 1, 2 or 3)
         Direction x, y, normal; // Intersected object base directions (unitary)
+        float pgeoFactor; // Factor used in montecarlo product (geometry / pdf)
+        float minDistance; // Distance to the nearest intersected object
+        bool pathFinished; // Store if path has to finish
 
 
 
@@ -194,81 +197,220 @@ int main(int argc, char* argv[]){
                     rayDir = rayDir / mod(rayDir);
                     //cout << rayDir.toString() << endl;
                     img[row][col] = RGB();
-                    //For each pixel the starting distance is the biggest value and it is going reduced
-                    distances[row][col] = FLT_MAX;
+                    // Initialize montecarlo products
+                    productR = 1, productG = 1, productB = 1;
+                    // Initialize pathFinished to false
+                    pathFinished = false;
 
-                    // Initialize nearest object code to 0 (no intersection)
-                    nearestObject = 0;
+                    while(!pathFinished){
+                        //For each object intersection the starting distance is the biggest value and it is going to be reduced
+                        minDistance = FLT_MAX;
 
-                    // Calculation of intersections between ray and planes
-                    intersectionRayPlane(origin, rayDir, row, col, distances, img, planeList, nearestPlane, nearestObject);
-    
-                    // Calculation of intersections between ray and spheres
-                    intersectionRaySphere(origin, rayDir, row, col, pixelPoint, distances, img, sphereList, nearestSphere, nearestObject);
+                        // Initialize nearest object code to 0 (no intersection)
+                        nearestObject = 0;
 
-                    // Calculation of intersections between ray and triangles
-                    intersectionRayTriangle(origin, bary, rayDir, row, col, textureH, textureW, pixelPoint, 
-                                            distances, textureImg, img, triangleList, nearestTriangle, nearestObject);
+                        // Calculation of intersections between ray and planes
+                        intersectionRayPlane(origin, rayDir, minDistance, img, planeList, nearestPlane, nearestObject);
+        
+                        // Calculation of intersections between ray and spheres
+                        intersectionRaySphere(origin, rayDir, pixelPoint, minDistance, img, sphereList, nearestSphere, nearestObject);
 
-                    switch (nearestObject)
-                    {
+                        // Calculation of intersections between ray and triangles
+                        intersectionRayTriangle(origin, bary, rayDir, textureH, textureW, pixelPoint, 
+                                                minDistance, textureImg, img, triangleList, nearestTriangle, nearestObject);
+
+                        switch (nearestObject){
                         case 0:
                             // No intersection
+                            // Path finished (no intersection)
+                            pathFinished = true;
+                            productR = 0;
+                            productG = 0;
+                            productB = 0;
                             break;
                         case 1:
                             // Nearest intersection: plane
-                            diffuseUB = nearestPlane.maxkd;
-                            // specularUB = diffuseUB + nearestPlane.maxks;
-                            // perfectSpecularUB = specularUB + nearestPlane.maxkps;
-                            // refractionUB = perfectSpecularUB + nearestPlane.maxkrf;
+                            if(nearestPlane.emitsLight){
+                                productR *= nearestPlane.emission.red;
+                                productG *= nearestPlane.emission.green;
+                                productB *= nearestPlane.emission.blue;
+                                // Path finished (reach emitting object)
+                                pathFinished = true;
+                            }
+                            else{
+                                diffuseUB = nearestPlane.maxkd;
+                                // specularUB = diffuseUB + nearestPlane.maxks;
+                                // perfectSpecularUB = specularUB + nearestPlane.maxkps;
+                                // refractionUB = perfectSpecularUB + nearestPlane.maxkrf;
+                                
+                                normal = nearestPlane.normal / mod(nearestPlane.normal);
+                                // Get tangent to plane using arbitraty unitary direction
+                                x = cross(normal, Direction(1, 0, 0));
+                                y = cross(x, normal);
+
+                                randomRR = uniform_real_distribution<float>(0, 1)(rng);
+                                if(randomRR <= diffuseUB){
+                                    // Russian roulette: diffuse
+                                    random1 = uniform_real_distribution<float>(0, 1)(rng);
+                                    random2 = uniform_real_distribution<float>(0, 1)(rng);
+                                    float sinTheta = sqrtf(1 - random1 * random1); 
+                                    float phi = 2 * M_PI * random2; 
+                                    float x_ = sinTheta * cosf(phi); 
+                                    float y_ = sinTheta * sinf(phi);
+                                    // Get new rayDir, using new direction with normal = 1 in local coordinates
+                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, 1);
+                                    pgeoFactor =  abs(dot(normal, rayDir)) * 2 * M_PI;
+                                    productR *= (nearestPlane.kdr / M_PI) * pgeoFactor;
+                                    productG *= (nearestPlane.kdg / M_PI) * pgeoFactor;
+                                    productB *= (nearestPlane.kdb / M_PI) * pgeoFactor;
+                                }
+                                /*
+                                else if(randomRR <= specularUB){
+                                    // Russian roulette: specular
+
+                                }
+                                else if(randomRR <= perfectSpecularUB){
+                                    // Russian roulette: perfect specular
+
+                                }
+                                else if(randomRR <= refractionUB){
+                                    // Russian roulette: refraction
+
+                                }
+                                */
+                                else{
+                                    // Path finished (russian roulette = absortion)
+                                    pathFinished = true;
+                                    productR = 0;
+                                    productG = 0;
+                                    productB = 0;
+                                }
+                            }
                             
-                            normal = nearestPlane.normal / mod(nearestPlane.normal);
-                            // Get tangent to plane using arbitraty unitary direction
-                            x = cross(normal, Direction(1, 0, 0));
-                            y = cross(x, normal);
                             
                             break;
                         case 2:
                             // Nearest intersection: sphere
-                            diffuseUB = nearestSphere.maxkd;
-                            // specularUB = diffuseUB + nearestSphere.maxks;
-                            // perfectSpecularUB = specularUB + nearestSphere.maxkps;
-                            // refractionUB = perfectSpecularUB + nearestSphere.maxkrf;
-                            normal = (origin - nearestSphere.center) / mod(origin - nearestSphere.center);
-                            x = cross(normal, Direction(1, 0, 0));
-                            y = cross(x, normal);
+                            if(nearestSphere.emitsLight){
+                                productR *= nearestSphere.emission.red;
+                                productG *= nearestSphere.emission.green;
+                                productB *= nearestSphere.emission.blue;
+                                // Path finished (reach emitting object)
+                                pathFinished = true;
+                            }
+                            else{
+                                diffuseUB = nearestSphere.maxkd;
+                                // specularUB = diffuseUB + nearestSphere.maxks;
+                                // perfectSpecularUB = specularUB + nearestSphere.maxkps;
+                                // refractionUB = perfectSpecularUB + nearestSphere.maxkrf;
+                                normal = (origin - nearestSphere.center) / mod(origin - nearestSphere.center);
+                                x = cross(normal, Direction(1, 0, 0));
+                                y = cross(x, normal);
+
+                                randomRR = uniform_real_distribution<float>(0, 1)(rng);
+                                if(randomRR <= diffuseUB){
+                                    // Russian roulette: diffuse
+                                    random1 = uniform_real_distribution<float>(0, 1)(rng);
+                                    random2 = uniform_real_distribution<float>(0, 1)(rng);
+                                    float sinTheta = sqrtf(1 - random1 * random1); 
+                                    float phi = 2 * M_PI * random2; 
+                                    float x_ = sinTheta * cosf(phi); 
+                                    float y_ = sinTheta * sinf(phi);
+                                    // Get new rayDir, using new direction with normal = 1 in local coordinates
+                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, 1);
+                                    pgeoFactor =  abs(dot(normal, rayDir)) * 2 * M_PI;
+                                    productR *= (nearestPlane.kdr / M_PI) * pgeoFactor;
+                                    productG *= (nearestPlane.kdg / M_PI) * pgeoFactor;
+                                    productB *= (nearestPlane.kdb / M_PI) * pgeoFactor;
+                                }
+                                /*
+                                else if(randomRR <= specularUB){
+                                    // Russian roulette: specular
+
+                                }
+                                else if(randomRR <= perfectSpecularUB){
+                                    // Russian roulette: perfect specular
+
+                                }
+                                else if(randomRR <= refractionUB){
+                                    // Russian roulette: refraction
+
+                                }
+                                */
+                                else{
+                                    // Path finished (russian roulette = absortion)
+                                    pathFinished = true;
+                                    productR = 0;
+                                    productG = 0;
+                                    productB = 0;
+                                }
+                            }
+                            
+
                             break;
                         case 3:
                             // Nearest intersection: triangle
-                            diffuseUB = nearestTriangle.maxkd;
-                            // specularUB = diffuseUB + nearestTriangle.maxks;
-                            // perfectSpecularUB = specularUB + nearestTriangle.maxkps;
-                            // refractionUB = perfectSpecularUB + nearestTriangle.maxkrf; 
-                            normal = nearestTriangle.normal / mod(nearestTriangle.normal);
-                            x = nearestTriangle.edge1 / mod(nearestTriangle.edge1);
-                            y = cross(x, normal);
-                    }
-                    randomRR = uniform_real_distribution<float>(0, 1)(rng);
-                    if(randomRR <= diffuseUB){
-                        // Russian roulette: diffuse
-                        
-                    }
-                    /*
-                    else if(randomRR <= specularUB){
-                        // Russian roulette: specular
+                            if(nearestTriangle.emitsLight){
+                                productR *= nearestTriangle.emission.red;
+                                productG *= nearestTriangle.emission.green;
+                                productB *= nearestTriangle.emission.blue;
+                                // Path finished (reach emitting object)
+                                pathFinished = true;
+                            }
+                            else{
+                                diffuseUB = nearestTriangle.maxkd;
+                                // specularUB = diffuseUB + nearestTriangle.maxks;
+                                // perfectSpecularUB = specularUB + nearestTriangle.maxkps;
+                                // refractionUB = perfectSpecularUB + nearestTriangle.maxkrf; 
+                                normal = nearestTriangle.normal / mod(nearestTriangle.normal);
+                                x = nearestTriangle.edge1 / mod(nearestTriangle.edge1);
+                                y = cross(x, normal);
 
-                    }
-                    else if(randomRR <= perfectSpecularUB){
-                        // Russian roulette: perfect specular
+                                randomRR = uniform_real_distribution<float>(0, 1)(rng);
+                                if(randomRR <= diffuseUB){
+                                    // Russian roulette: diffuse
+                                    random1 = uniform_real_distribution<float>(0, 1)(rng);
+                                    random2 = uniform_real_distribution<float>(0, 1)(rng);
+                                    float sinTheta = sqrtf(1 - random1 * random1); 
+                                    float phi = 2 * M_PI * random2; 
+                                    float x_ = sinTheta * cosf(phi); 
+                                    float y_ = sinTheta * sinf(phi);
+                                    // Get new rayDir, using new direction with normal = 1 in local coordinates
+                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, 1);
+                                    pgeoFactor =  abs(dot(normal, rayDir)) * 2 * M_PI;
+                                    productR *= (nearestPlane.kdr / M_PI) * pgeoFactor;
+                                    productG *= (nearestPlane.kdg / M_PI) * pgeoFactor;
+                                    productB *= (nearestPlane.kdb / M_PI) * pgeoFactor;
+                                }
+                                /*
+                                else if(randomRR <= specularUB){
+                                    // Russian roulette: specular
 
-                    }
-                    else if(randomRR <= refractionUB){
-                        // Russian roulette: refraction
+                                }
+                                else if(randomRR <= perfectSpecularUB){
+                                    // Russian roulette: perfect specular
 
+                                }
+                                else if(randomRR <= refractionUB){
+                                    // Russian roulette: refraction
+
+                                }
+                                */
+                                else{
+                                    // Path finished (russian roulette = absortion)
+                                    pathFinished = true;
+                                    productR = 0;
+                                    productG = 0;
+                                    productB = 0;
+                                }
+                            }
+                        }
                     }
-                    */
-                    
+                    acumR += productR;
+                    acumG += productG;
+                    acumB += productB;
                 }
+                img[row][col] = RGB(acumR / PPP, acumG / PPP, acumB / PPP);
             }
         }
         // Creation of the image and saving in a ppm format file

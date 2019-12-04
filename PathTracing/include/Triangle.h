@@ -171,9 +171,9 @@ inline void calculateBaricentricCordinates(const Point& origin, const Direction&
  * @param nearestTriangle is the nearest object found in path intersection
  * @param nearestObject is the code for the nearest object found in path intersection
  */
-inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction& rayDir, const int& row, const int& col,
+inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction& rayDir,
                                     const int& texH, const int& texW, const Point& pixelCenter, 
-                                    vector<vector<float>>& distances, vector<vector<RGB>>& textureImg,
+                                    float& minDistance, vector<vector<RGB>>& textureImg,
                                     vector<vector<RGB>>& img, Triangle triangleList[],
                                     Triangle& nearestTriangle, int& nearestObject)
 {
@@ -202,17 +202,17 @@ inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction&
 
         if (t > LIMIT && t < 1 / LIMIT) // ray intersection
         {
-            if(t < distances[row][col]){
+            if(t < minDistance){
                 //cout << "op" << i << endl;
                 // Its a near intersection and it is saved with the correct emission
                 if(triangleList[i].texture == nullptr){
-                    distances[row][col] = t;
-                    img[row][col] = triangleList[i].emission;
+                    minDistance = t;
                 }
                 else{
                     int rowTex, colTex;
                     calculateBaricentricCordinates(origin, rayDir, t, i, texH, texW, rowTex, colTex, triangleList);
-                    img[row][col] = textureImg[rowTex][colTex];
+                    // RGB obtained from texture
+                    // textureImg[rowTex][colTex];
                 }
 
                 // Update nearest object
