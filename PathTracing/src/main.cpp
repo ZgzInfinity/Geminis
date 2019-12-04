@@ -104,20 +104,20 @@ int main(int argc, char* argv[]){
         Triangle triangleList[DIM_TRIANGLE];
         
         // Definition of the planes which are going to appear in the scene 
-        Plane leftWall = Plane(Direction(0, 0, 1), 7, RGB(255, 0, 0));
+        Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0, 0);
         planeList[0] = leftWall;
-        Plane rightWall = Plane(Direction(0, 0,-1), 7, RGB(0, 255, 0));
+        Plane rightWall = Plane(Direction(0, 0,-1), 7, 0, 0.8, 0);
         planeList[1] = rightWall;
         Plane ceiling = Plane(Direction(0, -1, 0), 7, RGB(255, 255, 255));
         planeList[2] = ceiling;
-        Plane floor = Plane(Direction(0, 1, 0), 7, RGB(255, 255, 255));
+        Plane floor = Plane(Direction(0, 1, 0), 7, 0.8, 0.8, 0.8);
         planeList[3] = floor;
-        Plane background = Plane(Direction(-1, 0, 0), 7, RGB(255, 255, 255));
+        Plane background = Plane(Direction(-1, 0, 0), 7, 0.8, 0.8, 0.8);
         planeList[4] = background;
 
         // Definition of the spheres which are going to appear in the scene 
-        Sphere leftSphere = Sphere(Point(3, -5, -3), 2 , RGB(241, 196, 15));
-        Sphere rightSphere = Sphere(Point(5, -5, 3), 2 , RGB(74, 105, 189));
+        Sphere leftSphere = Sphere(Point(3, -5, -3), 2 , 0.8, 0.3, 0.6);
+        Sphere rightSphere = Sphere(Point(5, -5, 3), 2 , 0.8, 0.3, 0.6);
 
         sphereList[0] = leftSphere;
         sphereList[1] = rightSphere;
@@ -191,7 +191,13 @@ int main(int argc, char* argv[]){
                     // Initialize pathFinished to false
                     pathFinished = false;
 
+                    int rebotes = 0;
                     while(!pathFinished){
+
+                        rebotes++;
+
+                        cout << "REBOTES " << rebotes << endl;
+
                         //For each object intersection the starting distance is the biggest value and it is going to be reduced
                         minDistance = FLT_MAX;
 
@@ -211,6 +217,7 @@ int main(int argc, char* argv[]){
                         // Save rayDir for next origin point
                         oldRayDir = rayDir;
 
+                        cout << "CODIGO OBJETO TOCADO " << nearestObject << endl;
                         switch (nearestObject){
                         case 0:
                             // No intersection
@@ -250,6 +257,7 @@ int main(int argc, char* argv[]){
                                     float x_ = sinTheta * cosf(phi); 
                                     float y_ = sinTheta * sinf(phi);
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
+                                    cout << "Dir local " << Direction(x_, y_, 1).toString() << endl;
                                     rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, 1);
                                     rayDir = rayDir / mod(rayDir);
                                     pgeoFactor =  abs(dot(normal, rayDir)) * 2 * M_PI;
@@ -279,8 +287,6 @@ int main(int argc, char* argv[]){
                                     productB = 0;
                                 }
                             }
-                            
-                            
                             break;
                         case 2:
                             // Nearest intersection: sphere
@@ -402,6 +408,8 @@ int main(int argc, char* argv[]){
                         }
                         // Update origin point
                         origin =  origin + oldRayDir * minDistance;
+                        cout << "NUEVO ORIGEN " << origin.toString() << endl;
+                        cout << "NUEVA DIRECCION " << rayDir.toString() << endl;
                     }
                     acumR += productR;
                     acumG += productG;
