@@ -52,9 +52,9 @@ int main(int argc, char* argv[]){
         // Direction d_i = Direction(0, 0, -1);
         // Direction d_j = Direction(0, 1, 0);
         //Direction d_k = Direction(1, 0, 0);
-        Direction d_k = Direction(0, 0, -1);
+        Direction d_k = Direction(1, 0, 0);
         //Point origin = Point(-1.5, 2, 2);
-        Point origin = Point(0, 0, 5);
+        Point origin = Point(-7, 0, 0);
 
         // Creation of the base
         // Matrix4 camera = Matrix4::changeBase(d_i, d_j, d_k, origin);
@@ -70,8 +70,8 @@ int main(int argc, char* argv[]){
         // Calculation of the components of the vectors that form the projection plane
         // The smallest vector is taken as a reference in function of the width and height values
         if (width > height){
-            // leftPP = Direction(0, 0, - width / height);
-            leftPP = Direction(- width / height, 0, 0);
+            leftPP = Direction(0, 0, - width / height);
+            // leftPP = Direction(- width / height, 0, 0);
             upPP = Direction(0, 1, 0);
             pixelSize = mod(upPP) / (height / 2.f);
         }
@@ -95,39 +95,23 @@ int main(int argc, char* argv[]){
         Triangle triangleList[DIM_TRIANGLE];
         
         // Definition of the planes which are going to appear in the scene 
-        Plane p1 = Plane(Direction(0, 0, 1), 7, RGB(155, 89, 182));
-        planeList[0] = p1;
-        Plane p2 = Plane(Direction(0, 0,-1), 7, RGB(46, 204, 113));
-        planeList[1] = p2;
-        Plane p3 = Plane(Direction(0, -1, 0), 5, RGB(236, 240, 241));
-        planeList[2] = p3;
-        Plane p4 = Plane(Direction(0, 1, 0), 5, RGB(52, 73, 94));
-        planeList[3] = p4;
-        Plane p5 = Plane(Direction(-1, 0, 0), 20, RGB(192, 57, 43));
-        planeList[4] = p5;
+        Plane leftWall = Plane(Direction(0, 0, 1), 7, RGB(255, 0, 0));
+        planeList[0] = leftWall;
+        Plane rightWall = Plane(Direction(0, 0,-1), 7, RGB(0, 255, 0));
+        planeList[1] = rightWall;
+        Plane ceiling = Plane(Direction(0, -1, 0), 7, RGB(255, 255, 255));
+        planeList[2] = ceiling;
+        Plane floor = Plane(Direction(0, 1, 0), 7, RGB(255, 255, 255));
+        planeList[3] = floor;
+        Plane background = Plane(Direction(-1, 0, 0), 7, RGB(255, 255, 255));
+        planeList[4] = background;
 
         // Definition of the spheres which are going to appear in the scene 
-        Sphere s1 = Sphere(Point(3, 0, 0), 1 , RGB(241, 196, 15));
-        
-        Sphere s2 = Sphere(Point(5, 0, 0), 1 , RGB(74, 105, 189));
-        Sphere s3 = Sphere(Point(3, 1, 0), 0.5 , RGB(56, 173, 169));
-        sphereList[0] = s1;
-        sphereList[1] = s2;
-        sphereList[2] = s3;
+        Sphere leftSphere = Sphere(Point(3, -5, -3), 2 , RGB(241, 196, 15));
+        Sphere rightSphere = Sphere(Point(5, -5, 3), 2 , RGB(74, 105, 189));
 
-        // Definition of the triangles which are going to appear in the scene 
-        Triangle t1 = Triangle(Point(2, -1, -1), Point(2, -1, 0), 
-                               Point(2, 0, 0), &brickTexture, 0, 1, 1, 0, 0, 1);
-        triangleList[0] = t1;
-        Triangle t2 = Triangle(Point(2, 0, 0), Point(2, 1, 1), 
-                               Point(2, 1, 0), &brickTexture, 0, 1, 0, 0, 1, 1);
-        triangleList[1] = t2;
-        Triangle t3 = Triangle(Point(2, -2, 0), Point(2, -2, 1),
-                               Point(3, -2, 0), &brickTexture, 0, 1, 1, 0, 0, 1);
-        triangleList[2] = t3;
-        Triangle t4 = Triangle(Point(2, -2, 1), Point(3, -2, 1), 
-                               Point(3, -2, 0), &brickTexture, 0, 1, 0, 0, 1, 1);
-        triangleList[3] = t4;
+        sphereList[0] = leftSphere;
+        sphereList[1] = rightSphere;
 
         // Matrix of the image that is going to be built
         vector<vector<RGB>> img(height, vector<RGB>(width));
@@ -146,14 +130,17 @@ int main(int argc, char* argv[]){
         for(int row = 0; row < height; row++){
             for(int col = 0; col <width; col++){
                 // Calculation of the center of each pixel where the ray is going to be thrown
-                /*
+               
                 pixelCenter = Point(upperLeftCorner.c[0],
                                     upperLeftCorner.c[1] - (row * pixelSize + pixelOffset),
                                     upperLeftCorner.c[2] + col * pixelSize + pixelOffset);
-                */
+                
+
+                /*
                 pixelCenter = Point(upperLeftCorner.c[0] + col * pixelSize + pixelOffset,
                                     upperLeftCorner.c[1] - (row * pixelSize + pixelOffset),
                                     upperLeftCorner.c[2]);
+                */
 
                 // Direction of the ray with an emission 
                 rayDir = pixelCenter - origin;

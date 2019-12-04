@@ -24,7 +24,7 @@
 #include "../include/SharedOps.h"
 
 
-const int DIM_SPHERE = 3;
+const int DIM_SPHERE = 2;
 
 /*
  * Definition of data type Sphere
