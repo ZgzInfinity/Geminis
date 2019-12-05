@@ -153,6 +153,8 @@ int main(int argc, char* argv[]){
         float minDistance; // Distance to the nearest intersected object
         bool pathFinished; // Store if path has to finish
 
+        float x_, y_, z_, theta, phi;
+
 
         // Loop that calculates for each pixel the thrown ray and the intersections
         // between it and the spheres and planes stored in the scene
@@ -252,14 +254,15 @@ int main(int argc, char* argv[]){
                                 randomRR = uniform_real_distribution<float>(0, 1)(rng);
                                 if(randomRR <= diffuseUB){
                                     // Russian roulette: diffuse
-                                    random1 = uniform_real_distribution<float>(0, 1)(rng);
-                                    random2 = uniform_real_distribution<float>(0, 1)(rng);
-                                    float x_ = acosf(sqrt(1.f - random1)); 
-                                    float y_ = acosf(sqrt(1.f - random2));
+                                    theta = acosf(sqrt(1.f - uniform_real_distribution<float>(0, 1)(rng)));
+                                    phi = M_PI * uniform_real_distribution<float>(0, 1)(rng);
+                                    x_ = sin(phi) * cos(theta); 
+                                    y_ = sin(phi) * sin(theta);
+                                    z_ = cos(phi);
 
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     //cout << "Dir local " << Direction(x_, y_, 0.5).toString() << endl;
-                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, random1);
+                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, z_);
                                     //cout << "rayDir before unitary " << rayDir.toString() << endl;
                                     rayDir = rayDir / mod(rayDir);
                                     productR *= nearestPlane.kdr;
@@ -311,13 +314,15 @@ int main(int argc, char* argv[]){
                                 randomRR = uniform_real_distribution<float>(0, 1)(rng);
                                 if(randomRR <= diffuseUB){
                                     // Russian roulette: diffuse
-                                    random1 = uniform_real_distribution<float>(0, 1)(rng);
-                                    random2 = uniform_real_distribution<float>(0, 1)(rng);
-                                    float x_ = acosf(sqrt(1.f - random1)); 
-                                    float y_ = acosf(sqrt(1.f - random2));
+                                    theta = acosf(sqrt(1.f - uniform_real_distribution<float>(0, 1)(rng)));
+                                    phi = M_PI * uniform_real_distribution<float>(0, 1)(rng);
+                                    x_ = sin(phi) * cos(theta); 
+                                    y_ = sin(phi) * sin(theta);
+                                    z_ = cos(phi);
+
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     //cout << "Dir local " << Direction(x_, y_, 0.5).toString() << endl;
-                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, random1);
+                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, z_);
                                     //cout << "rayDir before unitary " << rayDir.toString() << endl;
                                     rayDir = rayDir / mod(rayDir);
                                     productR *= nearestSphere.kdr;
@@ -370,13 +375,15 @@ int main(int argc, char* argv[]){
                                 randomRR = uniform_real_distribution<float>(0, 1)(rng);
                                 if(randomRR <= diffuseUB){
                                     // Russian roulette: diffuse
-                                    random1 = uniform_real_distribution<float>(0, 1)(rng);
-                                    random2 = uniform_real_distribution<float>(0, 1)(rng);
-                                    float x_ = acosf(sqrt(1.f - random1)); 
-                                    float y_ = acosf(sqrt(1.f - random2));
+                                    theta = acosf(sqrt(1.f - uniform_real_distribution<float>(0, 1)(rng)));
+                                    phi = M_PI * uniform_real_distribution<float>(0, 1)(rng);
+                                    x_ = sin(phi) * cos(theta); 
+                                    y_ = sin(phi) * sin(theta);
+                                    z_ = cos(phi);
+
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     //cout << "Dir local " << Direction(x_, y_, 0.5).toString() << endl;
-                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, random1);
+                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, z_);
                                     //cout << "rayDir before unitary " << rayDir.toString() << endl;
                                     rayDir = rayDir / mod(rayDir);
                                     productR *= nearestTriangle.kdr;
