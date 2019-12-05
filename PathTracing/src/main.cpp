@@ -56,7 +56,7 @@ int main(int argc, char* argv[]){
         //Direction d_k = Direction(1, 0, 0);
         Direction d_k = Direction(1, 0, 0);
         //Point origin = Point(-1.5, 2, 2);
-        Point camera = Point(-7, 0, 0);
+        Point camera = Point(-3, 0, 0);
         Point origin;
 
         // Creation of the base
@@ -112,12 +112,12 @@ int main(int argc, char* argv[]){
         planeList[2] = ceiling;
         Plane floor = Plane(Direction(0, 1, 0), 7, 0.8, 0.8, 0.8);
         planeList[3] = floor;
-        Plane background = Plane(Direction(-1, 0, 0), 7, 0.8, 0.8, 0.8);
+        Plane background = Plane(Direction(-1, 0, 0), 50, 0.8, 0.8, 0.8);
         planeList[4] = background;
 
         // Definition of the spheres which are going to appear in the scene 
-        Sphere leftSphere = Sphere(Point(3, -5, -3), 2 , 0.8, 0.3, 0.6);
-        Sphere rightSphere = Sphere(Point(5, -5, 3), 2 , 0.8, 0.3, 0.6);
+        Sphere leftSphere = Sphere(Point(40, -5, -3), 2 , 0.8, 0.8, 0.8);
+        Sphere rightSphere = Sphere(Point(45, -5, 3), 2 , 0.8, 0.8, 0.8);
 
         sphereList[0] = leftSphere;
         sphereList[1] = rightSphere;
@@ -129,7 +129,6 @@ int main(int argc, char* argv[]){
         // Calculation of the upper left corner of the proyection plane 
         Point upperLeftCorner = origin + d_k + leftPP + upPP;
         Point pixelPoint;
-        float pixelOffset = pixelSize / 2.f;
         Direction rayDir, oldRayDir;
         Point bary;
 
@@ -165,14 +164,13 @@ int main(int argc, char* argv[]){
                     
                     origin = camera;
 
-                    pixelPoint = Point(upperLeftCorner.c[0],
-                                        upperLeftCorner.c[1] - (row * pixelSize + (pixelSize * random1)),
-                                        upperLeftCorner.c[2] + col * pixelSize + (pixelSize * random2));
-                    
-
                     // Generation of the random values for the path direction inside pixel box
                     random1 = uniform_real_distribution<float>(0, 1)(rng);
                     random2 = uniform_real_distribution<float>(0, 1)(rng);
+
+                    pixelPoint = Point(upperLeftCorner.c[0],
+                                        upperLeftCorner.c[1] - (row * pixelSize + (pixelSize * random1)),
+                                        upperLeftCorner.c[2] + col * pixelSize + (pixelSize * random2));
 
                     /*
                     // Calculation of the center of each pixel where the ray is going to be thrown
@@ -196,7 +194,7 @@ int main(int argc, char* argv[]){
 
                         rebotes++;
 
-                        cout << "REBOTES " << rebotes << endl;
+                        //cout << "REBOTES " << rebotes << endl;
 
                         //For each object intersection the starting distance is the biggest value and it is going to be reduced
                         minDistance = FLT_MAX;
@@ -217,7 +215,7 @@ int main(int argc, char* argv[]){
                         // Save rayDir for next origin point
                         oldRayDir = rayDir;
 
-                        cout << "CODIGO OBJETO TOCADO " << nearestObject << endl;
+                        //cout << "CODIGO OBJETO TOCADO " << nearestObject << endl;
                         switch (nearestObject){
                         case 0:
                             // No intersection
@@ -244,26 +242,29 @@ int main(int argc, char* argv[]){
                                 
                                 normal = nearestPlane.normal / mod(nearestPlane.normal);
                                 // Get tangent to plane using arbitraty unitary direction
-                                x = cross(normal, Direction(1, 0, 0));
+                                x = cross(normal, Direction(1, random1, random2) / mod(Direction(1, random1, random2)));
                                 y = cross(x, normal);
+                                //cout << "x " << x.toString() << endl;
+                                //cout << "y " << y.toString() << endl;
+                                //cout << "normal " << normal.toString() << endl;
+                                //cout << "nearestPlane.normal " << nearestPlane.normal.toString() << endl;
 
                                 randomRR = uniform_real_distribution<float>(0, 1)(rng);
                                 if(randomRR <= diffuseUB){
                                     // Russian roulette: diffuse
                                     random1 = uniform_real_distribution<float>(0, 1)(rng);
                                     random2 = uniform_real_distribution<float>(0, 1)(rng);
-                                    float sinTheta = sqrtf(1 - random1 * random1); 
-                                    float phi = 2 * M_PI * random2; 
-                                    float x_ = sinTheta * cosf(phi); 
-                                    float y_ = sinTheta * sinf(phi);
+                                    float x_ = acosf(sqrt(1.f - random1)); 
+                                    float y_ = acosf(sqrt(1.f - random2));
+
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
-                                    cout << "Dir local " << Direction(x_, y_, 1).toString() << endl;
-                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, 1);
+                                    //cout << "Dir local " << Direction(x_, y_, 0.5).toString() << endl;
+                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, random1);
+                                    //cout << "rayDir before unitary " << rayDir.toString() << endl;
                                     rayDir = rayDir / mod(rayDir);
-                                    pgeoFactor =  abs(dot(normal, rayDir)) * 2 * M_PI;
-                                    productR *= (nearestPlane.kdr / M_PI) * pgeoFactor;
-                                    productG *= (nearestPlane.kdg / M_PI) * pgeoFactor;
-                                    productB *= (nearestPlane.kdb / M_PI) * pgeoFactor;
+                                    productR *= nearestPlane.kdr;
+                                    productG *= nearestPlane.kdg;
+                                    productB *= nearestPlane.kdb;
                                 }
                                 /*
                                 else if(randomRR <= specularUB){
@@ -290,6 +291,7 @@ int main(int argc, char* argv[]){
                             break;
                         case 2:
                             // Nearest intersection: sphere
+                            //cout << "Sphere intersected" << endl;
                             if(nearestSphere.emitsLight){
                                 productR *= nearestSphere.emission.red;
                                 productG *= nearestSphere.emission.green;
@@ -303,7 +305,7 @@ int main(int argc, char* argv[]){
                                 // perfectSpecularUB = specularUB + nearestSphere.maxkps;
                                 // refractionUB = perfectSpecularUB + nearestSphere.maxkrf;
                                 normal = (origin - nearestSphere.center) / mod(origin - nearestSphere.center);
-                                x = cross(normal, Direction(1, 0, 0));
+                                x = cross(normal, Direction(1, random1, random2) / mod(Direction(1, random1, random2)));
                                 y = cross(x, normal);
 
                                 randomRR = uniform_real_distribution<float>(0, 1)(rng);
@@ -311,17 +313,16 @@ int main(int argc, char* argv[]){
                                     // Russian roulette: diffuse
                                     random1 = uniform_real_distribution<float>(0, 1)(rng);
                                     random2 = uniform_real_distribution<float>(0, 1)(rng);
-                                    float sinTheta = sqrtf(1 - random1 * random1); 
-                                    float phi = 2 * M_PI * random2; 
-                                    float x_ = sinTheta * cosf(phi); 
-                                    float y_ = sinTheta * sinf(phi);
+                                    float x_ = acosf(sqrt(1.f - random1)); 
+                                    float y_ = acosf(sqrt(1.f - random2));
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
-                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, 1);
+                                    //cout << "Dir local " << Direction(x_, y_, 0.5).toString() << endl;
+                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, random1);
+                                    //cout << "rayDir before unitary " << rayDir.toString() << endl;
                                     rayDir = rayDir / mod(rayDir);
-                                    pgeoFactor =  abs(dot(normal, rayDir)) * 2 * M_PI;
-                                    productR *= (nearestSphere.kdr / M_PI) * pgeoFactor;
-                                    productG *= (nearestSphere.kdg / M_PI) * pgeoFactor;
-                                    productB *= (nearestSphere.kdb / M_PI) * pgeoFactor;
+                                    productR *= nearestSphere.kdr;
+                                    productG *= nearestSphere.kdg;
+                                    productB *= nearestSphere.kdb;
                                 }
                                 /*
                                 else if(randomRR <= specularUB){
@@ -371,17 +372,16 @@ int main(int argc, char* argv[]){
                                     // Russian roulette: diffuse
                                     random1 = uniform_real_distribution<float>(0, 1)(rng);
                                     random2 = uniform_real_distribution<float>(0, 1)(rng);
-                                    float sinTheta = sqrtf(1 - random1 * random1); 
-                                    float phi = 2 * M_PI * random2; 
-                                    float x_ = sinTheta * cosf(phi); 
-                                    float y_ = sinTheta * sinf(phi);
+                                    float x_ = acosf(sqrt(1.f - random1)); 
+                                    float y_ = acosf(sqrt(1.f - random2));
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
-                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, 1);
+                                    //cout << "Dir local " << Direction(x_, y_, 0.5).toString() << endl;
+                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, random1);
+                                    //cout << "rayDir before unitary " << rayDir.toString() << endl;
                                     rayDir = rayDir / mod(rayDir);
-                                    pgeoFactor =  abs(dot(normal, rayDir)) * 2 * M_PI;
-                                    productR *= (nearestTriangle.kdr / M_PI) * pgeoFactor;
-                                    productG *= (nearestTriangle.kdg / M_PI) * pgeoFactor;
-                                    productB *= (nearestTriangle.kdb / M_PI) * pgeoFactor;
+                                    productR *= nearestTriangle.kdr;
+                                    productG *= nearestTriangle.kdg;
+                                    productB *= nearestTriangle.kdb;
                                 }
                                 /*
                                 else if(randomRR <= specularUB){
@@ -408,8 +408,8 @@ int main(int argc, char* argv[]){
                         }
                         // Update origin point
                         origin =  origin + oldRayDir * minDistance;
-                        cout << "NUEVO ORIGEN " << origin.toString() << endl;
-                        cout << "NUEVA DIRECCION " << rayDir.toString() << endl;
+                        //cout << "NUEVO ORIGEN " << origin.toString() << endl;
+                        //cout << "NUEVA DIRECCION " << rayDir.toString() << endl;
                     }
                     acumR += productR;
                     acumG += productG;
