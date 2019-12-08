@@ -41,14 +41,26 @@ Plane::Plane(const Direction _normal, const float _distance2origin, const RGB _e
 
 // Not emiting plane
 Plane::Plane(const Direction _normal, const float _distance2origin,
-             float _kdr, float _kdg, float _kdb){
+             float _kdr, float _kdg, float _kdb,
+             float _ksr, float _ksg, float _ksb, float _shininess, float _kps){
     normal = _normal;
     distance2origin = _distance2origin;
+    // Diffuse
     kdr = _kdr; kdg = _kdg; kdb = _kdb;
     // Store maximun kd in maxkd
     kdr > kdg ? maxkd = kdr : maxkd = kdg;
     if(maxkd < kdb){
-    maxkd = kdb;
+        maxkd = kdb;
     }
+    // Specular
+    ksr = _ksr; ksg = _ksg; ksb = _kdb;
+    shininess = _shininess;
+    // Store maximun ks in maxks
+    ksr > ksg ? maxks = ksr : maxks = ksg;
+    if(maxks < ksb){
+        maxks = ksb;
+    }
+    // Perfect specular
+    kps = _kps;
     emitsLight = false;
 }

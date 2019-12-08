@@ -104,20 +104,20 @@ int main(int argc, char* argv[]){
         Triangle triangleList[DIM_TRIANGLE];
         
         // Definition of the planes which are going to appear in the scene 
-        Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0, 0);
+        Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0, 0, 0.1, 0.1, 0.1, 0.1, 0);
         planeList[0] = leftWall;
-        Plane rightWall = Plane(Direction(0, 0,-1), 7, 0, 0.8, 0);
+        Plane rightWall = Plane(Direction(0, 0,-1), 7, 0, 0.8, 0, 0.1, 0.1, 0.1, 0.1, 0);
         planeList[1] = rightWall;
         Plane ceiling = Plane(Direction(0, -1, 0), 7, RGB(255, 255, 255));
         planeList[2] = ceiling;
-        Plane floor = Plane(Direction(0, 1, 0), 7, 0.8, 0.8, 0.8);
+        Plane floor = Plane(Direction(0, 1, 0), 7, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9);
         planeList[3] = floor;
-        Plane background = Plane(Direction(-1, 0, 0), 50, 0.8, 0.8, 0.8);
+        Plane background = Plane(Direction(-1, 0, 0), 50, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0);
         planeList[4] = background;
 
         // Definition of the spheres which are going to appear in the scene 
-        Sphere leftSphere = Sphere(Point(40, -5, -3), 2 , 0.8, 0.8, 0.8);
-        Sphere rightSphere = Sphere(Point(45, -5, 3), 2 , 0.8, 0.8, 0.8);
+        Sphere leftSphere = Sphere(Point(40, -5, -3), 2, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 10, 0);
+        Sphere rightSphere = Sphere(Point(45, -5, 3), 2, 0.5, 0.5, 0.5, 0.4, 0.4, 0.4, 10, 0);
 
         sphereList[0] = leftSphere;
         sphereList[1] = rightSphere;
@@ -144,6 +144,8 @@ int main(int argc, char* argv[]){
         float diffuseUB, specularUB, perfectSpecularUB, refractionUB;
         // Temporary values for kd, ks, ksp, krf
         float kdr = 0, kdg = 0, kdb = 0;
+        float ksr = 0, ksg = 0, ksb = 0, shininess = 0;
+        float kps = 0;
 
         // Nearest objects found in path intersection (0 is no intersection)
         Plane nearestPlane; // Object code = 1
@@ -235,8 +237,8 @@ int main(int argc, char* argv[]){
                                 }
                                 else{
                                     diffuseUB = nearestPlane.maxkd;
-                                    // specularUB = diffuseUB + nearestPlane.maxks;
-                                    // perfectSpecularUB = specularUB + nearestPlane.maxkps;
+                                    specularUB = diffuseUB + nearestPlane.maxks;
+                                    perfectSpecularUB = specularUB + nearestPlane.kps;
                                     // refractionUB = perfectSpecularUB + nearestPlane.maxkrf;
                                     
                                     normal = nearestPlane.normal / mod(nearestPlane.normal);
@@ -246,6 +248,11 @@ int main(int argc, char* argv[]){
                                     kdr = nearestPlane.kdr;
                                     kdg = nearestPlane.kdg;
                                     kdb = nearestPlane.kdb;
+                                    ksr = nearestPlane.ksr;
+                                    ksg = nearestPlane.ksg;
+                                    ksb = nearestPlane.ksb;
+                                    kps = nearestPlane.kps;
+                                    shininess = nearestPlane.shininess;
                                 }
                                 break;
                             case 2:
@@ -259,8 +266,8 @@ int main(int argc, char* argv[]){
                                 }
                                 else{
                                     diffuseUB = nearestSphere.maxkd;
-                                    // specularUB = diffuseUB + nearestSphere.maxks;
-                                    // perfectSpecularUB = specularUB + nearestSphere.maxkps;
+                                    specularUB = diffuseUB + nearestSphere.maxks;
+                                    perfectSpecularUB = specularUB + nearestSphere.kps;
                                     // refractionUB = perfectSpecularUB + nearestSphere.maxkrf;
                                     normal = (origin - nearestSphere.center) / mod(origin - nearestSphere.center);
                                     x = cross(normal, Direction(1, random1, random2) / mod(Direction(1, random1, random2)));
@@ -268,6 +275,11 @@ int main(int argc, char* argv[]){
                                     kdr = nearestSphere.kdr;
                                     kdg = nearestSphere.kdg;
                                     kdb = nearestSphere.kdb;
+                                    ksr = nearestSphere.ksr;
+                                    ksg = nearestSphere.ksg;
+                                    ksb = nearestSphere.ksb;
+                                    kps = nearestSphere.kps;
+                                    shininess = nearestSphere.shininess;
                                 }                            
                                 break;
                             case 3:
@@ -281,8 +293,8 @@ int main(int argc, char* argv[]){
                                 }
                                 else{
                                     diffuseUB = nearestTriangle.maxkd;
-                                    // specularUB = diffuseUB + nearestTriangle.maxks;
-                                    // perfectSpecularUB = specularUB + nearestTriangle.maxkps;
+                                    specularUB = diffuseUB + nearestTriangle.maxks;
+                                    perfectSpecularUB = specularUB + nearestTriangle.kps;
                                     // refractionUB = perfectSpecularUB + nearestTriangle.maxkrf; 
                                     normal = nearestTriangle.normal / mod(nearestTriangle.normal);
                                     x = nearestTriangle.edge1 / mod(nearestTriangle.edge1);
@@ -290,6 +302,11 @@ int main(int argc, char* argv[]){
                                     kdr = nearestTriangle.kdr;
                                     kdg = nearestTriangle.kdg;
                                     kdb = nearestTriangle.kdb;
+                                    ksr = nearestTriangle.ksr;
+                                    ksg = nearestTriangle.ksg;
+                                    ksb = nearestTriangle.ksb;
+                                    kps = nearestTriangle.kps;
+                                    shininess = nearestTriangle.shininess;
                                 }
                             }
                             if(!pathFinished){
@@ -309,15 +326,34 @@ int main(int argc, char* argv[]){
                                     productG *= kdg;
                                     productB *= kdb;
                                 }
-                                /*
                                 else if(randomRR <= specularUB){
                                     // Russian roulette: specular
+                                    theta = acosf(sqrt(1.f - uniform_real_distribution<float>(0, 1)(rng)));
+                                    phi = M_PI * uniform_real_distribution<float>(0, 1)(rng);
+                                    x_ = sin(phi) * cos(theta); 
+                                    y_ = sin(phi) * sin(theta);
+                                    z_ = cos(phi);
+
+                                    // Get new rayDir, using new direction with normal = 1 in local coordinates
+                                    rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, z_);
+                                    rayDir = rayDir / mod(rayDir);
+                                    productR *= ksr * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f;
+                                    productG *= ksg * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f;
+                                    productB *= ksb * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f;
 
                                 }
+                                
                                 else if(randomRR <= perfectSpecularUB){
                                     // Russian roulette: perfect specular
-
+                                    theta = acosf(dot(oldRayDir * (-1), normal));
+                                    // Get new rayDir, using new direction with normal = 1 in local coordinates
+                                    rayDir = oldRayDir - normal * dot(oldRayDir, normal) * 2.f;
+                                    rayDir = rayDir / mod(rayDir);
+                                    productR *= kps;
+                                    productG *= kps;
+                                    productB *= kps;
                                 }
+                                /*
                                 else if(randomRR <= refractionUB){
                                     // Russian roulette: refraction
 
@@ -339,7 +375,19 @@ int main(int argc, char* argv[]){
                     acumG += productG;
                     acumB += productB;
                 }
-                img[row][col] = RGB(acumR / PPP, acumG / PPP, acumB / PPP);
+                acumR /= PPP;
+                acumG /= PPP;
+                acumB /= PPP;
+                if(acumR > 255){
+                    acumR = 255;
+                }
+                if(acumG > 255){
+                    acumG = 255;
+                }
+                if(acumB > 255){
+                    acumB = 255;
+                }
+                img[row][col] = RGB(acumR, acumG, acumB);
             }
         }
         // Creation of the image and saving in a ppm format file

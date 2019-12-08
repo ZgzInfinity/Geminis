@@ -42,6 +42,10 @@ struct Sphere {
     // Material properties
     // Diffuse coefficient by RGB channel
     float kdr, kdg, kdb, maxkd;
+    // Specular coefficient by RGB channel
+    float ksr, ksg, ksb, shininess, maxks;
+    // Perfect specular
+    float kps;
 
 
 
@@ -62,7 +66,8 @@ struct Sphere {
     Sphere(const Point _center, const float _radius, const RGB _emission);
 
 
-    Sphere(const Point _center, const float _radius, float _kdr, float _kdg, float _kdb);
+    Sphere(const Point _center, const float _radius, float _kdr, float _kdg, float _kdb,
+     float _ksr, float _ksg, float _ksb, float _shininess, float _kps);
     
 };
 

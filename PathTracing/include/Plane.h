@@ -42,6 +42,10 @@ struct Plane {
     // Material properties
     // Diffuse coefficient by RGB channel
     float kdr, kdg, kdb, maxkd;
+    // Specular coefficient by RGB channel
+    float ksr, ksg, ksb, shininess, maxks;
+    // Perfect specular
+    float kps;
 
 
 
@@ -62,7 +66,8 @@ struct Plane {
     Plane(const Direction _normal, const float _distance2origin, const RGB _emission);
 
 
-    Plane(const Direction _normal, const float _distance2origin, float _kdr, float _kdg, float _kdb);
+    Plane(const Direction _normal, const float _distance2origin, float _kdr, float _kdg, float _kdb,
+          float _ksr, float _ksg, float _ksb, float _shininess, float _kps);
 
 };
 

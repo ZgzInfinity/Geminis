@@ -41,15 +41,27 @@ Sphere::Sphere(const Point _center, const float _radius, const RGB _emission){
 }
 
 
-Sphere::Sphere(const Point _center, const float _radius, float _kdr, float _kdg, float _kdb){
+Sphere::Sphere(const Point _center, const float _radius, float _kdr, float _kdg, float _kdb,
+               float _ksr, float _ksg, float _ksb, float _shininess, float _kps){
     center = _center;
     radius = _radius;
+    // Diffuse
     kdr = _kdr; kdg = _kdg; kdb = _kdb;
     // Store maximun kd in maxkd
     kdr > kdg ? maxkd = kdr : maxkd = kdg;
     if(maxkd < kdb){
-    maxkd = kdb;
+        maxkd = kdb;
     }
+    // Specular
+    ksr = _ksr; ksg = _ksg; ksb = _kdb;
+    shininess = _shininess;
+    // Store maximun ks in maxks
+    ksr > ksg ? maxks = ksr : maxks = ksg;
+    if(maxks < ksb){
+        maxks = ksb;
+    }
+    // Perfect specular
+    kps = _kps;
     emitsLight = false;
 }
 

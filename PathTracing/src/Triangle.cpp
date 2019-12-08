@@ -44,17 +44,30 @@ Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv, const RGB 
 
 
 Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv,
-                   float _kdr, float _kdg, float _kdb){
+                   float _kdr, float _kdg, float _kdb,
+                   float _ksr, float _ksg, float _ksb, float _shininess, float _kps){
   p0 = _p0; pu = _pu; pv = _pv;
   edge1 = (_pu - _p0);
   edge2 = (_pv - _p0);
   normal = cross(edge1, edge2);
+  // Diffuse
   kdr = _kdr; kdg = _kdg; kdb = _kdb;
   // Store maximun kd in maxkd
   kdr > kdg ? maxkd = kdr : maxkd = kdg;
   if(maxkd < kdb){
     maxkd = kdb;
   }
+  // Specular
+  ksr = _ksr; ksg = _ksg; ksb = _kdb;
+  shininess = _shininess;
+  // Store maximun ks in maxks
+  ksr > ksg ? maxks = ksr : maxks = ksg;
+  if(maxks < ksb){
+    maxks = ksb;
+  }
+  // Perfect specular
+  kps = _kps;
+
   emitsLight = false;
   texture = nullptr;
 }

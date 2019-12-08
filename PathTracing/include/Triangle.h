@@ -55,6 +55,10 @@ struct Triangle {
     // Material properties
     // Diffuse coefficient by RGB channel
     float kdr, kdg, kdb, maxkd;
+    // Specular coefficient by RGB channel
+    float ksr, ksg, ksb, shininess, maxks;
+    // Perfect specular
+    float kps;
 
 
 
@@ -77,7 +81,8 @@ struct Triangle {
 
 
 
-    Triangle(const Point _p0, const Point _pu, const Point _pv,  float _kdr, float _kdg, float _kdb);
+    Triangle(const Point _p0, const Point _pu, const Point _pv,  float _kdr, float _kdg, float _kdb,
+             float _ksr, float _ksg, float _ksb, float _shininess, float _kps);
 
 
 
