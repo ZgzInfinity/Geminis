@@ -116,8 +116,8 @@ int main(int argc, char* argv[]){
         planeList[4] = background;
 
         // Definition of the spheres which are going to appear in the scene 
-        Sphere leftSphere = Sphere(Point(40, -5, -3), 2, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 10, 0);
-        Sphere rightSphere = Sphere(Point(45, -5, 3), 2, 0.5, 0.5, 0.5, 0.4, 0.4, 0.4, 10, 0);
+        Sphere leftSphere = Sphere(Point(40, -5, -3), 2, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.9, 0);
+        Sphere rightSphere = Sphere(Point(45, -5, 3), 2, 0.5, 0.5, 0.5, 0.4, 0.4, 0.4, 0.9, 0);
 
         sphereList[0] = leftSphere;
         sphereList[1] = rightSphere;
@@ -322,9 +322,10 @@ int main(int argc, char* argv[]){
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, z_);
                                     rayDir = rayDir / mod(rayDir);
-                                    productR *= kdr;
-                                    productG *= kdg;
-                                    productB *= kdb;
+                                    // product = product * kdx / maxkd
+                                    productR *= (kdr / diffuseUB);
+                                    productG *= (kdg / diffuseUB);
+                                    productB *= (kdb / diffuseUB);
                                 }
                                 else if(randomRR <= specularUB){
                                     // Russian roulette: specular
@@ -337,10 +338,9 @@ int main(int argc, char* argv[]){
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, z_);
                                     rayDir = rayDir / mod(rayDir);
-                                    productR *= ksr * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f;
-                                    productG *= ksg * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f;
-                                    productB *= ksb * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f;
-
+                                    productR *= (ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
+                                    productG *= (ksg / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
+                                    productB *= (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
                                 }
                                 
                                 else if(randomRR <= perfectSpecularUB){
@@ -349,9 +349,9 @@ int main(int argc, char* argv[]){
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     rayDir = oldRayDir - normal * dot(oldRayDir, normal) * 2.f;
                                     rayDir = rayDir / mod(rayDir);
-                                    productR *= kps;
-                                    productG *= kps;
-                                    productB *= kps;
+                                    productR *= (kps / abs(perfectSpecularUB - specularUB));
+                                    productG *= (kps / abs(perfectSpecularUB - specularUB));
+                                    productB *= (kps / abs(perfectSpecularUB - specularUB));
                                 }
                                 /*
                                 else if(randomRR <= refractionUB){
@@ -377,7 +377,7 @@ int main(int argc, char* argv[]){
                 }
                 acumR /= PPP;
                 acumG /= PPP;
-                acumB /= PPP;
+                acumB /= PPP;                
                 if(acumR > 255){
                     acumR = 255;
                 }
