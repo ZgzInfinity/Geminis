@@ -44,8 +44,10 @@ struct Sphere {
     float kdr, kdg, kdb, maxkd;
     // Specular coefficient by RGB channel
     float ksr, ksg, ksb, shininess, maxks;
-    // Perfect specular
+    // Perfect specular (k)
     float kps;
+    // Refraction (k, refraction index)
+    float krf, ri;
 
 
 
@@ -67,7 +69,7 @@ struct Sphere {
 
 
     Sphere(const Point _center, const float _radius, float _kdr, float _kdg, float _kdb,
-     float _ksr, float _ksg, float _ksb, float _shininess, float _kps);
+     float _ksr, float _ksg, float _ksb, float _shininess, float _kps, float _krf, float _ri);
     
 };
 

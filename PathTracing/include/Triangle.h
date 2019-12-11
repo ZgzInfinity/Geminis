@@ -57,8 +57,10 @@ struct Triangle {
     float kdr, kdg, kdb, maxkd;
     // Specular coefficient by RGB channel
     float ksr, ksg, ksb, shininess, maxks;
-    // Perfect specular
+    // Perfect specular (k)
     float kps;
+    // Refraction (k, refraction index)
+    float krf, ri;
 
 
 
@@ -82,7 +84,7 @@ struct Triangle {
 
 
     Triangle(const Point _p0, const Point _pu, const Point _pv,  float _kdr, float _kdg, float _kdb,
-             float _ksr, float _ksg, float _ksb, float _shininess, float _kps);
+             float _ksr, float _ksg, float _ksb, float _shininess, float _kps, float _krf, float _ri);
 
 
 

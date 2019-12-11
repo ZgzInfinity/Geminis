@@ -45,7 +45,8 @@ Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv, const RGB 
 
 Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv,
                    float _kdr, float _kdg, float _kdb,
-                   float _ksr, float _ksg, float _ksb, float _shininess, float _kps){
+                   float _ksr, float _ksg, float _ksb, float _shininess, float _kps,
+                   float _krf, float _ri){
   p0 = _p0; pu = _pu; pv = _pv;
   edge1 = (_pu - _p0);
   edge2 = (_pv - _p0);
@@ -67,7 +68,8 @@ Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv,
   }
   // Perfect specular
   kps = _kps;
-
+  // Refraction
+  krf = _krf; ri = _ri;
   emitsLight = false;
   texture = nullptr;
 }

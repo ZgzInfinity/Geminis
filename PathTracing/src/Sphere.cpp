@@ -42,7 +42,8 @@ Sphere::Sphere(const Point _center, const float _radius, const RGB _emission){
 
 
 Sphere::Sphere(const Point _center, const float _radius, float _kdr, float _kdg, float _kdb,
-               float _ksr, float _ksg, float _ksb, float _shininess, float _kps){
+               float _ksr, float _ksg, float _ksb, float _shininess, float _kps,
+               float _krf, float _ri){
     center = _center;
     radius = _radius;
     // Diffuse
@@ -62,6 +63,8 @@ Sphere::Sphere(const Point _center, const float _radius, float _kdr, float _kdg,
     }
     // Perfect specular
     kps = _kps;
+    // Refraction
+    krf = _krf; ri = _ri;
     emitsLight = false;
 }
 

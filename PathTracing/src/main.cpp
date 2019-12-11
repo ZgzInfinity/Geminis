@@ -105,20 +105,20 @@ int main(int argc, char* argv[]){
         Triangle triangleList[DIM_TRIANGLE];
         
         // Definition of the planes which are going to appear in the scene 
-        Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0, 0, 0.1, 0.1, 0.1, 0.1, 0);
+        Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[0] = leftWall;
-        Plane rightWall = Plane(Direction(0, 0,-1), 7, 0, 0.8, 0, 0.1, 0.1, 0.1, 0.1, 0);
+        Plane rightWall = Plane(Direction(0, 0,-1), 7, 0, 0.8, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[1] = rightWall;
         Plane ceiling = Plane(Direction(0, -1, 0), 7, RGB(255, 255, 255));
         planeList[2] = ceiling;
-        Plane floor = Plane(Direction(0, 1, 0), 7, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9);
+        Plane floor = Plane(Direction(0, 1, 0), 7, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9, 0, 1);
         planeList[3] = floor;
-        Plane background = Plane(Direction(-1, 0, 0), 50, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9);
+        Plane background = Plane(Direction(-1, 0, 0), 50, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9, 0, 1);
         planeList[4] = background;
 
         // Definition of the spheres which are going to appear in the scene 
-        Sphere leftSphere = Sphere(Point(40, -5, -3), 2, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.9, 0);
-        Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9);
+        Sphere leftSphere = Sphere(Point(40, -5, -3), 2, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.9, 0, 0, 1);
+        Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9, 0, 1);
 
         sphereList[0] = leftSphere;
         sphereList[1] = rightSphere;
@@ -240,7 +240,7 @@ int main(int argc, char* argv[]){
                                     diffuseUB = nearestPlane.maxkd;
                                     specularUB = diffuseUB + nearestPlane.maxks;
                                     perfectSpecularUB = specularUB + nearestPlane.kps;
-                                    // refractionUB = perfectSpecularUB + nearestPlane.maxkrf;
+                                    refractionUB = perfectSpecularUB + nearestPlane.krf;
                                     
                                     normal = nearestPlane.normal / mod(nearestPlane.normal);
                                     // Get tangent to plane using arbitraty unitary direction
@@ -269,7 +269,7 @@ int main(int argc, char* argv[]){
                                     diffuseUB = nearestSphere.maxkd;
                                     specularUB = diffuseUB + nearestSphere.maxks;
                                     perfectSpecularUB = specularUB + nearestSphere.kps;
-                                    // refractionUB = perfectSpecularUB + nearestSphere.maxkrf;
+                                    refractionUB = perfectSpecularUB + nearestSphere.krf;
                                     normal = (origin + (rayDir * minDistance) - nearestSphere.center);
                                     normal = normal / mod(normal);
                                     x = cross(normal, Direction(1, random1, random2) / mod(Direction(1, random1, random2)));
@@ -297,7 +297,7 @@ int main(int argc, char* argv[]){
                                     diffuseUB = nearestTriangle.maxkd;
                                     specularUB = diffuseUB + nearestTriangle.maxks;
                                     perfectSpecularUB = specularUB + nearestTriangle.kps;
-                                    // refractionUB = perfectSpecularUB + nearestTriangle.maxkrf; 
+                                    refractionUB = perfectSpecularUB + nearestTriangle.krf; 
                                     normal = nearestTriangle.normal / mod(nearestTriangle.normal);
                                     x = nearestTriangle.edge1 / mod(nearestTriangle.edge1);
                                     y = cross(x, normal);

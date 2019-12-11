@@ -44,8 +44,10 @@ struct Plane {
     float kdr, kdg, kdb, maxkd;
     // Specular coefficient by RGB channel
     float ksr, ksg, ksb, shininess, maxks;
-    // Perfect specular
+    // Perfect specular (k)
     float kps;
+    // Refraction (k, refraction index)
+    float krf, ri;
 
 
 
@@ -67,7 +69,7 @@ struct Plane {
 
 
     Plane(const Direction _normal, const float _distance2origin, float _kdr, float _kdg, float _kdb,
-          float _ksr, float _ksg, float _ksb, float _shininess, float _kps);
+          float _ksr, float _ksg, float _ksb, float _shininess, float _kps, float _krf, float _ri);
 
 };
 
