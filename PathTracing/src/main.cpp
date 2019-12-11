@@ -112,12 +112,12 @@ int main(int argc, char* argv[]){
         planeList[2] = ceiling;
         Plane floor = Plane(Direction(0, 1, 0), 7, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9);
         planeList[3] = floor;
-        Plane background = Plane(Direction(-1, 0, 0), 50, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0);
+        Plane background = Plane(Direction(-1, 0, 0), 50, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9);
         planeList[4] = background;
 
         // Definition of the spheres which are going to appear in the scene 
         Sphere leftSphere = Sphere(Point(40, -5, -3), 2, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.9, 0);
-        Sphere rightSphere = Sphere(Point(45, -5, 3), 2, 0.5, 0.5, 0.5, 0.4, 0.4, 0.4, 0.9, 0);
+        Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9);
 
         sphereList[0] = leftSphere;
         sphereList[1] = rightSphere;
@@ -269,7 +269,8 @@ int main(int argc, char* argv[]){
                                     specularUB = diffuseUB + nearestSphere.maxks;
                                     perfectSpecularUB = specularUB + nearestSphere.kps;
                                     // refractionUB = perfectSpecularUB + nearestSphere.maxkrf;
-                                    normal = (origin - nearestSphere.center) / mod(origin - nearestSphere.center);
+                                    normal = (origin + (rayDir * minDistance) - nearestSphere.center);
+                                    normal = normal / mod(normal);
                                     x = cross(normal, Direction(1, random1, random2) / mod(Direction(1, random1, random2)));
                                     y = cross(x, normal);
                                     kdr = nearestSphere.kdr;
@@ -345,10 +346,8 @@ int main(int argc, char* argv[]){
                                 
                                 else if(randomRR <= perfectSpecularUB){
                                     // Russian roulette: perfect specular
-                                    theta = acosf(dot(oldRayDir * (-1), normal));
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     rayDir = oldRayDir - normal * dot(oldRayDir, normal) * 2.f;
-                                    rayDir = rayDir / mod(rayDir);
                                     productR *= (kps / abs(perfectSpecularUB - specularUB));
                                     productG *= (kps / abs(perfectSpecularUB - specularUB));
                                     productB *= (kps / abs(perfectSpecularUB - specularUB));
