@@ -105,17 +105,25 @@ int main(int argc, char* argv[]){
         Triangle triangleList[DIM_TRIANGLE];
         
         // Definition of the planes which are going to appear in the scene 
-        Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        //Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0.0, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        Plane leftWall = Plane(Direction(0, 0, 1), 7, RGB(255, 0, 0));
         planeList[0] = leftWall;
-        Plane rightWall = Plane(Direction(0, 0,-1), 7, 0, 0.8, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        //Plane rightWall = Plane(Direction(0, 0,-1), 7, 0, 0.8, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        Plane rightWall = Plane(Direction(0, 0,-1), 7, RGB(0, 255, 0));
         planeList[1] = rightWall;
         Plane ceiling = Plane(Direction(0, -1, 0), 7, RGB(255, 255, 255));
-        // Plane ceiling = Plane(Direction(0, -1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        //Plane ceiling = Plane(Direction(0, -1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[2] = ceiling;
-        Plane floor = Plane(Direction(0, 1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        //Plane floor = Plane(Direction(0, 1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        Plane floor = Plane(Direction(0, 1, 0), 7, RGB(255, 255, 255));
         planeList[3] = floor;
-        Plane background = Plane(Direction(-1, 0, 0), 50, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        //Plane background = Plane(Direction(-1, 0, 0), 50, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        Plane background = Plane(Direction(-1, 0, 0), 50, RGB(255, 255, 255));
         planeList[4] = background;
+
+        //Plane behind = Plane(Direction(1, 0, 0), 10, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        Plane behind = Plane(Direction(1, 0, 0), 10, RGB(255, 255, 255));
+        planeList[5] = behind;
 
         // Definition of the spheres which are going to appear in the scene 
         Sphere leftSphere = Sphere(Point(40, -5, -3), 2, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.9, 0, 0, 1);
@@ -325,7 +333,7 @@ int main(int argc, char* argv[]){
                                 if(randomRR <= diffuseUB){
                                     // Russian roulette: diffuse
                                     theta = acosf(sqrt(1.f - uniform_real_distribution<float>(0, 1)(rng)));
-                                    phi = M_PI * uniform_real_distribution<float>(0, 1)(rng);
+                                    phi = 2.f * M_PI * uniform_real_distribution<float>(0, 1)(rng);
                                     x_ = sin(phi) * cos(theta); 
                                     y_ = sin(phi) * sin(theta);
                                     z_ = cos(phi);
@@ -341,7 +349,7 @@ int main(int argc, char* argv[]){
                                 else if(randomRR <= specularUB){
                                     // Russian roulette: specular
                                     theta = acosf(sqrt(1.f - uniform_real_distribution<float>(0, 1)(rng)));
-                                    phi = M_PI * uniform_real_distribution<float>(0, 1)(rng);
+                                    phi = 2.f * M_PI * uniform_real_distribution<float>(0, 1)(rng);
                                     x_ = sin(phi) * cos(theta); 
                                     y_ = sin(phi) * sin(theta);
                                     z_ = cos(phi);
@@ -362,13 +370,19 @@ int main(int argc, char* argv[]){
                                 else if(randomRR <= refractionUB){
                                     // Russian roulette: refraction
                                     float cosi = dot(rayDir, normal) < -1.0 ? -1.0 : (1.0 < dot(rayDir, normal)) ? 1.0 : dot(rayDir, normal);
-                                    float etai = 1, etat = ri; 
+                                    float etai = 1, etat = ri;
+                                    cout << "------------------------------" << endl;
+                                    cout << "rayDir " << rayDir.toString() << endl;
+                                    cout << "normal " << normal.toString() << endl;
+                                    cout << "distance " << minDistance << endl;
                                     if (cosi < 0){
                                         cosi = -cosi;
+                                        cout << "cosi < 0" << endl;
                                     }
                                     else {
                                         swap(etai, etat);
                                         normal = normal * -1;
+                                        cout << "cambio de normal " << normal.toString() << endl;
                                     }
                                     float eta = etai / etat;
                                     float k = 1 - eta * eta * (1 - cosi * cosi);
@@ -379,8 +393,10 @@ int main(int argc, char* argv[]){
                                         productB = 0;
                                     }
                                     else {
-                                        rayDir = rayDir * eta + normal * (eta * cosi - sqrtf(k)); 
+                                        rayDir = rayDir * eta + normal * (eta * cosi - sqrtf(k));
+                                        cout << "new rayDir " << rayDir.toString() << endl;
                                     }
+                                    origin = origin + oldRayDir * 0.0001;
                                 }
                                 else{
                                     // Path finished (russian roulette = absortion)

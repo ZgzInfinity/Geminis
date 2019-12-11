@@ -22,7 +22,7 @@
 #include "../include/SharedOps.h"
 
 
-const int DIM_PLANE = 5;
+const int DIM_PLANE = 6;
 const float EPSILON = 0.0000001;
 
 
