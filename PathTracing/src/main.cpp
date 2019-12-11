@@ -110,18 +110,23 @@ int main(int argc, char* argv[]){
         Plane rightWall = Plane(Direction(0, 0,-1), 7, 0, 0.8, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[1] = rightWall;
         Plane ceiling = Plane(Direction(0, -1, 0), 7, RGB(255, 255, 255));
+        // Plane ceiling = Plane(Direction(0, -1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[2] = ceiling;
-        Plane floor = Plane(Direction(0, 1, 0), 7, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9, 0, 1);
+        Plane floor = Plane(Direction(0, 1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[3] = floor;
-        Plane background = Plane(Direction(-1, 0, 0), 50, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9, 0, 1);
+        Plane background = Plane(Direction(-1, 0, 0), 50, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[4] = background;
 
         // Definition of the spheres which are going to appear in the scene 
         Sphere leftSphere = Sphere(Point(40, -5, -3), 2, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.9, 0, 0, 1);
-        Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9, 0, 1);
+        // Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9, 0, 1);
+        Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0.9, 1.5);
+
+        //Sphere lightSphere = Sphere(Point(37, 7, 0), 5, RGB(255, 255, 255));
 
         sphereList[0] = leftSphere;
         sphereList[1] = rightSphere;
+        //sphereList[2] = lightSphere;
 
 
         // Matrix of the image that is going to be built
@@ -147,6 +152,7 @@ int main(int argc, char* argv[]){
         float kdr = 0, kdg = 0, kdb = 0;
         float ksr = 0, ksg = 0, ksb = 0, shininess = 0;
         float kps = 0;
+        float ri = 1;
 
         // Nearest objects found in path intersection (0 is no intersection)
         Plane nearestPlane; // Object code = 1
@@ -254,6 +260,7 @@ int main(int argc, char* argv[]){
                                     ksb = nearestPlane.ksb;
                                     kps = nearestPlane.kps;
                                     shininess = nearestPlane.shininess;
+                                    ri = nearestPlane.ri;
                                 }
                                 break;
                             case 2:
@@ -282,6 +289,7 @@ int main(int argc, char* argv[]){
                                     ksb = nearestSphere.ksb;
                                     kps = nearestSphere.kps;
                                     shininess = nearestSphere.shininess;
+                                    ri = nearestSphere.ri;
                                 }                            
                                 break;
                             case 3:
@@ -309,6 +317,7 @@ int main(int argc, char* argv[]){
                                     ksb = nearestTriangle.ksb;
                                     kps = nearestTriangle.kps;
                                     shininess = nearestTriangle.shininess;
+                                    ri = nearestTriangle.ri;
                                 }
                             }
                             if(!pathFinished){
@@ -353,7 +362,7 @@ int main(int argc, char* argv[]){
                                 else if(randomRR <= refractionUB){
                                     // Russian roulette: refraction
                                     float cosi = dot(rayDir, normal) < -1.0 ? -1.0 : (1.0 < dot(rayDir, normal)) ? 1.0 : dot(rayDir, normal);
-                                    float etai = 1, etat = 1; 
+                                    float etai = 1, etat = ri; 
                                     if (cosi < 0){
                                         cosi = -cosi;
                                     }
