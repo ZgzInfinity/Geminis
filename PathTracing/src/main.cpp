@@ -18,6 +18,7 @@
 #include <cfloat>
 #include <random>
 #include <chrono>
+#include <algorithm>
 #include "../include/Matrix4.h"
 #include "../include/SharedOps.h"
 #include "../include/Plane.h"
@@ -348,16 +349,30 @@ int main(int argc, char* argv[]){
                                     // Russian roulette: perfect specular
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     rayDir = oldRayDir - normal * dot(oldRayDir, normal) * 2.f;
-                                    productR *= (kps / abs(perfectSpecularUB - specularUB));
-                                    productG *= (kps / abs(perfectSpecularUB - specularUB));
-                                    productB *= (kps / abs(perfectSpecularUB - specularUB));
-                                }
-                                /*
+                                }                                
                                 else if(randomRR <= refractionUB){
                                     // Russian roulette: refraction
-
+                                    float cosi = dot(rayDir, normal) < -1.0 ? -1.0 : (1.0 < dot(rayDir, normal)) ? 1.0 : dot(rayDir, normal);
+                                    float etai = 1, etat = 1; 
+                                    if (cosi < 0){
+                                        cosi = -cosi;
+                                    }
+                                    else {
+                                        swap(etai, etat);
+                                        normal = normal * -1;
+                                    }
+                                    float eta = etai / etat;
+                                    float k = 1 - eta * eta * (1 - cosi * cosi);
+                                    if (k < 0){
+                                        pathFinished = true;
+                                        productR = 0;
+                                        productG = 0;
+                                        productB = 0;
+                                    }
+                                    else {
+                                        rayDir = rayDir * eta + normal * (eta * cosi - sqrtf(k)); 
+                                    }
                                 }
-                                */
                                 else{
                                     // Path finished (russian roulette = absortion)
                                     pathFinished = true;
@@ -374,19 +389,10 @@ int main(int argc, char* argv[]){
                     acumG += productG;
                     acumB += productB;
                 }
-                acumR /= PPP;
-                acumG /= PPP;
-                acumB /= PPP;                
-                if(acumR > 255){
-                    acumR = 255;
-                }
-                if(acumG > 255){
-                    acumG = 255;
-                }
-                if(acumB > 255){
-                    acumB = 255;
-                }
-                img[row][col] = RGB(acumR, acumG, acumB);
+                // Clamp RGB values between 0 and 255 
+                img[row][col] = RGB(clamp((int)(acumR / PPP), 0, 255), 
+                                    clamp((int)(acumG / PPP), 0, 255), 
+                                    clamp((int)(acumB / PPP), 0, 255));
             }
         }
         // Creation of the image and saving in a ppm format file
