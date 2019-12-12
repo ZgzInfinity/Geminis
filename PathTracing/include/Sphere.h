@@ -98,27 +98,34 @@ inline void intersectionRaySphere(const Point& origin, Direction& rayDir,
 {
     Direction oc;
     float t, a, b, c, discriminant;
+    float t0, t1;
     // Sphere intersection
     for(int i = 0; i < DIM_SPHERE; i++){
-        oc = origin - sphereList[i].center;
-        // Calculation of the coefficients to resolve a second grade equation
-        a = dot(rayDir, rayDir);
-        b = 2.f * dot(oc, rayDir);
-        c = dot(oc, oc) - (sphereList[i].radius * sphereList[i].radius);
-        discriminant = b * b - 4 * a * c;
-        if (discriminant >= 0.f){
-            t = (-b -sqrt(discriminant)) / 2.f * a;
-            // Control of dividing by zero
-            if(t > 0.f){
-                if(t < minDistance){
-                    // Its a near intersection
-                    minDistance = t;
+        Direction L = sphereList[i].center - origin; 
+        float tca = dot(L, rayDir); 
+        float d2 = dot(L, L) - tca * tca; 
+        if (d2 > sphereList[i].radius * sphereList[i].radius){
+            continue;
+        }  
+        float thc = sqrt(sphereList[i].radius * sphereList[i].radius - d2); 
+        float t0 = tca - thc; 
+        float t1 = tca + thc;
 
-                    // Update nearest object
-                    nearestSphere = sphereList[i];
-                    nearestObject =  2;
-                }
+        if (t0 > t1) std::swap(t0, t1); 
+ 
+        if (t0 < 0) { 
+            t0 = t1; // if t0 is negative, let's use t1 instead 
+            if (t0 < 0){
+                continue; // both t0 and t1 are negative
             }
+        } 
+
+        if(t0 < minDistance){
+            // Its a near intersection
+            // Update nearest object
+            minDistance = t0;
+            nearestSphere = sphereList[i];
+            nearestObject =  2;
         }
     }
 }

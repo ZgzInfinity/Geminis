@@ -105,28 +105,23 @@ int main(int argc, char* argv[]){
         Triangle triangleList[DIM_TRIANGLE];
         
         // Definition of the planes which are going to appear in the scene 
-        //Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0.0, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
-        Plane leftWall = Plane(Direction(0, 0, 1), 7, RGB(255, 0, 0));
+        Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0.0, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[0] = leftWall;
-        //Plane rightWall = Plane(Direction(0, 0,-1), 7, 0, 0.8, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
-        Plane rightWall = Plane(Direction(0, 0,-1), 7, RGB(0, 255, 0));
+        Plane rightWall = Plane(Direction(0, 0,-1), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[1] = rightWall;
         Plane ceiling = Plane(Direction(0, -1, 0), 7, RGB(255, 255, 255));
         //Plane ceiling = Plane(Direction(0, -1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[2] = ceiling;
-        //Plane floor = Plane(Direction(0, 1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
-        Plane floor = Plane(Direction(0, 1, 0), 7, RGB(255, 255, 255));
+        Plane floor = Plane(Direction(0, 1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[3] = floor;
-        //Plane background = Plane(Direction(-1, 0, 0), 50, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
-        Plane background = Plane(Direction(-1, 0, 0), 50, RGB(255, 255, 255));
+        Plane background = Plane(Direction(-1, 0, 0), 50, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[4] = background;
 
-        //Plane behind = Plane(Direction(1, 0, 0), 10, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
-        Plane behind = Plane(Direction(1, 0, 0), 10, RGB(255, 255, 255));
+        Plane behind = Plane(Direction(1, 0, 0), 10, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[5] = behind;
 
         // Definition of the spheres which are going to appear in the scene 
-        Sphere leftSphere = Sphere(Point(40, -5, -3), 2, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.9, 0, 0, 1);
+        Sphere leftSphere = Sphere(Point(40, -5, -3), 2, 0.0, 0.0, 0.0, 0.8, 0.8, 0.8, 0.1, 0, 0, 1);
         // Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9, 0, 1);
         Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0.9, 1.5);
 
@@ -205,7 +200,6 @@ int main(int argc, char* argv[]){
                     // Direction of the ray with an emission 
                     rayDir = pixelPoint - origin;
                     rayDir = rayDir / mod(rayDir);
-                    //cout << rayDir.toString() << endl;
                     img[row][col] = RGB();
                     // Initialize montecarlo products
                     productR = 1, productG = 1, productB = 1;
@@ -224,7 +218,7 @@ int main(int argc, char* argv[]){
         
                         // Calculation of intersections between ray and spheres
                         intersectionRaySphere(origin, rayDir, pixelPoint, minDistance, img, sphereList, nearestSphere, nearestObject);
-
+                        
                         // Calculation of intersections between ray and triangles
                         intersectionRayTriangle(origin, bary, rayDir, textureH, textureW, pixelPoint, 
                                                 minDistance, textureImg, img, triangleList, nearestTriangle, nearestObject);
@@ -371,18 +365,12 @@ int main(int argc, char* argv[]){
                                     // Russian roulette: refraction
                                     float cosi = dot(rayDir, normal) < -1.0 ? -1.0 : (1.0 < dot(rayDir, normal)) ? 1.0 : dot(rayDir, normal);
                                     float etai = 1, etat = ri;
-                                    cout << "------------------------------" << endl;
-                                    cout << "rayDir " << rayDir.toString() << endl;
-                                    cout << "normal " << normal.toString() << endl;
-                                    cout << "distance " << minDistance << endl;
                                     if (cosi < 0){
                                         cosi = -cosi;
-                                        cout << "cosi < 0" << endl;
                                     }
                                     else {
                                         swap(etai, etat);
                                         normal = normal * -1;
-                                        cout << "cambio de normal " << normal.toString() << endl;
                                     }
                                     float eta = etai / etat;
                                     float k = 1 - eta * eta * (1 - cosi * cosi);
@@ -394,7 +382,6 @@ int main(int argc, char* argv[]){
                                     }
                                     else {
                                         rayDir = rayDir * eta + normal * (eta * cosi - sqrtf(k));
-                                        cout << "new rayDir " << rayDir.toString() << endl;
                                     }
                                     origin = origin + oldRayDir * 0.0001;
                                 }
