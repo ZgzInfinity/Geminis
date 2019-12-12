@@ -121,7 +121,7 @@ int main(int argc, char* argv[]){
         planeList[5] = behind;
 
         // Definition of the spheres which are going to appear in the scene 
-        Sphere leftSphere = Sphere(Point(40, -5, -3), 2, 0.0, 0.0, 0.0, 0.8, 0.8, 0.8, 0.1, 0, 0, 1);
+        Sphere leftSphere = Sphere(Point(40, -5, -3), 2,  0.8, 0.8, 0.8, 0, 0, 0, 0.1, 0, 0, 1);
         // Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9, 0, 1);
         Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0.9, 1.5);
 
