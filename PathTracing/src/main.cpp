@@ -107,7 +107,7 @@ int main(int argc, char* argv[]){
         // Definition of the planes which are going to appear in the scene 
         Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0.0, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[0] = leftWall;
-        Plane rightWall = Plane(Direction(0, 0,-1), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        Plane rightWall = Plane(Direction(0, 0,-1), 7, 0.0, 0.8, 0.0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[1] = rightWall;
         Plane ceiling = Plane(Direction(0, -1, 0), 7, RGB(255, 255, 255));
         //Plane ceiling = Plane(Direction(0, -1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
@@ -163,7 +163,6 @@ int main(int argc, char* argv[]){
         Triangle nearestTriangle; // Object code = 3
         int nearestObject; // Code of the nearest object (0, 1, 2 or 3)
         Direction x, y, normal; // Intersected object base directions (unitary)
-        float pgeoFactor; // Factor used in montecarlo product (geometry / pdf)
         float minDistance; // Distance to the nearest intersected object
         bool pathFinished; // Store if path has to finish
 
@@ -253,7 +252,7 @@ int main(int argc, char* argv[]){
                                     normal = nearestPlane.normal / mod(nearestPlane.normal);
                                     // Get tangent to plane using arbitraty unitary direction
                                     x = cross(normal, Direction(1, random1, random2) / mod(Direction(1, random1, random2)));
-                                    y = cross(x, normal);
+                                    y = cross(normal, x);
                                     kdr = nearestPlane.kdr;
                                     kdg = nearestPlane.kdg;
                                     kdb = nearestPlane.kdb;
@@ -279,10 +278,10 @@ int main(int argc, char* argv[]){
                                     specularUB = diffuseUB + nearestSphere.maxks;
                                     perfectSpecularUB = specularUB + nearestSphere.kps;
                                     refractionUB = perfectSpecularUB + nearestSphere.krf;
-                                    normal = (origin + (rayDir * minDistance) - nearestSphere.center);
+                                    normal = (origin + (rayDir * minDistance)) - nearestSphere.center;
                                     normal = normal / mod(normal);
                                     x = cross(normal, Direction(1, random1, random2) / mod(Direction(1, random1, random2)));
-                                    y = cross(x, normal);
+                                    y = cross(normal, x);
                                     kdr = nearestSphere.kdr;
                                     kdg = nearestSphere.kdg;
                                     kdb = nearestSphere.kdb;
@@ -310,7 +309,7 @@ int main(int argc, char* argv[]){
                                     refractionUB = perfectSpecularUB + nearestTriangle.krf; 
                                     normal = nearestTriangle.normal / mod(nearestTriangle.normal);
                                     x = nearestTriangle.edge1 / mod(nearestTriangle.edge1);
-                                    y = cross(x, normal);
+                                    y = cross(normal, x);
                                     kdr = nearestTriangle.kdr;
                                     kdg = nearestTriangle.kdg;
                                     kdb = nearestTriangle.kdb;
@@ -328,9 +327,9 @@ int main(int argc, char* argv[]){
                                     // Russian roulette: diffuse
                                     theta = acosf(sqrt(1.f - uniform_real_distribution<float>(0, 1)(rng)));
                                     phi = 2.f * M_PI * uniform_real_distribution<float>(0, 1)(rng);
-                                    x_ = sin(phi) * cos(theta); 
-                                    y_ = sin(phi) * sin(theta);
-                                    z_ = cos(phi);
+                                    x_ = sin(theta) * cos(phi); 
+                                    y_ = sin(theta) * sin(phi);
+                                    z_ = cos(theta);
 
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, z_);
@@ -339,14 +338,18 @@ int main(int argc, char* argv[]){
                                     productR *= (kdr / diffuseUB);
                                     productG *= (kdg / diffuseUB);
                                     productB *= (kdb / diffuseUB);
+                                    if(nearestObject == 2){
+                                        //cout << "oldRayDir " << oldRayDir.toString() << " rayDir " << rayDir.toString() << endl;
+                                    }
+
                                 }
                                 else if(randomRR <= specularUB){
                                     // Russian roulette: specular
                                     theta = acosf(sqrt(1.f - uniform_real_distribution<float>(0, 1)(rng)));
                                     phi = 2.f * M_PI * uniform_real_distribution<float>(0, 1)(rng);
-                                    x_ = sin(phi) * cos(theta); 
-                                    y_ = sin(phi) * sin(theta);
-                                    z_ = cos(phi);
+                                    x_ = sin(theta) * cos(phi); 
+                                    y_ = sin(theta) * sin(phi);
+                                    z_ = cos(theta);
 
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, z_);

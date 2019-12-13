@@ -100,7 +100,7 @@ inline void intersectionRayPlane(const Point& origin, const Direction& rayDir, f
             // Calculation of the distance between 
             t = - (dot(origin, planeList[i].normal) + planeList[i].distance2origin) / denom;
             // Control of dividing by zerp
-            if(t > 0.f){
+            if(t > 0.0005){
                 if(t < minDistance){
                     // Its a near intersection and it is saved with the correct emission
                     minDistance = t;
