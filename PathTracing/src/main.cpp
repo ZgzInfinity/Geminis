@@ -26,6 +26,8 @@
 #include "../include/Triangle.h"
 #include "../include/Image.h"
 #include "../include/ImageLoaderPPM.h"
+#include "../include/DirectLight.h"
+
 
 using namespace std;
 
@@ -58,7 +60,7 @@ int main(int argc, char* argv[]){
         Direction d_k = Direction(1, 0, 0);
         //Point origin = Point(-1.5, 2, 2);
         Point camera = Point(-3, 0, 0);
-        Point origin;
+        Point origin, intersection;
 
         // Creation of the base
         // Matrix4 camera = Matrix4::changeBase(d_i, d_j, d_k, origin);
@@ -103,14 +105,15 @@ int main(int argc, char* argv[]){
         Sphere sphereList[DIM_SPHERE];
         Plane planeList[DIM_PLANE];
         Triangle triangleList[DIM_TRIANGLE];
+        DirectLight directLightList[DIM_DIRECT_LIGHT];
         
         // Definition of the planes which are going to appear in the scene 
         Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0.0, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[0] = leftWall;
         Plane rightWall = Plane(Direction(0, 0,-1), 7, 0.0, 0.8, 0.0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[1] = rightWall;
-        Plane ceiling = Plane(Direction(0, -1, 0), 7, RGB(255, 255, 255));
-        //Plane ceiling = Plane(Direction(0, -1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        // Plane ceiling = Plane(Direction(0, -1, 0), 7, RGB(255, 255, 255));
+        Plane ceiling = Plane(Direction(0, -1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[2] = ceiling;
         Plane floor = Plane(Direction(0, 1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[3] = floor;
@@ -131,6 +134,13 @@ int main(int argc, char* argv[]){
         sphereList[1] = rightSphere;
         //sphereList[2] = lightSphere;
 
+        // Definition of the direct lights which are going to appear in the scene 
+        DirectLight d1 = DirectLight(Point(35, 6, -2), 60, RGB(255, 255, 255));
+        DirectLight d2 = DirectLight(Point(35, 6, 2), 120, RGB(255, 255, 255));
+
+        directLightList[0] = d1;
+        directLightList[1] = d2;
+
 
         // Matrix of the image that is going to be built
         vector<vector<RGB>> img(height, vector<RGB>(width));
@@ -138,7 +148,7 @@ int main(int argc, char* argv[]){
         // Calculation of the upper left corner of the proyection plane 
         Point upperLeftCorner = origin + d_k + leftPP + upPP;
         Point pixelPoint;
-        Direction rayDir, oldRayDir;
+        Direction rayDir, oldRayDir, directLightRay;
         Point bary;
 
         // Aleatory number for the rays and russian roulette
@@ -167,9 +177,6 @@ int main(int argc, char* argv[]){
         bool pathFinished; // Store if path has to finish
 
         float x_, y_, z_, theta, phi;
-
-
-
 
         // Loop that calculates for each pixel the thrown ray and the intersections
         // between it and the spheres and planes stored in the scene
@@ -248,7 +255,7 @@ int main(int argc, char* argv[]){
                                     specularUB = diffuseUB + nearestPlane.maxks;
                                     perfectSpecularUB = specularUB + nearestPlane.kps;
                                     refractionUB = perfectSpecularUB + nearestPlane.krf;
-                                    
+                                    intersection = origin + (rayDir * minDistance);
                                     normal = nearestPlane.normal / mod(nearestPlane.normal);
                                     // Get tangent to plane using arbitraty unitary direction
                                     x = cross(normal, Direction(1, random1, random2) / mod(Direction(1, random1, random2)));
@@ -278,7 +285,9 @@ int main(int argc, char* argv[]){
                                     specularUB = diffuseUB + nearestSphere.maxks;
                                     perfectSpecularUB = specularUB + nearestSphere.kps;
                                     refractionUB = perfectSpecularUB + nearestSphere.krf;
-                                    normal = (origin + (rayDir * minDistance)) - nearestSphere.center;
+                                    // Calculate light from direct lights
+                                    intersection = origin + (rayDir * minDistance);
+                                    normal = intersection - nearestSphere.center;
                                     normal = normal / mod(normal);
                                     x = cross(normal, Direction(1, random1, random2) / mod(Direction(1, random1, random2)));
                                     y = cross(normal, x);
@@ -306,7 +315,8 @@ int main(int argc, char* argv[]){
                                     diffuseUB = nearestTriangle.maxkd;
                                     specularUB = diffuseUB + nearestTriangle.maxks;
                                     perfectSpecularUB = specularUB + nearestTriangle.kps;
-                                    refractionUB = perfectSpecularUB + nearestTriangle.krf; 
+                                    refractionUB = perfectSpecularUB + nearestTriangle.krf;
+                                    intersection = origin + (rayDir * minDistance);
                                     normal = nearestTriangle.normal / mod(nearestTriangle.normal);
                                     x = nearestTriangle.edge1 / mod(nearestTriangle.edge1);
                                     y = cross(normal, x);
@@ -338,10 +348,6 @@ int main(int argc, char* argv[]){
                                     productR *= (kdr / diffuseUB);
                                     productG *= (kdg / diffuseUB);
                                     productB *= (kdb / diffuseUB);
-                                    if(nearestObject == 2){
-                                        //cout << "oldRayDir " << oldRayDir.toString() << " rayDir " << rayDir.toString() << endl;
-                                    }
-
                                 }
                                 else if(randomRR <= specularUB){
                                     // Russian roulette: specular
@@ -357,8 +363,7 @@ int main(int argc, char* argv[]){
                                     productR *= (ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
                                     productG *= (ksg / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
                                     productB *= (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
-                                }
-                                
+                                }                                
                                 else if(randomRR <= perfectSpecularUB){
                                     // Russian roulette: perfect specular
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
@@ -394,6 +399,31 @@ int main(int argc, char* argv[]){
                                     productR = 0;
                                     productG = 0;
                                     productB = 0;
+                                }
+                                // Calculate the contribution from direct light sources
+                                for (int i = 0; i < DIM_DIRECT_LIGHT; i++){
+                                    // Direction of the ray to the direct light
+                                    directLightRay = directLightList[i].location - intersection;
+
+                                    // Update the minimum distance
+                                    minDistance = mod(directLightRay);
+
+                                    // Check posible intersections between the objects and the light ray
+                                    // Calculation of intersections between ray and planes
+                                    intersectionRayPlane(intersection, directLightRay, minDistance, img, planeList, nearestPlane, nearestObject);
+                    
+                                    // Calculation of intersections between ray and spheres
+                                    intersectionRaySphere(intersection, directLightRay, pixelPoint, minDistance, img, sphereList, nearestSphere, nearestObject);
+                                    
+                                    // Calculation of intersections between ray and triangles
+                                    intersectionRayTriangle(intersection, bary, directLightRay, textureH, textureW, pixelPoint, 
+                                                            minDistance, textureImg, img, triangleList, nearestTriangle, nearestObject);
+
+                                    // Check if directRay has intersect any object
+                                    if (minDistance == mod(directLightRay)){
+                                        // Not intersection
+                                        // TO DO ldirectLightList[i].power / (minDistance * minDistance)
+                                    } 
                                 }
                             } 
                         }
