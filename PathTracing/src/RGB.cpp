@@ -40,3 +40,13 @@ RGB::RGB(){
     green = 0.f;
     blue = 0.f;
 }
+
+
+RGB operator * (RGB a, RGB b){
+    return RGB(a.red * b.red, a.green * b.green, a.blue * b.blue);
+}
+
+
+RGB operator + (RGB a, RGB b){
+    return RGB(a.red + b.red, a.green + b.green, a.blue + b.blue);
+}

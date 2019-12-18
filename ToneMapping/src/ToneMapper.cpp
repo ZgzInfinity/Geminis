@@ -15,7 +15,10 @@
 
 #include <fstream>
 #include <cmath>
+#include <algorithm>
 #include "../include/ToneMapper.h"
+
+using namespace std;
 
 
 
@@ -111,7 +114,7 @@ RGB lab2rgb(LAB lab){
     if ( var_B > 0.0031308 ) var_B = 1.055 * pow( var_B , ( 1 / 2.4 ) ) - 0.055;
     else                     var_B = 12.92 * var_B;
 
-    return RGB(var_R * 255., var_G * 255., var_B * 255.);
+    return RGB(clamp((int)(var_R * 255.), 0, 255), clamp((int)(var_G * 255.), 0, 255), clamp((int)(var_B * 255.), 0, 255));
 }
 
 

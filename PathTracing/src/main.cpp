@@ -32,7 +32,7 @@
 using namespace std;
 
 const int NUMBER_PARAMETERS = 5;
-const int RC = 255;
+int rc = 0;
 
 
 
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]){
     if (argc != NUMBER_PARAMETERS){
         // Incorret
         cerr << "Wrong number of parameters" << endl;
-        cerr << "Invoke like pathTracing <rays per pixel> <width of image> <height of image" 
+        cerr << "Invoke like pathTracing <rays per pixel> <width of image> <height of image>" 
              << "path of the file" << endl;
     }
     else {
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]){
         Direction d_k = Direction(1, 0, 0);
         //Point origin = Point(-1.5, 2, 2);
         Point camera = Point(-3, 0, 0);
-        Point origin, intersection;
+        Point origin, intersection, lastIntersection;
 
         // Creation of the base
         // Matrix4 camera = Matrix4::changeBase(d_i, d_j, d_k, origin);
@@ -136,8 +136,8 @@ int main(int argc, char* argv[]){
         //sphereList[2] = lightSphere;
 
         // Definition of the direct lights which are going to appear in the scene 
-        DirectLight d1 = DirectLight(Point(35, 3, -2), 6, RGB(255, 255, 255));
-        DirectLight d2 = DirectLight(Point(35, 3, 2), 6, RGB(255, 255, 255));
+        DirectLight d1 = DirectLight(Point(35, 3, -2), 10000, RGB(255, 255, 255));
+        DirectLight d2 = DirectLight(Point(35, 3, 2), 10000, RGB(255, 255, 255));
 
         directLightList[0] = d1;
         directLightList[1] = d2;
@@ -182,6 +182,10 @@ int main(int argc, char* argv[]){
 
         float x_, y_, z_, theta, phi;
 
+        RGB acumDL[200000];
+        RGB acumIL[200000];
+        int ind;
+
         // Loop that calculates for each pixel the thrown ray and the intersections
         // between it and the spheres and planes stored in the scene
         for(int row = 0; row < height; row++){
@@ -215,10 +219,18 @@ int main(int argc, char* argv[]){
                     productR = 1, productG = 1, productB = 1;
                     // Initialize direct light sumatories
                     acumDirLR = 0, acumDirLG = 0, acumDirLB = 0;
+                    ind = 0;
                     // Initialize pathFinished to false
                     pathFinished = false;
 
                     while(!pathFinished){
+                        if(ind >= 200000) break;
+                        acumDL[ind] = RGB();
+                        acumIL[ind] = RGB();
+                        acumDirLR = 0;
+                        acumDirLG = 0;
+                        acumDirLB = 0;
+                        
                         //For each object intersection the starting distance is the biggest value and it is going to be reduced
                         minDistance = FLT_MAX;
 
@@ -261,11 +273,6 @@ int main(int argc, char* argv[]){
                                     specularUB = diffuseUB + nearestPlane.maxks;
                                     perfectSpecularUB = specularUB + nearestPlane.kps;
                                     refractionUB = perfectSpecularUB + nearestPlane.krf;
-                                    //cout << "plane" << endl;
-                                    //cout << "origin " << origin.toString() << endl;
-                                    //cout << "rayDir " << rayDir.toString() << endl;
-                                    //cout << "minDistance " << minDistance << endl;
-
                                     intersection = origin + (rayDir * minDistance);
                                     normal = nearestPlane.normal / mod(nearestPlane.normal);
                                     // Get tangent to plane using arbitraty unitary direction
@@ -296,10 +303,6 @@ int main(int argc, char* argv[]){
                                     specularUB = diffuseUB + nearestSphere.maxks;
                                     perfectSpecularUB = specularUB + nearestSphere.kps;
                                     refractionUB = perfectSpecularUB + nearestSphere.krf;
-                                    //cout << "sphere" << endl;
-                                    //cout << "origin " << origin.toString() << endl;
-                                    //cout << "rayDir " << rayDir.toString() << endl;
-                                    //cout << "minDistance " << minDistance << endl;
                                     intersection = origin + (rayDir * minDistance);
                                     normal = intersection - nearestSphere.center;
                                     normal = normal / mod(normal);
@@ -347,6 +350,7 @@ int main(int argc, char* argv[]){
                             }
                             if(!pathFinished){
                                 randomRR = uniform_real_distribution<float>(0, 1)(rng);
+                                lastIntersection = intersection;
                                 if(randomRR <= diffuseUB){
                                     // Russian roulette: diffuse
                                     theta = acosf(sqrt(1.f - uniform_real_distribution<float>(0, 1)(rng)));
@@ -364,12 +368,10 @@ int main(int argc, char* argv[]){
                                     productB *= (kdb / diffuseUB);
 
 
-
                                     // Calculate the contribution from direct light sources
                                     for (int i = 0; i < DIM_DIRECT_LIGHT; i++){
                                         // Direction of the ray to the direct light
                                         directLightRay = directLightList[i].location - intersection;
-                                        //cout << "light location " << directLightList[i].location.toString() << " intersection " << intersection.toString() << endl;
                                         // Update the minimum distance
                                         minDistanceDL = mod(directLightRay);
                                         oldDistanceDL = minDistanceDL;
@@ -378,7 +380,7 @@ int main(int argc, char* argv[]){
 
                                         // Check posible intersections between the objects and the light ray
                                         // Calculation of intersections between ray and planes
-                                        //intersectionRayPlane(intersection, directLightRay, minDistanceDL, img, planeList, nearestPlane, nearestObject);
+                                        intersectionRayPlane(intersection, directLightRay, minDistanceDL, img, planeList, nearestPlane, nearestObject);
                         
                                         // Calculation of intersections between ray and spheres
                                         intersectionRaySphere(intersection, directLightRay, pixelPoint, minDistanceDL, img, sphereList, nearestSphere, nearestObject);
@@ -386,27 +388,19 @@ int main(int argc, char* argv[]){
                                         // Calculation of intersections between ray and triangles
                                         intersectionRayTriangle(intersection, bary, directLightRay, textureH, textureW, pixelPoint, 
                                                                 minDistanceDL, textureImg, img, triangleList, nearestTriangle, nearestObject);
-                                        //cout << minDistanceDL << " " << oldDistanceDL << endl;
                                         // Check if directRay has intersect any object
                                         if (minDistanceDL == oldDistanceDL){
-                                            /*
-                                            acumDirLR += (directLightList[i].power / (mod(directLightRay) * mod(directLightRay))) *
-                                                        ((kdr / M_PI) / diffuseUB) *
-                                                        abs(dot(normal, (directLightList[i].location - intersection) / mod(directLightList[i].location - intersection)));
-                                            acumDirLG += (directLightList[i].power / (mod(directLightRay) * mod(directLightRay))) *
-                                                        ((kdg / M_PI) / diffuseUB) *
-                                                        abs(dot(normal, (directLightList[i].location - intersection) / mod(directLightList[i].location - intersection)));
-                                            acumDirLB += (directLightList[i].power / (mod(directLightRay) * mod(directLightRay))) *
-                                                        ((kdb / M_PI) / diffuseUB) *
-                                                        abs(dot(normal, (directLightList[i].location - intersection) / mod(directLightList[i].location - intersection)));
-                                                        */
                                             acumDirLR += (directLightList[i].power / (mod(directLightRay) * mod(directLightRay))) * kdr / diffuseUB;
                                             acumDirLG += (directLightList[i].power / (mod(directLightRay) * mod(directLightRay))) * kdg / diffuseUB;
                                             acumDirLB += (directLightList[i].power / (mod(directLightRay) * mod(directLightRay))) * kdb / diffuseUB;
                                             
-                                            //cout << acumDirLR <<  " " << acumDirLG <<  " " << acumDirLB << endl;
                                         } 
                                     }
+                                    acumDL[ind] = RGB(acumDirLR, acumDirLG, acumDirLB);
+                                    // Maybe it's necessary to divide by probability distribution of the new ray
+                                    acumIL[ind] = RGB((kdr / diffuseUB) * abs(dot(normal, rayDir)),
+                                                        (kdg / diffuseUB) * abs(dot(normal, rayDir)),
+                                                        (kdb / diffuseUB) * abs(dot(normal, rayDir)));
 
 
                                 }
@@ -426,8 +420,6 @@ int main(int argc, char* argv[]){
                                     productB *= (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
 
 
-
-
                                     // Calculate the contribution from direct light sources
                                     for (int i = 0; i < DIM_DIRECT_LIGHT; i++){
                                         // Direction of the ray to the direct light
@@ -442,7 +434,7 @@ int main(int argc, char* argv[]){
 
                                         // Check posible intersections between the objects and the light ray
                                         // Calculation of intersections between ray and planes
-                                        //intersectionRayPlane(intersection, directLightRay, minDistanceDL, img, planeList, nearestPlane, nearestObject);
+                                        intersectionRayPlane(intersection, directLightRay, minDistanceDL, img, planeList, nearestPlane, nearestObject);
                         
                                         // Calculation of intersections between ray and spheres
                                         intersectionRaySphere(intersection, directLightRay, pixelPoint, minDistanceDL, img, sphereList, nearestSphere, nearestObject);
@@ -461,11 +453,12 @@ int main(int argc, char* argv[]){
                                                         ((ksb / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f)) * pow(abs(dot(normal, (directLightList[i].location - intersection) / mod(directLightList[i].location - intersection)) / (mod(normal) * mod(directLightList[i].location - intersection))), shininess));
                                         } 
                                     }
+                                    acumDL[ind] = RGB(acumDirLR, acumDirLG, acumDirLB);
+                                    acumIL[ind] = RGB((ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f),
+                                                        (ksg / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f),
+                                                        (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f));
 
-
-
-
-
+                                    
 
 
                                 }                                
@@ -507,26 +500,45 @@ int main(int argc, char* argv[]){
                                 }
                             } 
                         }
+
                         // Update origin point
-                        //cout << "update origin" << endl;
-                        //cout << "origin " << origin.toString() << endl;
-                        //cout << "oldRayDir " << oldRayDir.toString() << endl;
-                        //cout << "minDistance " << minDistance << endl;
                         origin =  origin + oldRayDir * minDistance;
+                        ind++;
+                        if(ind > 200000){
+                            cout << "hola" << endl;
+                        }
                     }
-                    //cout << "save " << acumDirLR <<  " " << acumDirLG <<  " " << acumDirLB << endl;
-                    acumR += productR + acumDirLR;
-                    acumG += productG + acumDirLG;
-                    acumB += productB + acumDirLB;
+                    ind--;
+                    while(ind > 0){
+                        ind--;
+                        //cout << ind << endl;
+                        acumDL[ind] = acumDL[ind] + (acumDL[ind + 1] * acumIL[ind]);
+                    }
+                    //cout << "eh" << endl;
+
+                    acumR += productR + acumDL[0].red;
+                    acumG += productG + acumDL[0].green;
+                    acumB += productB + acumDL[0].blue;
+
+                    //cout << "oh" << endl;
                 }
-                // Clamp RGB values between 0 and 255 
-                img[row][col] = RGB(clamp((int)(acumR / PPP), 0, 255), 
-                                    clamp((int)(acumG / PPP), 0, 255), 
-                                    clamp((int)(acumB / PPP), 0, 255));
+                // Clamp RGB values between 0 and 255
+                if((acumR / PPP) > rc){
+                    rc = (int)(acumR / PPP);
+                }
+                if((acumG / PPP) > rc){
+                    rc = (int)(acumG / PPP);
+                }
+                if((acumB / PPP) > rc){
+                    rc = (int)(acumB / PPP);
+                }
+                img[row][col] = RGB((int)(acumR / PPP), 
+                                    (int)(acumG / PPP), 
+                                    (int)(acumB / PPP));
             }
         }
         // Creation of the image and saving in a ppm format file
-        Image image = Image(true, width, height, RC, RC, img);
+        Image image = Image(true, width, height, 45000, 45000, img);
         image.printImage(argv[4]);
     }
     // Final execution of the programm

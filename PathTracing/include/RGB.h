@@ -43,6 +43,12 @@ struct RGB {
      * Default builder without parameters
      */
     RGB();
+
 };
+
+
+RGB operator * (RGB a, RGB b);
+
+RGB operator + (RGB a, RGB b);
 
 #endif
