@@ -117,9 +117,11 @@ int main(int argc, char* argv[]){
         planeList[2] = ceiling;
         Plane floor = Plane(Direction(0, 1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[3] = floor;
-        Plane background = Plane(Direction(-1, 0, 0), 50, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        //Plane background = Plane(Direction(-1, 0, 0), 50, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+        Plane background = Plane(Direction(-1, 0, 0), 50, 0, 0, 0, 0, 0, 0, 0, 0.9, 0, 1);
         planeList[4] = background;
 
+        
         Plane behind = Plane(Direction(1, 0, 0), 10, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
         planeList[5] = behind;
 
@@ -466,6 +468,10 @@ int main(int argc, char* argv[]){
                                     // Russian roulette: perfect specular
                                     // Get new rayDir, using new direction with normal = 1 in local coordinates
                                     rayDir = oldRayDir - normal * dot(oldRayDir, normal) * 2.f;
+
+                                    
+                                    acumDL[ind] = RGB(0, 0, 0);
+                                    acumIL[ind] = RGB(1, 1, 1);
                                 }                                
                                 else if(randomRR <= refractionUB){
                                     // Russian roulette: refraction
@@ -490,6 +496,8 @@ int main(int argc, char* argv[]){
                                         rayDir = rayDir * eta + normal * (eta * cosi - sqrtf(k));
                                     }
                                     origin = origin + oldRayDir * 0.0001;
+                                    acumDL[ind] = RGB(0, 0, 0);
+                                    acumIL[ind] = RGB(1, 1, 1);
                                 }
                                 else{
                                     // Path finished (russian roulette = absortion)
@@ -503,6 +511,7 @@ int main(int argc, char* argv[]){
 
                         // Update origin point
                         origin =  origin + oldRayDir * minDistance;
+                        //cout << ind << endl;
                         ind++;
                         if(ind > 200000){
                             cout << "hola" << endl;

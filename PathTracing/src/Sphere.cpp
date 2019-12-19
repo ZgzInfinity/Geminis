@@ -54,7 +54,7 @@ Sphere::Sphere(const Point _center, const float _radius, float _kdr, float _kdg,
         maxkd = kdb;
     }
     // Specular
-    ksr = _ksr; ksg = _ksg; ksb = _kdb;
+    ksr = _ksr; ksg = _ksg; ksb = _ksb;
     shininess = _shininess;
     // Store maximun ks in maxks
     ksr > ksg ? maxks = ksr : maxks = ksg;

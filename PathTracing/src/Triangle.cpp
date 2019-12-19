@@ -59,7 +59,7 @@ Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv,
     maxkd = kdb;
   }
   // Specular
-  ksr = _ksr; ksg = _ksg; ksb = _kdb;
+  ksr = _ksr; ksg = _ksg; ksb = _ksb;
   shininess = _shininess;
   // Store maximun ks in maxks
   ksr > ksg ? maxks = ksr : maxks = ksg;
