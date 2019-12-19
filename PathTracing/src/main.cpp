@@ -128,8 +128,8 @@ int main(int argc, char* argv[]){
         // Definition of the spheres which are going to appear in the scene 
         Sphere leftSphere = Sphere(Point(40, -5, -3), 2,  0.8, 0.8, 0.8, 0, 0, 0, 0.1, 0, 0, 1);
         // Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9, 0, 1);
-        // Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0.9, 1.5);
-        Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.8, 0.8, 0.8, 0, 0, 0, 0.1, 0, 0, 1);
+        Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0.9, 1.5);
+        // Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.8, 0.8, 0.8, 0, 0, 0, 0.1, 0, 0, 1);
 
         //Sphere lightSphere = Sphere(Point(37, 7, 0), 5, RGB(255, 255, 255));
 
@@ -138,11 +138,11 @@ int main(int argc, char* argv[]){
         //sphereList[2] = lightSphere;
 
         // Definition of the direct lights which are going to appear in the scene 
-        DirectLight d1 = DirectLight(Point(35, 3, -2), 10000, RGB(255, 255, 255));
+        DirectLight d1 = DirectLight(Point(35, 3, -2), 20000, RGB(255, 255, 255));
         DirectLight d2 = DirectLight(Point(35, 3, 2), 10000, RGB(255, 255, 255));
 
         directLightList[0] = d1;
-        directLightList[1] = d2;
+        //directLightList[1] = d2;
 
 
         // Matrix of the image that is going to be built

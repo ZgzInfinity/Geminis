@@ -121,7 +121,7 @@ inline void intersectionRaySphere(const Point& origin, Direction& rayDir,
                     nearestObject =  2;
                 }
             }
-            else if(t0 < 0.f && t1 > 0.0005){
+            else if(t1 > 0.0005){
                 if(t1 < minDistance){                    
                     // Its a near intersection
                     // Update nearest object
