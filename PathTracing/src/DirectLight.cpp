@@ -27,13 +27,11 @@ DirectLight::DirectLight(){}
 /**
  * Build a Sphere type object
  * @param _location is the point in the space of the direct light source 
- * @param _power is the power of the direct light source
  * @param _color is the color of the direct light source
  * @returns a DirectLight type object
  */
-DirectLight::DirectLight(const Point _location, const float _power, const RGB _color){
+DirectLight::DirectLight(const Point _location, const RGB _color){
     location = _location;
-    power = _power;
     color = _color;
 }
 

@@ -29,8 +29,6 @@ const int DIM_DIRECT_LIGHT = 1;
 struct DirectLight {
     // Point in the space
     Point location;
-    // Power of the light source
-    float power;
     // RGB color 
     RGB color;
 
@@ -45,11 +43,10 @@ struct DirectLight {
     /**
      * Build a Sphere type object
      * @param _location is the point in the space of the direct light source 
-     * @param _power is the power of the direct light source
      * @param _color is the color of the direct light source
      * @returns a DirectLight type object
      */
-    DirectLight(const Point _location, const float _power, const RGB _color);
+    DirectLight(const Point _location, const RGB _color);
 
 };
 
