@@ -87,7 +87,13 @@ struct Triangle {
              float _ksr, float _ksg, float _ksb, float _shininess, float _kps, float _krf, float _ri);
 
 
+    Triangle(const Point _p0, const Point _pu, const Point _pv, Image* _texture,
+                   float _maxkd, float _maxks, float _shininess, float _kps,
+                   float _krf, float _ri,
+                   const float _s0, const float _su, const float _sv,
+                   const float _t0, const float _tu, const float _tv);
 
+    
     /**
      * Build a triangle type object without texture
      * @param _p0 is a the first vertex of the triangle
@@ -100,10 +106,11 @@ struct Triangle {
      * @param _tu is the coordinate t of the second vertex of the triangle in the texture image
      * @param _tv is the coordinate t of the third vertex of the triangle in the texture image
      * @returns a Triangle type object
-     */
+     *
     Triangle(const Point _p0, const Point _pu, const Point _pv, Image* _texture,
              const float _s0, const float _su, const float _sv,
              const float _t0, const float _tu, const float _tv);
+             */
 
 };
 
@@ -220,6 +227,27 @@ inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction&
                     calculateBaricentricCordinates(origin, rayDir, t, i, texH, texW, rowTex, colTex, triangleList);
                     // RGB obtained from texture
                     // textureImg[rowTex][colTex];
+                    float color[3];
+                    color[0] = textureImg[rowTex][colTex].red;
+                    color[1] = textureImg[rowTex][colTex].green;
+                    color[2] = textureImg[rowTex][colTex].blue;
+                    float max;
+                    if(color[0] > color[1]){
+                        max = color[0];
+                    }
+                    else{
+                        max = color[1];
+                    }
+                    if(max < color[2]){
+                        max = color[2];
+                    }
+                    // Assign coefficients dynamically
+                    triangleList[i].kdr = color[0] * triangleList[i].maxkd / max;
+                    triangleList[i].kdg = color[1] * triangleList[i].maxkd / max;
+                    triangleList[i].kdb = color[2] * triangleList[i].maxkd / max;
+                    triangleList[i].ksr = color[0] * triangleList[i].maxks / max;
+                    triangleList[i].ksg = color[1] * triangleList[i].maxks / max;
+                    triangleList[i].ksb = color[2] * triangleList[i].maxks / max;
                 }
 
                 // Update nearest object

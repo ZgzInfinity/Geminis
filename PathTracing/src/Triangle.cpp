@@ -75,6 +75,31 @@ Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv,
 }
 
 
+Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv, Image* _texture,
+                   float _maxkd, float _maxks, float _shininess, float _kps,
+                   float _krf, float _ri,
+                   const float _s0, const float _su, const float _sv,
+                   const float _t0, const float _tu, const float _tv){
+  p0 = _p0; pu = _pu; pv = _pv;
+  s0 = _s0; su = _su; sv = _sv;
+  t0 = _t0; tu = _tu; tv = _tv;
+  edge1 = (_pu - _p0);
+  edge2 = (_pv - _p0);
+  normal = cross(edge1, edge2);
+  // Diffuse
+  maxkd = _maxkd;
+  // Specular
+  maxks = _maxks;
+  shininess = _shininess;
+  // Perfect specular
+  kps = _kps;
+  // Refraction
+  krf = _krf; ri = _ri;
+  emitsLight = false;
+  texture = _texture;
+}
+
+
 /**
  *Build a triangle type object without texture
  * @param _p0 is a the first vertex of the triangle
@@ -87,7 +112,7 @@ Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv,
  * @param _tu is the coordinate t of the second vertex of the triangle in the texture image
  * @param _tv is the coordinate t of the third vertex of the triangle in the texture image
  * @returns a Triangle type object
- */
+ *
 Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv, Image* _texture,
                    const float _s0, const float _su, const float _sv,
                    const float _t0, const float _tu, const float _tv){
@@ -100,5 +125,6 @@ Triangle::Triangle(const Point _p0, const Point _pu, const Point _pv, Image* _te
   texture = _texture;
   emitsLight = true;
 }
+*/
 
 

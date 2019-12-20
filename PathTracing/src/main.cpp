@@ -140,20 +140,23 @@ int main(int argc, char* argv[]){
 
         // Definition of the triangles which are going to appear in the scene 
         Triangle t1 = Triangle(Point(49.99, -7, -7), Point(49.99, -7, 7), 
-                               Point(49.99, 7, -7), 0, 0, 0.8, 0, 0, 0.1, 0.1, 0, 0, 1);
+                               Point(49.99, 7, -7), &brickTexture, 0.8, 0.1, 0.1, 0, 0, 1,
+                                    0, 1, 0, 0, 0 , 1);
         triangleList[0] = t1;
         Triangle t2 = Triangle(Point(49.99, 7, -7), Point(49.99, -7, 7), 
-                               Point(49.99, 7, 7), 0.8, 0.8, 0, 0.1, 0.1, 0, 0.1, 0, 0, 1);
+                               Point(49.99, 7, 7), &brickTexture, 0.8, 0.1, 0.1, 0, 0, 1,
+                               0, 1, 1, 1, 0, 1);
         triangleList[1] = t2;
-
 
 
         // Definition of the direct lights which are going to appear in the scene 
         DirectLight d1 = DirectLight(Point(35, 3, -2), RGB(5000, 5000, 5000));
         DirectLight d2 = DirectLight(Point(35, 3, 2), RGB(5000, 5000, 5000));
+        DirectLight d3 = DirectLight(Point(45, 3, 0), RGB(5000, 5000, 5000));
 
         directLightList[0] = d1;
         directLightList[1] = d2;
+        directLightList[2] = d3;
 
 
         // Matrix of the image that is going to be built
