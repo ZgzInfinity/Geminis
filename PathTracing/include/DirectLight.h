@@ -20,7 +20,7 @@
 #include "RGB.h"
 
 
-const int DIM_DIRECT_LIGHT = 1;
+const int DIM_DIRECT_LIGHT = 2;
 
 
 /*

@@ -138,11 +138,11 @@ int main(int argc, char* argv[]){
         //sphereList[2] = lightSphere;
 
         // Definition of the direct lights which are going to appear in the scene 
-        DirectLight d1 = DirectLight(Point(35, 6, -2), RGB(255, 255, 255));
-        DirectLight d2 = DirectLight(Point(35, 3, 2), RGB(255, 255, 255));
+        DirectLight d1 = DirectLight(Point(35, 3, -2), RGB(5000, 5000, 5000));
+        DirectLight d2 = DirectLight(Point(35, 3, 2), RGB(5000, 5000, 5000));
 
         directLightList[0] = d1;
-        //directLightList[1] = d2;
+        directLightList[1] = d2;
 
 
         // Matrix of the image that is going to be built
@@ -383,9 +383,9 @@ int main(int argc, char* argv[]){
                                         // Check if directRay has intersect any object
                                         if (minDistanceDL == oldDistanceDL){
                                             acumDL[ind] = acumDL[ind] + 
-                                                            RGB((directLightList[i].color.red / (mod(directLightRay) * mod(directLightRay))) * kdr / diffuseUB,
-                                                                (directLightList[i].color.green / (mod(directLightRay) * mod(directLightRay))) * kdg / diffuseUB,
-                                                                (directLightList[i].color.blue / (mod(directLightRay) * mod(directLightRay))) * kdb / diffuseUB);                                            
+                                                            RGB((directLightList[i].color.red / (oldDistanceDL * oldDistanceDL)) * kdr / M_PI * abs(dot(normal, directLightRay)) / diffuseUB,
+                                                                (directLightList[i].color.green / (oldDistanceDL * oldDistanceDL)) * kdg / M_PI * abs(dot(normal, directLightRay)) / diffuseUB,
+                                                                (directLightList[i].color.blue / (oldDistanceDL * oldDistanceDL)) * kdb / M_PI * abs(dot(normal, directLightRay)) / diffuseUB);                                            
                                         } 
                                     }
                                     // Maybe it's necessary to divide by probability distribution of the new ray
@@ -437,12 +437,12 @@ int main(int argc, char* argv[]){
                                         // Check if directRay has intersect any object
                                         if (minDistanceDL == oldDistanceDL){
                                             acumDL[ind] = acumDL[ind] +
-                                                            RGB((directLightList[i].color.red / (mod(directLightRay) * mod(directLightRay))) *
-                                                                    ((ksr / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f)) * pow(abs(dot(normal, (directLightList[i].location - intersection) / mod(directLightList[i].location - intersection)) / (mod(normal) * mod(directLightList[i].location - intersection))), shininess)),
-                                                                (directLightList[i].color.green / (mod(directLightRay) * mod(directLightRay))) *
-                                                                    ((ksg / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f)) * pow(abs(dot(normal, (directLightList[i].location - intersection) / mod(directLightList[i].location - intersection)) / (mod(normal) * mod(directLightList[i].location - intersection))), shininess)),
-                                                                (directLightList[i].color.blue / (mod(directLightRay) * mod(directLightRay))) *
-                                                                    ((ksb / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f)) * pow(abs(dot(normal, (directLightList[i].location - intersection) / mod(directLightList[i].location - intersection)) / (mod(normal) * mod(directLightList[i].location - intersection))), shininess)));
+                                                            RGB((directLightList[i].color.red / (oldDistanceDL * oldDistanceDL)) *
+                                                                    ((ksr / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(normal, directLightRay)), shininess)),
+                                                                (directLightList[i].color.green / (oldDistanceDL * oldDistanceDL)) *
+                                                                    ((ksg / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(normal, directLightRay)), shininess)),
+                                                                (directLightList[i].color.blue / (oldDistanceDL * oldDistanceDL)) *
+                                                                    ((ksb / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(normal, directLightRay)), shininess)));
                                         } 
                                     }
                                     acumIL[ind] = RGB((ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f),
