@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
         vector<vector<RGB>> matrix = image.getImg();
         // Creation of the tone mapper 
         ToneMapper tm = ToneMapper(image);
-        tm.clampGamma(30, fileName, 1.5);
+        tm.clampGamma(95, fileName, 1.5);
         cout << "Image tone mapped" << endl;
         return 0;
     }

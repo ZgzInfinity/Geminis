@@ -126,16 +126,27 @@ int main(int argc, char* argv[]){
         planeList[5] = behind;
 
         // Definition of the spheres which are going to appear in the scene 
-        Sphere leftSphere = Sphere(Point(40, -5, -3), 2,  0.8, 0.8, 0.8, 0, 0, 0, 0.1, 0, 0, 1);
+        Sphere leftSphere = Sphere(Point(40, -5, -3), 2,  0.1, 0.1, 0.1, 0.8, 0.8, 0.8, 0.1, 0, 0, 1);
         // Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0.9, 0, 1);
-        Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0.9, 1.5);
-        // Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.8, 0.8, 0.8, 0, 0, 0, 0.1, 0, 0, 1);
+        //Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0, 0, 0.9, 1.5);
+        Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0.1, 0.9, 0, 1);
 
         //Sphere lightSphere = Sphere(Point(37, 7, 0), 5, RGB(255, 255, 255));
 
         sphereList[0] = leftSphere;
         sphereList[1] = rightSphere;
         //sphereList[2] = lightSphere;
+
+
+        // Definition of the triangles which are going to appear in the scene 
+        Triangle t1 = Triangle(Point(49.99, -7, -7), Point(49.99, -7, 7), 
+                               Point(49.99, 7, -7), 0, 0, 0.8, 0, 0, 0.1, 0.1, 0, 0, 1);
+        triangleList[0] = t1;
+        Triangle t2 = Triangle(Point(49.99, 7, -7), Point(49.99, -7, 7), 
+                               Point(49.99, 7, 7), 0.8, 0.8, 0, 0.1, 0.1, 0, 0.1, 0, 0, 1);
+        triangleList[1] = t2;
+
+
 
         // Definition of the direct lights which are going to appear in the scene 
         DirectLight d1 = DirectLight(Point(35, 3, -2), RGB(5000, 5000, 5000));

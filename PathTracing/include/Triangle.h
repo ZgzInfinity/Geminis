@@ -25,8 +25,8 @@
 #include "Image.h"
 
 
-const int DIM_TRIANGLE = 0;
-const float LIMIT = 0.0000001;
+const int DIM_TRIANGLE = 2;
+const float LIMIT = 0.0005;
 
 
 /*
