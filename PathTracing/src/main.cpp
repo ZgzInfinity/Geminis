@@ -95,11 +95,6 @@ int main(int argc, char* argv[]){
 
         // Load of the file which contains the texture format
         Image brickTexture = loadImagePPM("textures/brick_wall.ppm");
-        vector<vector<RGB>> textureImg = brickTexture.getImg();
-
-        // Dimensions of the texture image
-        int textureH = brickTexture.getHeight();
-        int textureW = brickTexture.getWidth();
 
         // Vectors with the planes and spheres represented in the scene
         Sphere sphereList[DIM_SPHERE];
@@ -253,8 +248,8 @@ int main(int argc, char* argv[]){
                         intersectionRaySphere(origin, rayDir, pixelPoint, minDistance, img, sphereList, nearestSphere, nearestObject);
                         
                         // Calculation of intersections between ray and triangles
-                        intersectionRayTriangle(origin, bary, rayDir, textureH, textureW, pixelPoint, 
-                                                minDistance, textureImg, img, triangleList, nearestTriangle, nearestObject);
+                        intersectionRayTriangle(origin, bary, rayDir, pixelPoint, 
+                                                minDistance, triangleList, nearestTriangle, nearestObject);
                         
                         // Save rayDir for next origin point
                         oldRayDir = rayDir;
@@ -392,8 +387,8 @@ int main(int argc, char* argv[]){
                                         intersectionRaySphere(intersection, directLightRay, pixelPoint, minDistanceDL, img, sphereList, nearestSphere, nearestObject);
                                         
                                         // Calculation of intersections between ray and triangles
-                                        intersectionRayTriangle(intersection, bary, directLightRay, textureH, textureW, pixelPoint, 
-                                                                minDistanceDL, textureImg, img, triangleList, nearestTriangle, nearestObject);
+                                        intersectionRayTriangle(intersection, bary, directLightRay, pixelPoint, 
+                                                                minDistanceDL, triangleList, nearestTriangle, nearestObject);
                                         // Check if directRay has intersect any object
                                         if (minDistanceDL == oldDistanceDL){
                                             acumDL[ind] = acumDL[ind] + 
@@ -445,8 +440,8 @@ int main(int argc, char* argv[]){
                                         intersectionRaySphere(intersection, directLightRay, pixelPoint, minDistanceDL, img, sphereList, nearestSphere, nearestObject);
                                         
                                         // Calculation of intersections between ray and triangles
-                                        intersectionRayTriangle(intersection, bary, directLightRay, textureH, textureW, pixelPoint, 
-                                                                minDistanceDL, textureImg, img, triangleList, nearestTriangle, nearestObject);
+                                        intersectionRayTriangle(intersection, bary, directLightRay, pixelPoint, 
+                                                                minDistanceDL, triangleList, nearestTriangle, nearestObject);
 
                                         // Check if directRay has intersect any object
                                         if (minDistanceDL == oldDistanceDL){

@@ -37,10 +37,11 @@ class Image {
   float rc;
   // Real maximun value of the image
   float m;
-  // Matrix of pixels that represents the image
-  vector<vector<RGB>> img;
 
   public:
+
+    // Matrix of pixels that represents the image
+    vector<vector<RGB>> img;
 
     /**
      * Build an Image type object

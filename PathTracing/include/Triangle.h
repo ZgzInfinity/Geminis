@@ -171,25 +171,15 @@ inline void calculateBaricentricCordinates(const Point& origin, const Direction&
  * @param origin is the point of the space where the camera is located
  * @param bary is the point where the ray intersects a triangle
  * @param rayDir is  the direction of the ray thrown from the camera
- * @param row is the row index
- * @param col is the col index
- * @param texH is the height of the texture image
- * @param texW is the width of the texture image
  * @param pixelCenter is the size of the pixel 
- * @param distances is the matrix which stores de distances between the rays and the 
- *        pixels of the image
- * @param textureImg is a matrix that contains the texture image
- * @param img is the matrix which contains the image 
  * @param triangleList is the list which stores all the triangles in the scene
- * @param randomRR // TODO
  * @param nearestTriangle is the nearest object found in path intersection
  * @param nearestObject is the code for the nearest object found in path intersection
  */
 inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction& rayDir,
-                                    const int& texH, const int& texW, const Point& pixelCenter, 
-                                    float& minDistance, vector<vector<RGB>>& textureImg,
-                                    vector<vector<RGB>>& img, Triangle triangleList[],
-                                    Triangle& nearestTriangle, int& nearestObject)
+                                    const Point& pixelCenter, float& minDistance,
+                                    Triangle triangleList[], Triangle& nearestTriangle,
+                                     int& nearestObject)
 {
     Direction h, s, q;
     float a, b, c, d;
@@ -223,14 +213,19 @@ inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction&
                     minDistance = t;
                 }
                 else{
+                    // Dimensions of the texture image
+                    int texH = triangleList[i].texture->getHeight();
+                    int texW = triangleList[i].texture->getWidth();
+
+
                     int rowTex, colTex;
                     calculateBaricentricCordinates(origin, rayDir, t, i, texH, texW, rowTex, colTex, triangleList);
                     // RGB obtained from texture
                     // textureImg[rowTex][colTex];
                     float color[3];
-                    color[0] = textureImg[rowTex][colTex].red;
-                    color[1] = textureImg[rowTex][colTex].green;
-                    color[2] = textureImg[rowTex][colTex].blue;
+                    color[0] = triangleList[i].texture->img[rowTex][colTex].red;
+                    color[1] = triangleList[i].texture->img[rowTex][colTex].green;
+                    color[2] = triangleList[i].texture->img[rowTex][colTex].blue;
                     float max;
                     if(color[0] > color[1]){
                         max = color[0];
