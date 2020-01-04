@@ -114,12 +114,12 @@ inline void rayTracer(const int& PPP, const float& width, const float& height, v
                     // Initialize nearest object code to 0 (no intersection)
                     nearestObject = 0;
                     // Calculation of intersections between ray and planes
-                    intersectionRayPlane(origin, rayDir, minDistance, img, planeList, nearestPlane, nearestObject);
+                    intersectionRayPlane(origin, rayDir, minDistance, planeList, nearestPlane, nearestObject);
                     // Calculation of intersections between ray and spheres
-                    intersectionRaySphere(origin, rayDir, pixelPoint, minDistance, img, sphereList, nearestSphere, nearestObject);
+                    intersectionRaySphere(origin, rayDir, minDistance, sphereList, nearestSphere, nearestObject);
                     
                     // Calculation of intersections between ray and triangles
-                    intersectionRayTriangle(origin, bary, rayDir, pixelPoint, 
+                    intersectionRayTriangle(origin, bary, rayDir, 
                                             minDistance, triangleList, nearestTriangle, nearestObject);
                     
                     // Save rayDir for next origin point
@@ -186,13 +186,13 @@ inline void rayTracer(const int& PPP, const float& width, const float& height, v
 
                                     // Check posible intersections between the objects and the light ray
                                     // Calculation of intersections between ray and planes
-                                    intersectionRayPlane(intersection, directLightRay, minDistanceDL, img, planeList, nearestPlane, nearestObject);
+                                    intersectionRayPlane(intersection, directLightRay, minDistanceDL, planeList, nearestPlane, nearestObject);
                     
                                     // Calculation of intersections between ray and spheres
-                                    intersectionRaySphere(intersection, directLightRay, pixelPoint, minDistanceDL, img, sphereList, nearestSphere, nearestObject);
+                                    intersectionRaySphere(intersection, directLightRay, minDistanceDL, sphereList, nearestSphere, nearestObject);
                                     
                                     // Calculation of intersections between ray and triangles
-                                    intersectionRayTriangle(intersection, bary, directLightRay, pixelPoint, 
+                                    intersectionRayTriangle(intersection, bary, directLightRay, 
                                                             minDistanceDL, triangleList, nearestTriangle, nearestObject);
                                     // Check if directRay has intersect any object
                                     if (minDistanceDL == oldDistanceDL){
@@ -233,13 +233,13 @@ inline void rayTracer(const int& PPP, const float& width, const float& height, v
 
                                     // Check posible intersections between the objects and the light ray
                                     // Calculation of intersections between ray and planes
-                                    intersectionRayPlane(intersection, directLightRay, minDistanceDL, img, planeList, nearestPlane, nearestObject);
+                                    intersectionRayPlane(intersection, directLightRay, minDistanceDL, planeList, nearestPlane, nearestObject);
                     
                                     // Calculation of intersections between ray and spheres
-                                    intersectionRaySphere(intersection, directLightRay, pixelPoint, minDistanceDL, img, sphereList, nearestSphere, nearestObject);
+                                    intersectionRaySphere(intersection, directLightRay,minDistanceDL, sphereList, nearestSphere, nearestObject);
                                     
                                     // Calculation of intersections between ray and triangles
-                                    intersectionRayTriangle(intersection, bary, directLightRay, pixelPoint, 
+                                    intersectionRayTriangle(intersection, bary, directLightRay,
                                                             minDistanceDL, triangleList, nearestTriangle, nearestObject);
 
                                     // Check if directRay has intersect any object

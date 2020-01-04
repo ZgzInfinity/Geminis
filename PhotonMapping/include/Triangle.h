@@ -151,13 +151,11 @@ inline void calculateBaricentricCordinates(const Point& origin, const Direction&
  * @param origin is the point of the space where the camera is located
  * @param bary is the point where the ray intersects a triangle
  * @param rayDir is  the direction of the ray thrown from the camera
- * @param pixelCenter is the size of the pixel 
  * @param triangleList is the list which stores all the triangles in the scene
  * @param nearestTriangle is the nearest object found in path intersection
  * @param nearestObject is the code for the nearest object found in path intersection
  */
-inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction& rayDir,
-                                    const Point& pixelCenter, float& minDistance,
+inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction& rayDir, float& minDistance,
                                     list<Triangle>& triangleList, Triangle& nearestTriangle,
                                     int& nearestObject)
 {
@@ -240,6 +238,7 @@ inline void updateNearestTriangle(Triangle& nearestTriangle, float& productR, fl
             float& kdg, float& kdb, float& ksr, float& ksg, float& ksb, float& shininess, float& ri)
 {
     if(nearestTriangle.emitsLight){
+        // TODO
         productR *= nearestTriangle.emission.red;
         productG *= nearestTriangle.emission.green;
         productB *= nearestTriangle.emission.blue;

@@ -82,18 +82,15 @@ struct Sphere {
  * @param rayDir is  the direction of the ray thrown from the camera
  * @param row is the row index
  * @param col is the col index
- * @param pixelCenter is the size of the pixel 
  * @param distances is the matrix which stores de distances between the rays and the 
  *        pixels of the image
- * @param img is the matrix which contains the image 
  * @param sphereList is the list which stores all the spheres in the scene
  * @param randomRR is the random value for russian roulette
  * @param nearestSphere is the nearest object found in path intersection
  * @param nearestObject is the code for the nearest object found in path intersection
  */
-inline void intersectionRaySphere(const Point& origin, Direction& rayDir,
-                                  const Point& pixelCenter, float& minDistance, 
-                                  vector<vector<RGB>>& img, list<Sphere>& sphereList,
+inline void intersectionRaySphere(const Point& origin, Direction& rayDir, float& minDistance, 
+                                  list<Sphere>& sphereList,
                                   Sphere& nearestSphere, int& nearestObject)
 {
     Direction oc;
@@ -144,6 +141,7 @@ inline void updateNearestSphere(Sphere& nearestSphere, float& productR, float& p
             float& kdg, float& kdb, float& ksr, float& ksg, float& ksb, float& shininess, float& ri)
 {
     if(nearestSphere.emitsLight){
+        // TODO
         productR *= nearestSphere.emission.red;
         productG *= nearestSphere.emission.green;
         productB *= nearestSphere.emission.blue;

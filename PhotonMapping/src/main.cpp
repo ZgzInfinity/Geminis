@@ -188,7 +188,7 @@ int main(int argc, char* argv[]){
         list<Photon> photonList;
 
         // Generate photons
-        photonMapper(photonList, directLightList);
+        photonMapper(photonList, directLightList, planeList, sphereList, triangleList);
 
         // Store photons in kd tree
 
