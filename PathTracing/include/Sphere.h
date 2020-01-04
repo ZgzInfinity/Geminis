@@ -17,6 +17,7 @@
 
 
 #include <cmath>
+#include <list>
 #include <vector>
 #include "Point.h"
 #include "Direction.h"
@@ -24,7 +25,6 @@
 #include "../include/SharedOps.h"
 
 
-const int DIM_SPHERE = 2;
 
 /*
  * Definition of data type Sphere
@@ -69,7 +69,7 @@ struct Sphere {
 
 
     Sphere(const Point _center, const float _radius, float _kdr, float _kdg, float _kdb,
-     float _ksr, float _ksg, float _ksb, float _shininess, float _kps, float _krf, float _ri);
+           float _ksr, float _ksg, float _ksb, float _shininess, float _kps, float _krf, float _ri);
     
 };
 
@@ -93,19 +93,19 @@ struct Sphere {
  */
 inline void intersectionRaySphere(const Point& origin, Direction& rayDir,
                                   const Point& pixelCenter, float& minDistance, 
-                                  vector<vector<RGB>>& img, Sphere sphereList[],
+                                  vector<vector<RGB>>& img, list<Sphere>& sphereList,
                                   Sphere& nearestSphere, int& nearestObject)
 {
     Direction oc;
     float a, b, c, discriminant;
     float t0, t1;
     // Sphere intersection
-    for(int i = 0; i < DIM_SPHERE; i++){
-        oc = origin - sphereList[i].center;
+    for(const auto& sphere : sphereList){
+        oc = origin - sphere.center;
         // Calculation of the coefficients to resolve a second grade equation
         a = dot(rayDir, rayDir);
         b = 2.f * dot(oc, rayDir);
-        c = dot(oc, oc) - (sphereList[i].radius * sphereList[i].radius);
+        c = dot(oc, oc) - (sphere.radius * sphere.radius);
         discriminant = b * b - 4 * a * c;
         if (discriminant >= 0.f){
             t0 = (-b - sqrt(discriminant)) / 2.f * a;
@@ -117,7 +117,7 @@ inline void intersectionRaySphere(const Point& origin, Direction& rayDir,
                     // Its a near intersection
                     // Update nearest object
                     minDistance = t0;
-                    nearestSphere = sphereList[i];
+                    nearestSphere = sphere;
                     nearestObject =  2;
                 }
             }
@@ -126,7 +126,7 @@ inline void intersectionRaySphere(const Point& origin, Direction& rayDir,
                     // Its a near intersection
                     // Update nearest object
                     minDistance = t1;
-                    nearestSphere = sphereList[i];
+                    nearestSphere = sphere;
                     nearestObject =  2;
                 }
 

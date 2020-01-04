@@ -20,8 +20,6 @@
 #include "RGB.h"
 
 
-const int DIM_DIRECT_LIGHT = 1;
-
 
 /*
  * Definition of data type DirectLight

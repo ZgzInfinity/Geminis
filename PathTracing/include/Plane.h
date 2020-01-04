@@ -23,7 +23,6 @@
 #include "../include/SharedOps.h"
 
 
-const int DIM_PLANE = 6;
 const float EPSILON = 0.0000001;
 
 
@@ -105,7 +104,6 @@ inline void intersectionRayPlane(const Point& origin, const Direction& rayDir, f
                 if(t < minDistance){
                     // Its a near intersection and it is saved with the correct emission
                     minDistance = t;
-
                     // Update nearest object
                     nearestPlane = plane;
                     nearestObject =  1;

@@ -17,7 +17,7 @@ using namespace std;
 
 const int NUMBER_PARAMETERS = 5;
 
-void sceneDefinitionHardShadows(list<Plane> planeList, Sphere sphereList[], Triangle triangleList[], DirectLight directLightList[], Image* textureList[]){
+void sceneDefinitionHardShadows(list<Plane>& planeList, list<Sphere>& sphereList, list<Triangle>& triangleList, list<DirectLight>& directLightList, Image* textureList[]){
      // Definition of the planes which are going to appear in the scene 
     Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0.0, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
     planeList.push_back(leftWall);
@@ -34,23 +34,23 @@ void sceneDefinitionHardShadows(list<Plane> planeList, Sphere sphereList[], Tria
 
     // Definition of the spheres which are going to appear in the scene 
     Sphere leftSphere = Sphere(Point(40, -5, -3), 2,  0.1, 0.1, 0.1, 0.8, 0.8, 0.8, 0.1, 0, 0, 1);
-    sphereList[0] = leftSphere;
+    sphereList.push_back(leftSphere);
     Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0.1, 0.9, 0, 1);
-    sphereList[1] = rightSphere;
+    sphereList.push_back(rightSphere);
 
     // Definition of the triangles which are going to appear in the scene 
     Triangle t1 = Triangle(Point(49.99, -7, -7), Point(49.99, -7, 7), 
                            Point(49.99, 7, -7), textureList[0], 0.8, 0.1, 0.1, 0, 0, 1,
                            0, 1, 0, 0, 0 , 1);
-    triangleList[0] = t1;
+    triangleList.push_back(t1);
     Triangle t2 = Triangle(Point(49.99, 7, -7), Point(49.99, -7, 7), 
                            Point(49.99, 7, 7), textureList[0], 0.8, 0.1, 0.1, 0, 0, 1,
                            0, 1, 1, 1, 0, 1);
-    triangleList[1] = t2;
+    triangleList.push_back(t2);
 
     // Definition of the direct lights which are going to appear in the scene 
     DirectLight d1 = DirectLight(Point(35, 3, 0), RGB(2000000, 2000000, 2000000));
-    directLightList[0] = d1;
+    directLightList.push_back(d1);
 }
 /*
 void sceneDefinition(list<Plane> planeList, Sphere sphereList[], Triangle triangleList[], DirectLight directLightList[], Image* textureList[]){
@@ -164,11 +164,11 @@ int main(int argc, char* argv[]){
             pixelSize = mod(leftPP) / (width / 2.f);
         }
 
-        // Vectors with the planes and spheres represented in the scene
-        Sphere sphereList[DIM_SPHERE];
+        // Lists with the objects represented in the scene
         list<Plane> planeList;
-        Triangle triangleList[DIM_TRIANGLE];
-        DirectLight directLightList[DIM_DIRECT_LIGHT];
+        list<Sphere> sphereList;
+        list<Triangle> triangleList;
+        list<DirectLight> directLightList;
 
         // Load of the file which contains the texture format
         Image brickTexture = loadImagePPM("textures/brick_wall.ppm");

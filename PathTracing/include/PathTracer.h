@@ -30,8 +30,8 @@
 #include "../include/DirectLight.h"
 
 inline void pathTracer(const int& PPP, const float& width, const float& height, vector<vector<RGB>>& img,
-                list<Plane>& planeList, Sphere sphereList[], Triangle triangleList[],
-                DirectLight directLightList[], Point& camera, Direction& d_k,
+                list<Plane>& planeList, list<Sphere>& sphereList, list<Triangle>& triangleList, 
+                list<DirectLight>& directLightList, Point& camera, Direction& d_k,
                 Direction& leftPP, Direction& upPP, float& pixelSize, int& rc)
 {
     Point intersection, lastIntersection;
@@ -176,9 +176,9 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                                 productB *= (kdb / diffuseUB);
 
                                 // Calculate the contribution from direct light sources
-                                for (int i = 0; i < DIM_DIRECT_LIGHT; i++){
+                                for(const auto& directLight : directLightList){
                                     // Direction of the ray to the direct light
-                                    directLightRay = directLightList[i].location - intersection;
+                                    directLightRay = directLight.location - intersection;
                                     // Update the minimum distance
                                     minDistanceDL = mod(directLightRay);
                                     oldDistanceDL = minDistanceDL;
@@ -197,9 +197,9 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                                     // Check if directRay has intersect any object
                                     if (minDistanceDL == oldDistanceDL){
                                         acumDL.back() = acumDL.back() + 
-                                                        RGB((directLightList[i].color.red / (oldDistanceDL * oldDistanceDL)) * kdr / M_PI * abs(dot(normal, directLightRay)) / diffuseUB,
-                                                            (directLightList[i].color.green / (oldDistanceDL * oldDistanceDL)) * kdg / M_PI * abs(dot(normal, directLightRay)) / diffuseUB,
-                                                            (directLightList[i].color.blue / (oldDistanceDL * oldDistanceDL)) * kdb / M_PI * abs(dot(normal, directLightRay)) / diffuseUB);                                            
+                                                        RGB((directLight.color.red / (oldDistanceDL * oldDistanceDL)) * kdr / M_PI * abs(dot(normal, directLightRay)) / diffuseUB,
+                                                            (directLight.color.green / (oldDistanceDL * oldDistanceDL)) * kdg / M_PI * abs(dot(normal, directLightRay)) / diffuseUB,
+                                                            (directLight.color.blue / (oldDistanceDL * oldDistanceDL)) * kdb / M_PI * abs(dot(normal, directLightRay)) / diffuseUB);                                            
                                     } 
                                 }
                                 acumIL.back() = RGB((kdr / diffuseUB) * abs(dot(normal, rayDir)),
@@ -222,9 +222,9 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                                 productB *= (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
 
                                 // Calculate the contribution from direct light sources
-                                for (int i = 0; i < DIM_DIRECT_LIGHT; i++){
+                                for(const auto& directLight : directLightList){
                                     // Direction of the ray to the direct light
-                                    directLightRay = directLightList[i].location - intersection;
+                                    directLightRay = directLight.location - intersection;
 
                                     // Update the minimum distance
                                     minDistanceDL = mod(directLightRay);
@@ -245,11 +245,11 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                                     // Check if directRay has intersect any object
                                     if (minDistanceDL == oldDistanceDL){
                                         acumDL.back() = acumDL.back() +
-                                                        RGB((directLightList[i].color.red / (oldDistanceDL * oldDistanceDL)) *
+                                                        RGB((directLight.color.red / (oldDistanceDL * oldDistanceDL)) *
                                                                 ((ksr / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(normal, directLightRay)), shininess)),
-                                                            (directLightList[i].color.green / (oldDistanceDL * oldDistanceDL)) *
+                                                            (directLight.color.green / (oldDistanceDL * oldDistanceDL)) *
                                                                 ((ksg / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(normal, directLightRay)), shininess)),
-                                                            (directLightList[i].color.blue / (oldDistanceDL * oldDistanceDL)) *
+                                                            (directLight.color.blue / (oldDistanceDL * oldDistanceDL)) *
                                                                 ((ksb / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(normal, directLightRay)), shininess)));
                                     } 
                                 }
