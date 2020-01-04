@@ -84,13 +84,12 @@ struct Plane {
  * @param col is the col index
  * @param distances is the matrix which stores de distances between the rays and the 
  *        pixels of the image
- * @param img is the matrix which contains the image 
  * @param planeList is the list which stores all the planes in the scene
  * @param randomRR is the random value for russian roulette
  * @param nearestPlane is the nearest object found in path intersection
  * @param nearestObject is the code for the nearest object found in path intersection
  */
-inline void intersectionRayPlane(const Point& origin, const Direction& rayDir, float& minDistance, vector<vector<RGB>>& img,
+inline void intersectionRayPlane(const Point& origin, const Direction& rayDir, float& minDistance,
                                  list<Plane>& planeList, Plane& nearestPlane, int& nearestObject)
 {
     float denom, t;
