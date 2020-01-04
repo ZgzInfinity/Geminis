@@ -10,44 +10,27 @@
  */ 
 
 
-#include <vector>
-#include <iostream>
-#include <cstring>
-#include <list>
-#include <iomanip>
-#include <cfloat>
-#include <random>
-#include <chrono>
-#include <algorithm>
-#include "../include/Matrix4.h"
-#include "../include/SharedOps.h"
-#include "../include/Plane.h"
-#include "../include/Sphere.h"
-#include "../include/Triangle.h"
-#include "../include/Image.h"
-#include "../include/ImageLoaderPPM.h"
-#include "../include/DirectLight.h"
+#include "../include/PathTracer.h"
 
 
 using namespace std;
 
 const int NUMBER_PARAMETERS = 5;
-int rc = 0;
 
-void sceneDefinitionHardShadows(Plane planeList[], Sphere sphereList[], Triangle triangleList[], DirectLight directLightList[], Image* textureList[]){
+void sceneDefinitionHardShadows(list<Plane> planeList, Sphere sphereList[], Triangle triangleList[], DirectLight directLightList[], Image* textureList[]){
      // Definition of the planes which are going to appear in the scene 
     Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0.0, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
-    planeList[0] = leftWall;
+    planeList.push_back(leftWall);
     Plane rightWall = Plane(Direction(0, 0,-1), 7, 0.0, 0.8, 0.0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
-    planeList[1] = rightWall;
+    planeList.push_back(rightWall);
     Plane ceiling = Plane(Direction(0, -1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
-    planeList[2] = ceiling;
+    planeList.push_back(ceiling);
     Plane floor = Plane(Direction(0, 1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
-    planeList[3] = floor;
+    planeList.push_back(floor);
     Plane background = Plane(Direction(-1, 0, 0), 50, 0, 0, 0, 0, 0, 0, 0, 0.9, 0, 1);
-    planeList[4] = background;
+    planeList.push_back(background);
     Plane behind = Plane(Direction(1, 0, 0), 10, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
-    planeList[5] = behind;
+    planeList.push_back(behind);
 
     // Definition of the spheres which are going to appear in the scene 
     Sphere leftSphere = Sphere(Point(40, -5, -3), 2,  0.1, 0.1, 0.1, 0.8, 0.8, 0.8, 0.1, 0, 0, 1);
@@ -69,8 +52,8 @@ void sceneDefinitionHardShadows(Plane planeList[], Sphere sphereList[], Triangle
     DirectLight d1 = DirectLight(Point(35, 3, 0), RGB(2000000, 2000000, 2000000));
     directLightList[0] = d1;
 }
-
-void sceneDefinition(Plane planeList[], Sphere sphereList[], Triangle triangleList[], DirectLight directLightList[], Image* textureList[]){
+/*
+void sceneDefinition(list<Plane> planeList, Sphere sphereList[], Triangle triangleList[], DirectLight directLightList[], Image* textureList[]){
      // Definition of the planes which are going to appear in the scene 
     Plane leftWall = Plane(Direction(0, 0, 1), 7, 0.8, 0.0, 0, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
     planeList[0] = leftWall;
@@ -130,304 +113,9 @@ void sceneDefinition(Plane planeList[], Sphere sphereList[], Triangle triangleLi
     //directLightList[1] = d2;
     //directLightList[2] = d3;
 }
+*/
 
 
-inline void pathTracer(const int& PPP, const float& width, const float& height, vector<vector<RGB>>& img,
-                Plane planeList[], Sphere sphereList[], Triangle triangleList[],
-                DirectLight directLightList[], Point camera, Direction d_k,
-                Direction leftPP, Direction upPP, float pixelSize){
-    Point intersection, lastIntersection;
-    Point origin = camera;
-    // Calculation of the upper left corner of the proyection plane 
-    Point upperLeftCorner = origin + d_k + leftPP + upPP;
-    Point pixelPoint;
-    Direction rayDir, oldRayDir, directLightRay;
-    Point bary;
-
-    // Generation random numbers
-    mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-
-    // Aleatory number for the rays and russian roulette
-    float random1, random2, randomRR;
-
-    // Acumulated radiance for each pixel
-    float acumR, acumG, acumB;
-    // Acumulated product for each path
-    float productR, productG, productB;
-
-    // Upper bounds for russian roullete probabilities
-    float diffuseUB, specularUB, perfectSpecularUB, refractionUB;
-    // Temporary values for kd, ks, ksp, krf
-    float kdr = 0, kdg = 0, kdb = 0;
-    float ksr = 0, ksg = 0, ksb = 0, shininess = 0;
-    float ri = 1;
-
-    // Nearest objects found in path intersection (0 is no intersection)
-    Plane nearestPlane; // Object code = 1
-    Sphere nearestSphere; // Object code = 2
-    Triangle nearestTriangle; // Object code = 3
-    int nearestObject; // Code of the nearest object (0, 1, 2 or 3)
-    Direction x, y, normal; // Intersected object base directions (unitary)
-    float minDistance; // Distance to the nearest intersected object
-    bool pathFinished; // Store if path has to finish
-    float minDistanceDL, oldDistanceDL;
-
-    float x_, y_, z_, theta, phi;
-
-    RGB acumDL[200000];
-    RGB acumIL[200000];
-    int ind;
-    
-    // Loop that calculates for each pixel the thrown ray and the intersections
-    // between it and the spheres and planes stored in the scene
-    for(int row = 0; row < height; row++){
-        for(int col = 0; col < width; col++){
-            // Inicialization
-            acumR = 0, acumG = 0, acumB = 0;
-            for (int i = 0; i < PPP; i++){
-                origin = camera;
-
-                // Generation of the random values for the path direction inside pixel box
-                random1 = uniform_real_distribution<float>(0, 1)(rng);
-                random2 = uniform_real_distribution<float>(0, 1)(rng);
-
-                // Calculation of the center of each pixel where the ray is going to be thrown
-                pixelPoint = Point(upperLeftCorner.c[0],
-                                    upperLeftCorner.c[1] - (row * pixelSize + (pixelSize * random1)),
-                                    upperLeftCorner.c[2] + col * pixelSize + (pixelSize * random2));
-
-                // Direction of the new ray
-                rayDir = pixelPoint - origin;
-                rayDir = rayDir / mod(rayDir);
-                img[row][col] = RGB();
-
-                // Initialize montecarlo products
-                productR = 1, productG = 1, productB = 1;
-                ind = 0;
-                // Initialize pathFinished to false
-                pathFinished = false;
-
-                while(!pathFinished){
-                    if(ind >= 200000) break;
-                    acumDL[ind] = RGB();
-                    acumIL[ind] = RGB();
-                    
-                    //For each object intersection the starting distance is the biggest value and it is going to be reduced
-                    minDistance = FLT_MAX;
-
-                    // Initialize nearest object code to 0 (no intersection)
-                    nearestObject = 0;
-                    // Calculation of intersections between ray and planes
-                    intersectionRayPlane(origin, rayDir, minDistance, img, planeList, nearestPlane, nearestObject);
-                    // Calculation of intersections between ray and spheres
-                    intersectionRaySphere(origin, rayDir, pixelPoint, minDistance, img, sphereList, nearestSphere, nearestObject);
-                    
-                    // Calculation of intersections between ray and triangles
-                    intersectionRayTriangle(origin, bary, rayDir, pixelPoint, 
-                                            minDistance, triangleList, nearestTriangle, nearestObject);
-                    
-                    // Save rayDir for next origin point
-                    oldRayDir = rayDir;
-                    if(nearestObject == 0){
-                        // No intersection
-                        // Path finished (no intersection)
-                        pathFinished = true;
-                        productR = 0; productG = 0; productB = 0;
-                    }
-                    else{
-                        switch (nearestObject){
-                        case 1:
-                            // Nearest intersection: plane
-                            // Update variables in inline method
-                            updateNearestPlane(nearestPlane, productR, productG, productB, pathFinished,
-                                diffuseUB, specularUB, perfectSpecularUB, refractionUB, intersection,
-                                origin, rayDir, minDistance, normal, random1, random2, x, y, kdr, kdg,
-                                kdb, ksr, ksg, ksb, shininess, ri);
-                            break;
-                        case 2:
-                            // Nearest intersection: sphere
-                            // Update variables in inline method
-                            updateNearestSphere(nearestSphere, productR, productG, productB, pathFinished,
-                                diffuseUB, specularUB, perfectSpecularUB, refractionUB, intersection,
-                                origin, rayDir, minDistance, normal, random1, random2, x, y, kdr, kdg,
-                                kdb, ksr, ksg, ksb, shininess, ri);
-                            break;
-                        case 3:
-                            // Nearest intersection: triangle
-                            // Update variables in inline method
-                            updateNearestTriangle(nearestTriangle, productR, productG, productB, pathFinished,
-                                diffuseUB, specularUB, perfectSpecularUB, refractionUB, intersection,
-                                origin, rayDir, minDistance, normal, random1, random2, x, y, kdr, kdg,
-                                kdb, ksr, ksg, ksb, shininess, ri);
-                        }
-                        if(!pathFinished){
-                            randomRR = uniform_real_distribution<float>(0, 1)(rng);
-                            lastIntersection = intersection;
-                            if(randomRR <= diffuseUB){
-                                // Russian roulette: diffuse
-                                theta = acosf(sqrt(1.f - uniform_real_distribution<float>(0, 1)(rng)));
-                                phi = 2.f * M_PI * uniform_real_distribution<float>(0, 1)(rng);
-                                x_ = sin(theta) * cos(phi); 
-                                y_ = sin(theta) * sin(phi);
-                                z_ = cos(theta);
-
-                                // Get new rayDir, using new direction with normal = 1 in local coordinates
-                                rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, z_);
-                                rayDir = rayDir / mod(rayDir);
-                                // product = product * kdx / maxkd
-                                productR *= (kdr / diffuseUB);
-                                productG *= (kdg / diffuseUB);
-                                productB *= (kdb / diffuseUB);
-
-                                // Calculate the contribution from direct light sources
-                                for (int i = 0; i < DIM_DIRECT_LIGHT; i++){
-                                    // Direction of the ray to the direct light
-                                    directLightRay = directLightList[i].location - intersection;
-                                    // Update the minimum distance
-                                    minDistanceDL = mod(directLightRay);
-                                    oldDistanceDL = minDistanceDL;
-                                    directLightRay = directLightRay / mod(directLightRay);
-
-                                    // Check posible intersections between the objects and the light ray
-                                    // Calculation of intersections between ray and planes
-                                    intersectionRayPlane(intersection, directLightRay, minDistanceDL, img, planeList, nearestPlane, nearestObject);
-                    
-                                    // Calculation of intersections between ray and spheres
-                                    intersectionRaySphere(intersection, directLightRay, pixelPoint, minDistanceDL, img, sphereList, nearestSphere, nearestObject);
-                                    
-                                    // Calculation of intersections between ray and triangles
-                                    intersectionRayTriangle(intersection, bary, directLightRay, pixelPoint, 
-                                                            minDistanceDL, triangleList, nearestTriangle, nearestObject);
-                                    // Check if directRay has intersect any object
-                                    if (minDistanceDL == oldDistanceDL){
-                                        acumDL[ind] = acumDL[ind] + 
-                                                        RGB((directLightList[i].color.red / (oldDistanceDL * oldDistanceDL)) * kdr / M_PI * abs(dot(normal, directLightRay)) / diffuseUB,
-                                                            (directLightList[i].color.green / (oldDistanceDL * oldDistanceDL)) * kdg / M_PI * abs(dot(normal, directLightRay)) / diffuseUB,
-                                                            (directLightList[i].color.blue / (oldDistanceDL * oldDistanceDL)) * kdb / M_PI * abs(dot(normal, directLightRay)) / diffuseUB);                                            
-                                    } 
-                                }
-                                acumIL[ind] = RGB((kdr / diffuseUB) * abs(dot(normal, rayDir)),
-                                                    (kdg / diffuseUB) * abs(dot(normal, rayDir)),
-                                                    (kdb / diffuseUB) * abs(dot(normal, rayDir)));
-                            }
-                            else if(randomRR <= specularUB){
-                                // Russian roulette: specular
-                                theta = acosf(sqrt(1.f - uniform_real_distribution<float>(0, 1)(rng)));
-                                phi = 2.f * M_PI * uniform_real_distribution<float>(0, 1)(rng);
-                                x_ = sin(theta) * cos(phi); 
-                                y_ = sin(theta) * sin(phi);
-                                z_ = cos(theta);
-
-                                // Get new rayDir, using new direction with normal = 1 in local coordinates
-                                rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, z_);
-                                rayDir = rayDir / mod(rayDir);
-                                productR *= (ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
-                                productG *= (ksg / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
-                                productB *= (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
-
-                                // Calculate the contribution from direct light sources
-                                for (int i = 0; i < DIM_DIRECT_LIGHT; i++){
-                                    // Direction of the ray to the direct light
-                                    directLightRay = directLightList[i].location - intersection;
-
-                                    // Update the minimum distance
-                                    minDistanceDL = mod(directLightRay);
-                                    oldDistanceDL = minDistanceDL;
-                                    directLightRay = directLightRay / mod(directLightRay);
-
-                                    // Check posible intersections between the objects and the light ray
-                                    // Calculation of intersections between ray and planes
-                                    intersectionRayPlane(intersection, directLightRay, minDistanceDL, img, planeList, nearestPlane, nearestObject);
-                    
-                                    // Calculation of intersections between ray and spheres
-                                    intersectionRaySphere(intersection, directLightRay, pixelPoint, minDistanceDL, img, sphereList, nearestSphere, nearestObject);
-                                    
-                                    // Calculation of intersections between ray and triangles
-                                    intersectionRayTriangle(intersection, bary, directLightRay, pixelPoint, 
-                                                            minDistanceDL, triangleList, nearestTriangle, nearestObject);
-
-                                    // Check if directRay has intersect any object
-                                    if (minDistanceDL == oldDistanceDL){
-                                        acumDL[ind] = acumDL[ind] +
-                                                        RGB((directLightList[i].color.red / (oldDistanceDL * oldDistanceDL)) *
-                                                                ((ksr / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(normal, directLightRay)), shininess)),
-                                                            (directLightList[i].color.green / (oldDistanceDL * oldDistanceDL)) *
-                                                                ((ksg / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(normal, directLightRay)), shininess)),
-                                                            (directLightList[i].color.blue / (oldDistanceDL * oldDistanceDL)) *
-                                                                ((ksb / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(normal, directLightRay)), shininess)));
-                                    } 
-                                }
-                                acumIL[ind] = RGB((ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f),
-                                                    (ksg / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f),
-                                                    (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f));
-                            }                                
-                            else if(randomRR <= perfectSpecularUB){
-                                // Russian roulette: perfect specular
-                                // Get new rayDir, using new direction with normal = 1 in local coordinates
-                                rayDir = oldRayDir - normal * dot(oldRayDir, normal) * 2.f;
-                                acumDL[ind] = RGB(0, 0, 0);
-                                acumIL[ind] = RGB(1, 1, 1);
-                            }                                
-                            else if(randomRR <= refractionUB){
-                                // Russian roulette: refraction
-                                float cosi = dot(rayDir, normal) < -1.0 ? -1.0 : (1.0 < dot(rayDir, normal)) ? 1.0 : dot(rayDir, normal);
-                                float etai = 1, etat = ri;
-                                if (cosi < 0){
-                                    cosi = -cosi;
-                                }
-                                else {
-                                    swap(etai, etat);
-                                    normal = normal * -1;
-                                }
-                                float eta = etai / etat;
-                                float k = 1 - eta * eta * (1 - cosi * cosi);
-                                if (k < 0){
-                                    pathFinished = true;
-                                    productR = 0; productG = 0; productB = 0;
-                                }
-                                else {
-                                    rayDir = rayDir * eta + normal * (eta * cosi - sqrtf(k));
-                                }
-                                origin = origin + oldRayDir * 0.0001;
-                                acumDL[ind] = RGB(0, 0, 0);
-                                acumIL[ind] = RGB(1, 1, 1);
-                            }
-                            else{
-                                // Path finished (russian roulette = absortion)
-                                pathFinished = true;
-                                productR = 0; productG = 0; productB = 0;
-                            }
-                        } 
-                    }
-                    // Update origin point
-                    origin =  origin + oldRayDir * minDistance;
-                    ind++;
-                }
-                ind--;
-                while(ind > 0){
-                    ind--;
-                    acumDL[ind] = acumDL[ind] + (acumDL[ind + 1] * acumIL[ind]);
-                }
-                acumR += productR + acumDL[0].red;
-                acumG += productG + acumDL[0].green;
-                acumB += productB + acumDL[0].blue;
-            }
-            // Clamp RGB values between 0 and rc
-            if((acumR / PPP) > rc){
-                rc = (int)(acumR / PPP);
-            }
-            if((acumG / PPP) > rc){
-                rc = (int)(acumG / PPP);
-            }
-            if((acumB / PPP) > rc){
-                rc = (int)(acumB / PPP);
-            }
-            img[row][col] = RGB((int)(acumR / PPP), 
-                                (int)(acumG / PPP), 
-                                (int)(acumB / PPP));
-        }
-    }
-}
 
 // http://viclw17.github.io/2018/07/16/raytracing-ray-sphere-intersection/
 
@@ -458,6 +146,7 @@ int main(int argc, char* argv[]){
         float width = atof(argv[2]);
         float height = atof(argv[3]);
         float pixelSize;
+        int rc = 0;
 
         // Projection plane direction vectors
         Direction leftPP, upPP;
@@ -477,7 +166,7 @@ int main(int argc, char* argv[]){
 
         // Vectors with the planes and spheres represented in the scene
         Sphere sphereList[DIM_SPHERE];
-        Plane planeList[DIM_PLANE];
+        list<Plane> planeList;
         Triangle triangleList[DIM_TRIANGLE];
         DirectLight directLightList[DIM_DIRECT_LIGHT];
 
@@ -494,7 +183,7 @@ int main(int argc, char* argv[]){
         
         // Call path tracing algorithm
         pathTracer(PPP, width, height, img, planeList, sphereList, triangleList, directLightList,
-                   camera, d_k, leftPP, upPP, pixelSize);
+                   camera, d_k, leftPP, upPP, pixelSize, rc);
 
         // Creation of the image and saving in a ppm format file
         Image image = Image(true, width, height, rc, rc, img);

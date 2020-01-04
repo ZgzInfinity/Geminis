@@ -17,6 +17,7 @@
 #ifndef PLANE_H
 #define PLANE_H
 
+#include <list>
 #include "Direction.h"
 #include "RGB.h"
 #include "../include/SharedOps.h"
@@ -91,14 +92,14 @@ struct Plane {
  * @param nearestObject is the code for the nearest object found in path intersection
  */
 inline void intersectionRayPlane(const Point& origin, const Direction& rayDir, float& minDistance, vector<vector<RGB>>& img,
-                                 Plane planeList[], Plane& nearestPlane, int& nearestObject)
+                                 list<Plane>& planeList, Plane& nearestPlane, int& nearestObject)
 {
     float denom, t;
     // Plane intersection
-    for(int i = 0; i < DIM_PLANE; i++){
-        if(abs(denom = dot(rayDir, planeList[i].normal)) > EPSILON){
+    for(const auto& plane : planeList){
+        if(abs(denom = dot(rayDir, plane.normal)) > EPSILON){
             // Calculation of the distance between 
-            t = - (dot(origin, planeList[i].normal) + planeList[i].distance2origin) / denom;
+            t = - (dot(origin, plane.normal) + plane.distance2origin) / denom;
             // Control of dividing by zerp
             if(t > 0.0005){
                 if(t < minDistance){
@@ -106,7 +107,7 @@ inline void intersectionRayPlane(const Point& origin, const Direction& rayDir, f
                     minDistance = t;
 
                     // Update nearest object
-                    nearestPlane = planeList[i];
+                    nearestPlane = plane;
                     nearestObject =  1;
                 }
             }
