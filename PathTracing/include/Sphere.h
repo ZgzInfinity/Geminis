@@ -136,4 +136,40 @@ inline void intersectionRaySphere(const Point& origin, Direction& rayDir,
 }
 
 
+
+inline void updateNearestSphere(Sphere& nearestSphere, float& productR, float& productG, float& productB,
+            bool& pathFinished, float& diffuseUB, float& specularUB, float& perfectSpecularUB,
+            float& refractionUB, Point& intersection, Point& origin, Direction& rayDir, float& minDistance,
+            Direction& normal, float& random1, float& random2, Direction& x, Direction& y, float& kdr,
+            float& kdg, float& kdb, float& ksr, float& ksg, float& ksb, float& shininess, float& ri)
+{
+    if(nearestSphere.emitsLight){
+        productR *= nearestSphere.emission.red;
+        productG *= nearestSphere.emission.green;
+        productB *= nearestSphere.emission.blue;
+        // Path finished (reach emitting object)
+        pathFinished = true;
+    }
+    else{
+        diffuseUB = nearestSphere.maxkd;
+        specularUB = diffuseUB + nearestSphere.maxks;
+        perfectSpecularUB = specularUB + nearestSphere.kps;
+        refractionUB = perfectSpecularUB + nearestSphere.krf;
+        intersection = origin + (rayDir * minDistance);
+        normal = intersection - nearestSphere.center;
+        normal = normal / mod(normal);
+        x = cross(normal, Direction(1, random1, random2) / mod(Direction(1, random1, random2)));
+        y = cross(normal, x);
+        kdr = nearestSphere.kdr;
+        kdg = nearestSphere.kdg;
+        kdb = nearestSphere.kdb;
+        ksr = nearestSphere.ksr;
+        ksg = nearestSphere.ksg;
+        ksb = nearestSphere.ksb;
+        shininess = nearestSphere.shininess;
+        ri = nearestSphere.ri;
+    }   
+}
+
+
 #endif

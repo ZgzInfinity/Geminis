@@ -114,4 +114,40 @@ inline void intersectionRayPlane(const Point& origin, const Direction& rayDir, f
     }
 }
 
+
+
+inline void updateNearestPlane(Plane& nearestPlane, float& productR, float& productG, float& productB,
+            bool& pathFinished, float& diffuseUB, float& specularUB, float& perfectSpecularUB,
+            float& refractionUB, Point& intersection, Point& origin, Direction& rayDir, float& minDistance,
+            Direction& normal, float& random1, float& random2, Direction& x, Direction& y, float& kdr,
+            float& kdg, float& kdb, float& ksr, float& ksg, float& ksb, float& shininess, float& ri)
+{
+    if(nearestPlane.emitsLight){
+        productR *= nearestPlane.emission.red;
+        productG *= nearestPlane.emission.green;
+        productB *= nearestPlane.emission.blue;
+        // Path finished (reach emitting object)
+        pathFinished = true;
+    }
+    else{
+        diffuseUB = nearestPlane.maxkd;
+        specularUB = diffuseUB + nearestPlane.maxks;
+        perfectSpecularUB = specularUB + nearestPlane.kps;
+        refractionUB = perfectSpecularUB + nearestPlane.krf;
+        intersection = origin + (rayDir * minDistance);
+        normal = nearestPlane.normal / mod(nearestPlane.normal);
+        // Get tangent to plane using arbitraty unitary direction
+        x = cross(normal, Direction(1, random1, random2) / mod(Direction(1, random1, random2)));
+        y = cross(normal, x);
+        kdr = nearestPlane.kdr;
+        kdg = nearestPlane.kdg;
+        kdb = nearestPlane.kdb;
+        ksr = nearestPlane.ksr;
+        ksg = nearestPlane.ksg;
+        ksb = nearestPlane.ksb;
+        shininess = nearestPlane.shininess;
+        ri = nearestPlane.ri;
+    }
+}
+
 #endif

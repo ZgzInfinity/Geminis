@@ -93,25 +93,6 @@ struct Triangle {
                    const float _s0, const float _su, const float _sv,
                    const float _t0, const float _tu, const float _tv);
 
-    
-    /**
-     * Build a triangle type object without texture
-     * @param _p0 is a the first vertex of the triangle
-     * @param _pu is a the second vertex of the triangle
-     * @param _pv is a the third vertex of the triangle
-     * @param _s0 is the coordinate s of the frst vertex of the triangle in the texture image
-     * @param _su is the coordinate s of the second vertex of the triangle in the texture image
-     * @param _sv is the coordinate s of the third vertex of the triangle in the texture image
-     * @param _t0 is the coordinate t of the frst vertex of the triangle in the texture image
-     * @param _tu is the coordinate t of the second vertex of the triangle in the texture image
-     * @param _tv is the coordinate t of the third vertex of the triangle in the texture image
-     * @returns a Triangle type object
-     *
-    Triangle(const Point _p0, const Point _pu, const Point _pv, Image* _texture,
-             const float _s0, const float _su, const float _sv,
-             const float _t0, const float _tu, const float _tv);
-             */
-
 };
 
 
@@ -207,7 +188,6 @@ inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction&
         if (t > LIMIT && t < 1 / LIMIT) // ray intersection
         {
             if(t < minDistance){
-                //cout << "op" << i << endl;
                 // Its a near intersection and it is saved with the correct emission
                 if(triangleList[i].texture == nullptr){
                     minDistance = t;
@@ -221,7 +201,6 @@ inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction&
                     int rowTex, colTex;
                     calculateBaricentricCordinates(origin, rayDir, t, i, texH, texW, rowTex, colTex, triangleList);
                     // RGB obtained from texture
-                    // textureImg[rowTex][colTex];
                     float color[3];
                     color[0] = triangleList[i].texture->img[rowTex][colTex].red;
                     color[1] = triangleList[i].texture->img[rowTex][colTex].green;
@@ -250,6 +229,41 @@ inline void intersectionRayTriangle(const Point& origin, Point& bary, Direction&
                 nearestObject =  3;
             }
         }
+    }
+}
+
+
+
+inline void updateNearestTriangle(Triangle& nearestTriangle, float& productR, float& productG, float& productB,
+            bool& pathFinished, float& diffuseUB, float& specularUB, float& perfectSpecularUB,
+            float& refractionUB, Point& intersection, Point& origin, Direction& rayDir, float& minDistance,
+            Direction& normal, float& random1, float& random2, Direction& x, Direction& y, float& kdr,
+            float& kdg, float& kdb, float& ksr, float& ksg, float& ksb, float& shininess, float& ri)
+{
+    if(nearestTriangle.emitsLight){
+        productR *= nearestTriangle.emission.red;
+        productG *= nearestTriangle.emission.green;
+        productB *= nearestTriangle.emission.blue;
+        // Path finished (reach emitting object)
+        pathFinished = true;
+    }
+    else{
+        diffuseUB = nearestTriangle.maxkd;
+        specularUB = diffuseUB + nearestTriangle.maxks;
+        perfectSpecularUB = specularUB + nearestTriangle.kps;
+        refractionUB = perfectSpecularUB + nearestTriangle.krf;
+        intersection = origin + (rayDir * minDistance);
+        normal = nearestTriangle.normal / mod(nearestTriangle.normal);
+        x = nearestTriangle.edge1 / mod(nearestTriangle.edge1);
+        y = cross(normal, x);
+        kdr = nearestTriangle.kdr;
+        kdg = nearestTriangle.kdg;
+        kdb = nearestTriangle.kdb;
+        ksr = nearestTriangle.ksr;
+        ksg = nearestTriangle.ksg;
+        ksb = nearestTriangle.ksb;
+        shininess = nearestTriangle.shininess;
+        ri = nearestTriangle.ri;
     }
 }
 
