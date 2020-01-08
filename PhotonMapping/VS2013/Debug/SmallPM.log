@@ -1,0 +1,63 @@
+﻿Compilación iniciada a las 08/01/2020 16:54:00.
+     1>Proyecto "C:\Users\Gord\Desktop\SmallPM\VS2013\SmallPM.vcxproj" en el nodo 2 (Rebuild destinos).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\SmallPM\SmallRT\include /I..\SmallPM\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\SmallPM\src\main.cpp ..\SmallPM\src\PhotonMapping.cpp ..\SmallPM\src\RenderEngine.cpp
+         RenderEngine.cpp
+     1>c:\users\gord\desktop\smallpm\smallpm\smallrt\include\ray.h(26): warning C4305: 'inicializando' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\renderengine.cpp(55): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\smallpm\smallpm\src\renderengine.cpp(68): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\smallpm\smallpm\src\renderengine.cpp(79): warning C4244: 'inicializando' : conversión de 'float' a 'int'; posible pérdida de datos
+     1>c:\users\gord\desktop\smallpm\smallpm\src\renderengine.cpp(93): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\smallpm\smallpm\src\renderengine.cpp(102): warning C4244: 'argumento' : conversión de 'int' a 'const float'; posible pérdida de datos
+     1>c:\users\gord\desktop\smallpm\smallpm\src\renderengine.cpp(111): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
+         PhotonMapping.cpp
+     1>c:\users\gord\desktop\smallpm\smallpm\smallrt\include\ray.h(26): warning C4305: 'inicializando' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\photonmapping.cpp(117): warning C4244: 'argumento' : conversión de 'double' a 'const float'; posible pérdida de datos
+     1>c:\users\gord\desktop\smallpm\smallpm\src\photonmapping.cpp(162): warning C4244: 'argumento' : conversión de 'std::chrono::system_clock::rep' a 'unsigned int'; posible pérdida de datos
+         main.cpp
+     1>c:\users\gord\desktop\smallpm\smallpm\smallrt\include\ray.h(26): warning C4305: 'inicializando' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\smallrt\include\lambertian.h(28): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(46): warning C4305: 'inicializando' : truncamiento de 'double' a 'float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(98): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(99): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(100): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(101): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(143): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(146): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(152): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(155): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(158): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(164): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(173): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(175): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(181): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(184): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\smallpm\smallpm\src\main.cpp(188): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+         Generando código...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\SmallPM.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\SmallPM\SmallRT\lib SmallRT_VS2013d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\SmallPM.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\SmallPM.lib" /MACHINE:X86 /SAFESEH Debug\main.obj
+         Debug\PhotonMapping.obj
+         Debug\RenderEngine.obj
+     1>main.obj : warning LNK4075: se omite '/EDITANDCONTINUE' debido a la especificación '/SAFESEH'
+     1>SmallRT_VS2013d.lib(Camera.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(Film.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(Intersection.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(LightSource.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(Ray.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(Vector2.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(Vector3.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(World.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(Lambertian.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(Specular.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(Transmissive.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(BVH.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(Mesh.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(Object3D.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(Sphere.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+     1>SmallRT_VS2013d.lib(Triangle.obj) : warning LNK4204: falta información de depuración de 'C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\vc120.pdb' para hacer referencia al módulo; se vinculará el objeto sin tener en cuenta información de depuración
+         SmallPM.vcxproj -> C:\Users\Gord\Desktop\SmallPM\VS2013\Debug\SmallPM.exe
+     1>Compilación del proyecto terminada "C:\Users\Gord\Desktop\SmallPM\VS2013\SmallPM.vcxproj" (Rebuild destinos).
+
+Compilación correcta.
+
+Tiempo transcurrido 00:00:02.75
