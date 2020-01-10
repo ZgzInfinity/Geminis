@@ -12,6 +12,9 @@ This software is provided as is, and any express or implied warranties are discl
 In no event shall copyright holders be liable for any damage.
 **********************************************************************************/
 
+#define _USE_MATH_DEFINES
+#include <cmath> 
+
 #include <random>
 #include <chrono>
 #include "PhotonMapping.h"
@@ -197,6 +200,12 @@ void PhotonMapping::preprocess()
 	for (auto const& photon : caustic_photons){
 		m_caustics_map.store(std::vector<Real>(photon.position.data, photon.position.data + 3), photon);
 	}
+
+	// Balance the global photon Kdtree
+	m_global_map.balance();
+
+	// Balance the caustic photon Kdtree
+	m_caustics_map.balance();
 }
 
 //*********************************************************************
@@ -217,6 +226,89 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 	
 	Intersection it(it0);
 
+	// Reflect and refract until a diffuse surface is found, then show its albedo...
+	int nb_bounces = 0;
+	// MAX_NB_BOUNCES defined in ./SmallRT/include/globals.h
+	while (it.intersected()->material()->is_delta() && ++nb_bounces < MAX_NB_BOUNCES)
+	{
+		Ray r; float pdf;
+		it.intersected()->material()->get_outgoing_sample_ray(it, r, pdf);
+		W = W * it.intersected()->material()->get_albedo(it) / pdf;
+
+		r.shift();
+		world->first_intersection(r, it);
+	}
+	// Direct light contribution
+	L = it.intersected()->material()->get_albedo(it);
+	L = L * W;
+
+	// Lambertian material
+	Vector3 p = it.get_position();
+	std::vector<const KDTree<Photon, 3>::Node*> photonsGlobal, photonsCaustic;
+	Real max_distance;
+	// Find the k nearest photons
+	m_global_map.find(std::vector<Real>(p.data, p.data + 3), m_nb_photons, photonsGlobal, max_distance);
+
+	// Calculation of the final radiance estimation
+	Real globalRadEstR = 0.0, globalRadEstG = 0.0, globalRadEstB = 0.0;
+
+	// Iteration through the global photons
+	for (auto const& photonNode : photonsGlobal){
+		// Cast like photon
+		Photon photon = photonNode->data();
+		// Get diffuse coefficient for each channel
+		float kdR = it.intersected()->material()->get_albedo(it).data[0];
+		float kdG = it.intersected()->material()->get_albedo(it).data[1];
+		float kdB = it.intersected()->material()->get_albedo(it).data[2];
+
+		// Get specular coefficient
+		float ks = it.intersected()->material()->get_specular(it);
+
+		// +ks * ((shininess + 2) / (2 * M_PI)) * pow(dot_abs(it.get_normal(), )shininess);
+
+		globalRadEstR += ((kdR / M_PI) * photon.flux.data[0]);
+		globalRadEstG += ((kdG / M_PI) * photon.flux.data[1]);
+		globalRadEstB += ((kdB / M_PI) * photon.flux.data[2]);
+	}
+	globalRadEstR /= (4.f / 3.f) * max_distance * max_distance * max_distance * M_PI;
+	globalRadEstG /= (4.f / 3.f) * max_distance * max_distance * max_distance * M_PI;
+	globalRadEstB /= (4.f / 3.f) * max_distance * max_distance * max_distance * M_PI;
+
+	// Find the k nearest photons
+	m_caustics_map.find(std::vector<Real>(p.data, p.data + 3), m_nb_photons, photonsGlobal, max_distance);
+
+	// Calculation of the final radiance estimation
+	Real causticRadEstR = 0.0, causticRadEstG = 0.0, causticRadEstB = 0.0;
+
+	// Iteration through the caustic photons
+	for (auto const& photonNode : photonsCaustic){
+		// Cast like photon
+		Photon photon = photonNode->data();
+		// Get diffuse coefficient for each channel
+		float kdR = it.intersected()->material()->get_albedo(it).data[0];
+		float kdG = it.intersected()->material()->get_albedo(it).data[1];
+		float kdB = it.intersected()->material()->get_albedo(it).data[2];
+
+		// Get specular coefficient
+		float ks = it.intersected()->material()->get_specular(it);
+
+		// +ks * ((shininess + 2) / (2 * M_PI)) * pow(dot_abs(it.get_normal(), )shininess);
+
+		causticRadEstR += ((kdR / M_PI) * photon.flux.data[0]);
+		causticRadEstG += ((kdG / M_PI) * photon.flux.data[1]);
+		causticRadEstB += ((kdB / M_PI) * photon.flux.data[2]);
+	}
+	causticRadEstR /= (4.f / 3.f) * max_distance * max_distance * max_distance * M_PI;
+	causticRadEstG /= (4.f / 3.f) * max_distance * max_distance * max_distance * M_PI;
+	causticRadEstB /= (4.f / 3.f) * max_distance * max_distance * max_distance * M_PI;
+
+	// Add the contribution of caustic 
+	L.data[0] += globalRadEstR + causticRadEstR;
+	L.data[1] += globalRadEstG + causticRadEstG;
+	L.data[2] += globalRadEstB + causticRadEstB;
+
+	return L;
+	
 	//**********************************************************************
 	// The following piece of code is included here for two reasons: first
 	// it works as a 'hello world' code to check that everthing compiles 
@@ -224,7 +316,7 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 	// will need when doing the work. Goes without saying: remove the 
 	// pieces of code that you won't be using.
 	//
-	unsigned int debug_mode = 7;
+	unsigned int debug_mode = 6;
 
 	switch (debug_mode)
 	{

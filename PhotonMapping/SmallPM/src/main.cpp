@@ -195,7 +195,6 @@ int main(int argc, char* argv[])
 	film = new Film(sizex,sizey);
 	pm = new PhotonMapping(w, photons_global, photons_caustic, max_shots, nb_nearest_photons );
 
-	pm->preprocess();
 	engine = new RenderEngine(w, film, &camera, pm);
 	
 	engine->render(name_file);	
