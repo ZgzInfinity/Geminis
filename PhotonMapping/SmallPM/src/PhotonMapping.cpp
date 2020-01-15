@@ -22,6 +22,7 @@ In no event shall copyright holders be liable for any damage.
 #include "Intersection.h"
 #include "Ray.h"
 #include "BSDF.h"
+#include "Phong.h"
 
 //*********************************************************************
 // Compute the photons by tracing the Ray 'r' from the light source
@@ -128,7 +129,6 @@ bool PhotonMapping::trace_ray(const Ray& r, const Vector3 &p,
 		m_max_nb_shots = m_nb_current_shots-1;
 		return false;
 	}
-
 	return true;
 }
 
@@ -189,7 +189,8 @@ void PhotonMapping::preprocess()
 			Ray ray = Ray(lightSource->get_position(), rayDir.normalize());
 
 			// Trace the ray
-			keepContinue = trace_ray(ray, lightSource->get_intensities() / m_nb_photons, global_photons, caustic_photons, false, false);
+			// Flux adapted to the number of photons and PDF
+			keepContinue = trace_ray(ray, lightSource->get_intensities() * 4 * M_PI / m_nb_photons, global_photons, caustic_photons, false, false);
 		}
 	}
 	// Store global photons in the KDTree
@@ -256,6 +257,8 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 	// Calculation of the final radiance estimation
 	Real globalRadEstR = 0.0, globalRadEstG = 0.0, globalRadEstB = 0.0;
 
+
+
 	// Iteration through the global photons
 	for (auto const& photonNode : photonsGlobal){
 		// Cast like photon
@@ -268,7 +271,11 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 		// Get specular coefficient
 		float ks = it.intersected()->material()->get_specular(it);
 
-		// +ks * ((shininess + 2) / (2 * M_PI)) * pow(dot_abs(it.get_normal(), )shininess);
+		// Phong p = (Phong) it.intersected()->material()->;
+
+		// float shininess = 
+
+		// +ks * ((shininess + 2) / (2 * M_PI)) * pow(dot_abs(photon.direction.normalize(), - (it.get_ray().get_direction().normalize()), it);
 
 		globalRadEstR += ((kdR / M_PI) * photon.flux.data[0]);
 		globalRadEstG += ((kdG / M_PI) * photon.flux.data[1]);
@@ -298,15 +305,20 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 			// Get specular coefficient
 			float ks = it.intersected()->material()->get_specular(it);
 
+			// 
+			float filteringFactor = 1 - sqrtf(pow(it.get_position().data[0] - photon.position.data[0], 2) +
+											  pow(it.get_position().data[1] - photon.position.data[1], 2) +
+											  pow(it.get_position().data[2] - photon.position.data[2], 2)) / max_distance;
+
 			// +ks * ((shininess + 2) / (2 * M_PI)) * pow(dot_abs(it.get_normal(), )shininess);
 
-			causticRadEstR += ((kdR / M_PI) * photon.flux.data[0]);
-			causticRadEstG += ((kdG / M_PI) * photon.flux.data[1]);
-			causticRadEstB += ((kdB / M_PI) * photon.flux.data[2]);
+			causticRadEstR += ((kdR / M_PI) * photon.flux.data[0]) * filteringFactor;
+			causticRadEstG += ((kdG / M_PI) * photon.flux.data[1]) * filteringFactor;
+			causticRadEstB += ((kdB / M_PI) * photon.flux.data[2]) * filteringFactor;
 		}
-		causticRadEstR /= ((4.f / 3.f) * max_distance * max_distance * max_distance * M_PI);
-		causticRadEstG /= ((4.f / 3.f) * max_distance * max_distance * max_distance * M_PI);
-		causticRadEstB /= ((4.f / 3.f) * max_distance * max_distance * max_distance * M_PI);
+		causticRadEstR /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
+		causticRadEstG /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
+		causticRadEstB /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
 	}
 
 	// Add the contribution of global illumination 
