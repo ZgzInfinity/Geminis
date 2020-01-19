@@ -190,7 +190,7 @@ void PhotonMapping::preprocess()
 
 			// Trace the ray
 			// Flux adapted to the number of photons and PDF
-			keepContinue = trace_ray(ray, lightSource->get_intensities() * 4 * M_PI / m_nb_photons, global_photons, caustic_photons, false, false);
+			keepContinue = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4 * M_PI / m_nb_photons, global_photons, caustic_photons, false, false);
 		}
 	}
 	// Store global photons in the KDTree
@@ -259,7 +259,7 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 	
 	// Direct light contribution
 	// L = it.intersected()->material()->get_albedo(it);
-	//L = L * W;
+	// L = L * W;
 	
 	// Lambertian material
 	Vector3 p = it.get_position();
@@ -272,6 +272,9 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 	Real globalRadEstR = 0.0, globalRadEstG = 0.0, globalRadEstB = 0.0;
 
 	float filteringFactor;
+
+	Vector3 globalRadEst(0);
+	Vector3 causticRadEst(0);
 
 
 
@@ -302,8 +305,13 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 		globalRadEstB += ((kdB / M_PI) * photon.flux.data[2]) * filteringFactor;
 	}
 	globalRadEstR /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
-	globalRadEstG /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
+	globalRadEstR /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
 	globalRadEstB /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
+
+	globalRadEst = Vector3(globalRadEstR, globalRadEstR, globalRadEstB);
+	
+	globalRadEst = globalRadEst * (it.intersected()->material()->get_albedo(it) / M_PI);
+
 
 	// Calculation of the final radiance estimation
 	Real causticRadEstR = 0.0, causticRadEstG = 0.0, causticRadEstB = 0.0;
@@ -339,16 +347,23 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 		causticRadEstR /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
 		causticRadEstG /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
 		causticRadEstB /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
+
+		causticRadEst = Vector3(causticRadEstR, causticRadEstG, causticRadEstB);
+		causticRadEst = causticRadEst * (it.intersected()->material()->get_albedo(it) / M_PI);
 	}
+	cout <<"Direct" << endl;
+	cout << L.data[0] << " " << L.data[1] << " " << L.data[2] << endl;
+	cout <<"Global" << endl;
+	cout << globalRadEst.data[0] << " " << globalRadEst.data[1] << " " << globalRadEst.data[2] << endl;
 
-	// Add the contribution of global illumination 
-	L.data[0] += globalRadEstR + causticRadEstR;
-	L.data[1] += globalRadEstG + causticRadEstG;
-	L.data[2] += globalRadEstB + causticRadEstB;
 
+	// Add the contribution of global illumination
+	L = L + globalRadEst + causticRadEst;
 	
 	// cout << L.data[0] << " " << L.data[1] << " " << L.data[2] << endl;
-	L.normalize();
+	
+
+	// L.normalize();
 	
 
 	return L;
