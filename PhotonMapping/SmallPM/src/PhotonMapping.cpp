@@ -271,6 +271,8 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 	// Calculation of the final radiance estimation
 	Real globalRadEstR = 0.0, globalRadEstG = 0.0, globalRadEstB = 0.0;
 
+	float filteringFactor;
+
 
 
 	// Iteration through the global photons
@@ -285,19 +287,23 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 		// Get specular coefficient
 		float ks = it.intersected()->material()->get_specular(it);
 
+		filteringFactor = 1 - sqrtf(pow(it.get_position().data[0] - photon.position.data[0], 2) +
+			pow(it.get_position().data[1] - photon.position.data[1], 2) +
+			pow(it.get_position().data[2] - photon.position.data[2], 2)) / max_distance;
+
 		// Phong p = (Phong) it.intersected()->material()->;
 
 		// float shininess = 
 
 		// +ks * ((shininess + 2) / (2 * M_PI)) * pow(dot_abs(photon.direction.normalize(), - (it.get_ray().get_direction().normalize()), it);
 
-		globalRadEstR += ((kdR / M_PI) * photon.flux.data[0]);
-		globalRadEstG += ((kdG / M_PI) * photon.flux.data[1]);
-		globalRadEstB += ((kdB / M_PI) * photon.flux.data[2]);
+		globalRadEstR += ((kdR / M_PI) * photon.flux.data[0]) * filteringFactor;
+		globalRadEstG += ((kdG / M_PI) * photon.flux.data[1]) * filteringFactor;
+		globalRadEstB += ((kdB / M_PI) * photon.flux.data[2]) * filteringFactor;
 	}
-	globalRadEstR /= ((4.f / 3.f) * max_distance * max_distance * max_distance * M_PI);
-	globalRadEstG /= ((4.f / 3.f) * max_distance * max_distance * max_distance * M_PI);
-	globalRadEstB /= ((4.f / 3.f) * max_distance * max_distance * max_distance * M_PI);
+	globalRadEstR /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
+	globalRadEstG /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
+	globalRadEstB /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
 
 	// Calculation of the final radiance estimation
 	Real causticRadEstR = 0.0, causticRadEstG = 0.0, causticRadEstB = 0.0;
@@ -320,7 +326,7 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 			float ks = it.intersected()->material()->get_specular(it);
 
 			// 
-			float filteringFactor = 1 - sqrtf(pow(it.get_position().data[0] - photon.position.data[0], 2) +
+			filteringFactor = 1 - sqrtf(pow(it.get_position().data[0] - photon.position.data[0], 2) +
 											  pow(it.get_position().data[1] - photon.position.data[1], 2) +
 											  pow(it.get_position().data[2] - photon.position.data[2], 2)) / max_distance;
 
@@ -341,7 +347,7 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 	L.data[2] += globalRadEstB + causticRadEstB;
 
 	
-	cout << L.data[0] << " " << L.data[1] << " " << L.data[2] << endl;
+	// cout << L.data[0] << " " << L.data[1] << " " << L.data[2] << endl;
 	L.normalize();
 	
 
