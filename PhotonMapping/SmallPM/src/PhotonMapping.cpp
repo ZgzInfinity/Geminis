@@ -190,7 +190,7 @@ void PhotonMapping::preprocess()
 
 			// Trace the ray
 			// Flux adapted to the number of photons and PDF
-			keepContinue = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4.f * M_PI / m_nb_photons, global_photons, caustic_photons, false, false);
+			keepContinue = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4.f * M_PI / m_max_nb_shots, global_photons, caustic_photons, false, false);
 		}
 	}
 	// Store global photons in the KDTree
@@ -352,10 +352,10 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 		causticRadEst = Vector3(causticRadEstR, causticRadEstG, causticRadEstB);
 		causticRadEst = causticRadEst * (it.intersected()->material()->get_albedo(it) / M_PI);
 	}
-	cout <<"Direct" << endl;
-	cout << L.data[0] << " " << L.data[1] << " " << L.data[2] << endl;
-	cout <<"Global" << endl;
-	cout << globalRadEst.data[0] << " " << globalRadEst.data[1] << " " << globalRadEst.data[2] << endl;
+	// cout <<"Direct" << endl;
+	// cout << L.data[0] << " " << L.data[1] << " " << L.data[2] << endl;
+	// cout <<"Global" << endl;
+	// cout << globalRadEst.data[0] << " " << globalRadEst.data[1] << " " << globalRadEst.data[2] << endl;
 
 
 	// Add the contribution of global illumination
