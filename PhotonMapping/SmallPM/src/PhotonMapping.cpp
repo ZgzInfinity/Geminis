@@ -190,7 +190,7 @@ void PhotonMapping::preprocess()
 
 			// Trace the ray
 			// Flux adapted to the number of photons and PDF
-			keepContinue = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4 * M_PI / m_nb_photons, global_photons, caustic_photons, false, false);
+			keepContinue = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4.f * M_PI / m_nb_photons, global_photons, caustic_photons, false, false);
 		}
 	}
 	// Store global photons in the KDTree
@@ -231,15 +231,18 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 
 	// Reflect and refract until a diffuse surface is found, then show its albedo...
 	int nb_bounces = 0;
+	float k_cone = 2.f;
 	// MAX_NB_BOUNCES defined in ./SmallRT/include/globals.h
 	while (it.intersected()->material()->is_delta() && ++nb_bounces < MAX_NB_BOUNCES)
 	{
-		Ray r; float pdf;
+		Ray r; 
+		float pdf;
 		it.intersected()->material()->get_outgoing_sample_ray(it, r, pdf);
-		W = W * it.intersected()->material()->get_albedo(it) / pdf;
-
+		// W = W * it.intersected()->material()->get_albedo(it) / pdf;
+		// Shift the ray
 		r.shift();
 		world->first_intersection(r, it);
+
 	}
 
 	
@@ -277,7 +280,6 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 	Vector3 causticRadEst(0);
 
 
-
 	// Iteration through the global photons
 	for (auto const& photonNode : photonsGlobal){
 		// Cast like photon
@@ -290,9 +292,9 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 		// Get specular coefficient
 		float ks = it.intersected()->material()->get_specular(it);
 
-		filteringFactor = 1 - sqrtf(pow(it.get_position().data[0] - photon.position.data[0], 2) +
+		filteringFactor = 1 - (sqrtf(pow(it.get_position().data[0] - photon.position.data[0], 2) +
 			pow(it.get_position().data[1] - photon.position.data[1], 2) +
-			pow(it.get_position().data[2] - photon.position.data[2], 2)) / max_distance;
+			pow(it.get_position().data[2] - photon.position.data[2], 2)) / (max_distance * k_cone));
 
 		// Phong p = (Phong) it.intersected()->material()->;
 
@@ -304,14 +306,13 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 		globalRadEstG += ((kdG / M_PI) * photon.flux.data[1]) * filteringFactor;
 		globalRadEstB += ((kdB / M_PI) * photon.flux.data[2]) * filteringFactor;
 	}
-	globalRadEstR /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
-	globalRadEstR /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
-	globalRadEstB /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
+	globalRadEstR *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
+	globalRadEstR *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
+	globalRadEstB *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
 
 	globalRadEst = Vector3(globalRadEstR, globalRadEstR, globalRadEstB);
 	
 	globalRadEst = globalRadEst * (it.intersected()->material()->get_albedo(it) / M_PI);
-
 
 	// Calculation of the final radiance estimation
 	Real causticRadEstR = 0.0, causticRadEstG = 0.0, causticRadEstB = 0.0;
@@ -334,9 +335,9 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 			float ks = it.intersected()->material()->get_specular(it);
 
 			// 
-			filteringFactor = 1 - sqrtf(pow(it.get_position().data[0] - photon.position.data[0], 2) +
+			filteringFactor = 1 - (sqrtf(pow(it.get_position().data[0] - photon.position.data[0], 2) +
 											  pow(it.get_position().data[1] - photon.position.data[1], 2) +
-											  pow(it.get_position().data[2] - photon.position.data[2], 2)) / max_distance;
+											  pow(it.get_position().data[2] - photon.position.data[2], 2)) / (max_distance * k_cone));
 
 			// +ks * ((shininess + 2) / (2 * M_PI)) * pow(dot_abs(it.get_normal(), )shininess);
 
@@ -344,9 +345,9 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 			causticRadEstG += ((kdG / M_PI) * photon.flux.data[1]) * filteringFactor;
 			causticRadEstB += ((kdB / M_PI) * photon.flux.data[2]) * filteringFactor;
 		}
-		causticRadEstR /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
-		causticRadEstG /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
-		causticRadEstB /= ((1 - 2 / 3.f) * max_distance * max_distance * M_PI);
+		causticRadEstR *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
+		causticRadEstG *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
+		causticRadEstB *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
 
 		causticRadEst = Vector3(causticRadEstR, causticRadEstG, causticRadEstB);
 		causticRadEst = causticRadEst * (it.intersected()->material()->get_albedo(it) / M_PI);
