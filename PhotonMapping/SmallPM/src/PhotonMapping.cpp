@@ -307,10 +307,10 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 		globalRadEstB += ((kdB / M_PI) * photon.flux.data[2]) * filteringFactor;
 	}
 	globalRadEstR *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
-	globalRadEstR *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
+	globalRadEstG *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
 	globalRadEstB *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
 
-	globalRadEst = Vector3(globalRadEstR, globalRadEstR, globalRadEstB);
+	globalRadEst = Vector3(globalRadEstR, globalRadEstG, globalRadEstB);
 	
 	globalRadEst = globalRadEst * (it.intersected()->material()->get_albedo(it) / M_PI);
 
@@ -363,10 +363,6 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 	
 	// cout << L.data[0] << " " << L.data[1] << " " << L.data[2] << endl;
 	
-
-	// L.normalize();
-	
-
 	return L;
 	
 	//**********************************************************************
