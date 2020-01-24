@@ -1,4 +1,4 @@
-﻿Compilación iniciada a las 24/01/2020 12:44:09.
+﻿Compilación iniciada a las 24/01/2020 20:29:36.
      1>Proyecto "C:\Users\Gord\Desktop\PhotonMapping\VS2013\SmallPM.vcxproj" en el nodo 2 (Rebuild destinos).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\SmallPM\SmallRT\include /I..\SmallPM\include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\SmallPM\src\main.cpp ..\SmallPM\src\PhotonMapping.cpp ..\SmallPM\src\RenderEngine.cpp
@@ -13,27 +13,27 @@
          PhotonMapping.cpp
      1>c:\users\gord\desktop\photonmapping\smallpm\smallrt\include\ray.h(26): warning C4305: 'inicializando' : truncamiento de 'double' a 'const float'
      1>c:\users\gord\desktop\photonmapping\smallpm\smallrt\include\phong.h(29): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(121): warning C4244: 'argumento' : conversión de 'double' a 'const float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(165): warning C4244: 'argumento' : conversión de 'std::chrono::system_clock::rep' a 'unsigned int'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(195): warning C4244: 'argumento' : conversión de 'unsigned int' a 'const float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(195): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(201): warning C4244: 'argumento' : conversión de 'unsigned int' a 'const float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(201): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(204): warning C4244: 'argumento' : conversión de 'unsigned int' a 'const float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(204): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(269): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(320): warning C4244: '+=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(321): warning C4244: '+=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(123): warning C4244: 'argumento' : conversión de 'double' a 'const float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(167): warning C4244: 'argumento' : conversión de 'std::chrono::system_clock::rep' a 'unsigned int'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(197): warning C4244: 'argumento' : conversión de 'unsigned int' a 'const float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(197): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(203): warning C4244: 'argumento' : conversión de 'unsigned int' a 'const float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(203): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(206): warning C4244: 'argumento' : conversión de 'unsigned int' a 'const float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(206): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(271): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
      1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(322): warning C4244: '+=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(324): warning C4244: '*=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(325): warning C4244: '*=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(326): warning C4244: '*=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(360): warning C4244: '+=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(361): warning C4244: '+=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(362): warning C4244: '+=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(364): warning C4244: '*=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(365): warning C4244: '*=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(366): warning C4244: '*=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(323): warning C4244: '+=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(324): warning C4244: '+=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(328): warning C4244: '*=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(329): warning C4244: '*=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(330): warning C4244: '*=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(364): warning C4244: '+=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(365): warning C4244: '+=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(366): warning C4244: '+=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(368): warning C4244: '*=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(369): warning C4244: '*=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(370): warning C4244: '*=' : conversión de 'double' a 'float'; posible pérdida de datos
      1>c:\users\gord\desktop\photonmapping\smallpm\include\kdtree.h(222): warning C4018: '<' : no coinciden signed/unsigned
                  c:\users\gord\desktop\photonmapping\smallpm\include\kdtree.h(216) : durante la compilación de la función miembro de plantilla de clase 'void KDTree<PhotonMapping::Photon,3>::find(const std::vector<float,std::allocator<_Ty>> &,int,int,float &,std::vector<const KDTree<PhotonMapping::Photon,3>::Node *,std::allocator<const KDTree<PhotonMapping::Photon,3>::Node>> &,std::vector<std::pair<int,float>,std::allocator<std::pair<int,float>>> &) const'
                  with
@@ -59,7 +59,7 @@
                      _Ty=const KDTree<PhotonMapping::Photon,3>::Node *
                  ]
                  c:\users\gord\desktop\photonmapping\smallpm\include\kdtree.h(368) : durante la compilación de la función miembro de plantilla de clase 'void KDTree<PhotonMapping::Photon,3>::balance(void)'
-                 c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(213) : vea la referencia a la creación de instancias de plantilla de función 'void KDTree<PhotonMapping::Photon,3>::balance(void)' que se está compilando
+                 c:\users\gord\desktop\photonmapping\smallpm\src\photonmapping.cpp(215) : vea la referencia a la creación de instancias de plantilla de función 'void KDTree<PhotonMapping::Photon,3>::balance(void)' que se está compilando
          main.cpp
      1>c:\users\gord\desktop\photonmapping\smallpm\smallrt\include\ray.h(26): warning C4305: 'inicializando' : truncamiento de 'double' a 'const float'
      1>c:\users\gord\desktop\photonmapping\smallpm\smallrt\include\lambertian.h(28): warning C4305: 'argumento' : truncamiento de 'double' a 'const float'
@@ -106,4 +106,4 @@
 
 Compilación correcta.
 
-Tiempo transcurrido 00:00:02.43
+Tiempo transcurrido 00:00:02.30

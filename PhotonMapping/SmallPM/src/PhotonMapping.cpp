@@ -61,6 +61,8 @@ bool PhotonMapping::trace_ray(const Ray& r, const Vector3 &p,
 
 	bool is_caustic_particle = false;
 
+	
+
 	//Iterate the path
 	while(1)
 	{
@@ -108,7 +110,7 @@ bool PhotonMapping::trace_ray(const Ray& r, const Vector3 &p,
 		if (epsilon2 > avg_surf_albedo || photon_ray.get_level() > MAX_PHOTON_ITERATIONS ) 
 			break;
 		
-		if (direct_only && !is_caustic_particle && photon_ray.get_level() > 1)
+		if (direct_only && !is_caustic_particle)
 			break;
 
 		// Random walk's next step
@@ -321,6 +323,8 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 		globalRadEstG += ((kdG / M_PI) * photon.flux.data[1]) * filteringFactor;
 		globalRadEstB += ((kdB / M_PI) * photon.flux.data[2]) * filteringFactor;
 	}
+	// photonsGlobal.clear();
+	// vector<const KDTree<Photon, 3>::Node *>().swap(photonsGlobal);
 	globalRadEstR *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
 	globalRadEstG *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
 	globalRadEstB *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
