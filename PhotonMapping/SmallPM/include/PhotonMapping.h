@@ -37,6 +37,7 @@ class PhotonMapping
 	
 	unsigned int m_max_nb_shots, m_nb_global_photons, m_nb_caustic_photons;
 	unsigned int m_nb_current_shots;
+	int flagDI;
 
 	unsigned int m_nb_photons;
 	bool m_raytraced_direct;
@@ -74,10 +75,10 @@ class PhotonMapping
 public:
 
  	PhotonMapping( World *_world, unsigned int nb_global_photons, unsigned int nb_caustic_photons,
-				   unsigned int max_nb_shots, unsigned int nb_photons, bool raytraced_direct = true): 
+		unsigned int max_nb_shots, unsigned int nb_photons, int _flagDI, bool raytraced_direct = true) :
  		world(_world), m_max_nb_shots(max_nb_shots), m_nb_current_shots(0),
 		m_nb_global_photons(nb_global_photons), m_nb_caustic_photons(nb_caustic_photons),
-		m_nb_photons(nb_photons), m_raytraced_direct(raytraced_direct)
+		m_nb_photons(nb_photons), m_raytraced_direct(raytraced_direct), flagDI(_flagDI)
 	{ }
 	
 	// Preprocess the photon map. This needs to be run before rendering,

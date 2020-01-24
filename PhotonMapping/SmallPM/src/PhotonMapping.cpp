@@ -190,7 +190,19 @@ void PhotonMapping::preprocess()
 
 			// Trace the ray
 			// Flux adapted to the number of photons and PDF
-			keepContinue = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4.f * M_PI / m_max_nb_shots, global_photons, caustic_photons, false, false);
+			switch (flagDI){
+				case 1:
+					keepContinue = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4.f * M_PI / m_max_nb_shots, global_photons, caustic_photons, true, false);
+				break;
+				case 2:
+					keepContinue = false;
+				break;
+				case 3:
+					keepContinue = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4.f * M_PI / m_max_nb_shots, global_photons, caustic_photons, false, true);
+				break;
+				default:
+					keepContinue = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4.f * M_PI / m_max_nb_shots, global_photons, caustic_photons, false, false);
+			}
 		}
 	}
 	// Store global photons in the KDTree
@@ -204,6 +216,7 @@ void PhotonMapping::preprocess()
 	if (!caustic_photons.empty()){
 		// Store caustic photons in the KDTree
 		for (auto const& photon : caustic_photons){
+			// cout << photon.flux.data[0] << " " << photon.flux.data[1] << " " << photon.flux.data[2] << endl;
 			m_caustics_map.store(std::vector<Real>(photon.position.data, photon.position.data + 3), photon);
 		}
 		// Balance the caustic photon Kdtree
@@ -245,15 +258,17 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 
 	}
 
-	
-	for (auto const& lightSource : world->light_source_list){
-		if (lightSource->is_visible(it.get_position())){
-			Vector3 power = lightSource->get_intensities();
-			Vector3 connection = lightSource->get_position() - it.get_position();
-			
-			
-			L += (power / connection.length2()) * (it.intersected()->material()->get_albedo(it) / M_PI) *
-												  (dot_abs(it.get_normal(), connection.normalize()));
+	// If direct light with ray tracing
+	if (flagDI == 0 || flagDI == 2){
+		for (auto const& lightSource : world->light_source_list){
+			if (lightSource->is_visible(it.get_position())){
+				Vector3 power = lightSource->get_intensities();
+				Vector3 connection = lightSource->get_position() - it.get_position();
+
+
+				L += (power / connection.length2()) * (it.intersected()->material()->get_albedo(it) / M_PI) *
+					(dot_abs(it.get_normal(), connection.normalize()));
+			}
 		}
 	}
 	
@@ -312,7 +327,8 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 
 	globalRadEst = Vector3(globalRadEstR, globalRadEstG, globalRadEstB);
 	
-	globalRadEst = globalRadEst * (it.intersected()->material()->get_albedo(it) / M_PI);
+	// globalRadEst = globalRadEst * (it.intersected()->material()->get_albedo(it) / M_PI);
+
 
 	// Calculation of the final radiance estimation
 	Real causticRadEstR = 0.0, causticRadEstG = 0.0, causticRadEstB = 0.0;
@@ -320,7 +336,7 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 	// Check if the KDtree of caustic objects is empty
 	if (!m_caustics_map.is_empty()){
 		// Find the k nearest photons
-		m_caustics_map.find(std::vector<Real>(p.data, p.data + 3), m_nb_photons, photonsGlobal, max_distance);
+		m_caustics_map.find(std::vector<Real>(p.data, p.data + 3), m_nb_photons, photonsCaustic, max_distance);
 
 		// Iteration through the caustic photons
 		for (auto const& photonNode : photonsCaustic){
@@ -350,7 +366,7 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 		causticRadEstB *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
 
 		causticRadEst = Vector3(causticRadEstR, causticRadEstG, causticRadEstB);
-		causticRadEst = causticRadEst * (it.intersected()->material()->get_albedo(it) / M_PI);
+		// causticRadEst = causticRadEst * (it.intersected()->material()->get_albedo(it) / M_PI);
 	}
 	// cout <<"Direct" << endl;
 	// cout << L.data[0] << " " << L.data[1] << " " << L.data[2] << endl;

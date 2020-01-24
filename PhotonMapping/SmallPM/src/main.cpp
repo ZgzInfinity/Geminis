@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 	unsigned int photons_global = 10000, 
 				 photons_caustic = 10000, 
 				 max_shots = 100000, 
-				 nb_nearest_photons = 10;
+				 nb_nearest_photons = 50;
 
 	// ---------------------------------------------------------------------
 	// Parse input
@@ -193,7 +193,14 @@ int main(int argc, char* argv[])
 	// Create Film and rendering engine
 	//
 	film = new Film(sizex,sizey);
-	pm = new PhotonMapping(w, photons_global, photons_caustic, max_shots, nb_nearest_photons );
+	// Flag which control the calculation the direct illumination
+	// 0 = direct illumination with ray tracing + global 
+	// 1 = direct illumination with photon mapping + global
+	// 2 = only direct illumination with ray tracing
+	// 3 = only direct illumination with photon mapping
+	// 4 = only global illumination
+	int flagDI = 0;
+	pm = new PhotonMapping(w, photons_global, photons_caustic, max_shots, nb_nearest_photons, flagDI);
 
 	engine = new RenderEngine(w, film, &camera, pm);
 	
