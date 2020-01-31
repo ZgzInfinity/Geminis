@@ -33,9 +33,9 @@ void sceneDefinitionHardShadows(list<Plane>& planeList, list<Sphere>& sphereList
     planeList.push_back(behind);
 
     // Definition of the spheres which are going to appear in the scene 
-    Sphere leftSphere = Sphere(Point(40, -5, -3), 2,  0.1, 0.1, 0.1, 0.8, 0.8, 0.8, 0.1, 0, 0, 1);
+    Sphere leftSphere = Sphere(Point(40, -5, -3), 2,  0.1, 0.1, 0.1, 0.8, 0.8, 0.8, 10, 0, 0, 1);
     sphereList.push_back(leftSphere);
-    Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0.1, 0.9, 0, 1);
+    Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.0, 0.9, 1.5);
     sphereList.push_back(rightSphere);
 
     // Definition of the triangles which are going to appear in the scene 

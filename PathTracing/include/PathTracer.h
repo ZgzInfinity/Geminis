@@ -217,9 +217,9 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                                 // Get new rayDir, using new direction with normal = 1 in local coordinates
                                 rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, z_);
                                 rayDir = rayDir / mod(rayDir);
-                                productR *= (ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
-                                productG *= (ksg / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
-                                productB *= (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f);
+                                productR *= (ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(oldRayDir, rayDir)), shininess) / 2.f);
+                                productG *= (ksg / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(oldRayDir, rayDir)), shininess) / 2.f);
+                                productB *= (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(oldRayDir, rayDir)), shininess) / 2.f);
 
                                 // Calculate the contribution from direct light sources
                                 for(const auto& directLight : directLightList){
@@ -308,7 +308,7 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                 acumG += productG + acumDL.back().green;
                 acumB += productB + acumDL.back().blue;
             }
-            // Clamp RGB values between 0 and rc
+            // Update max rc (resolution color) value
             if((acumR / PPP) > rc){
                 rc = (int)(acumR / PPP);
             }
