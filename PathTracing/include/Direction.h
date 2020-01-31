@@ -18,6 +18,7 @@
 #define DIRECTION_H
 
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
