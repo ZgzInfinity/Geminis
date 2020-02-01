@@ -50,9 +50,9 @@ int main(int argc, char* argv[])
 
 	unsigned int scene = 0;
 
-	unsigned int photons_global = 100000, 
-				 photons_caustic = 100000, 
-				 max_shots = 1000000, 
+	unsigned int photons_global = 10000, 
+				 photons_caustic = 10000, 
+				 max_shots = 100000, 
 				 nb_nearest_photons = 30;
 
 	// ---------------------------------------------------------------------
@@ -165,8 +165,9 @@ int main(int argc, char* argv[])
 		w->add_object(sphere1);
 
 
-		Mesh* bunny = new Mesh("..\\data\\bunny.obj", mirror);
+		Mesh* bunny = new Mesh("..\\data\\bunny3.obj", mirror);
 		w->add_object(bunny);
+	break;
 	}
 	case 4:
 	{	
@@ -199,7 +200,7 @@ int main(int argc, char* argv[])
 	// 2 = only direct illumination with ray tracing
 	// 3 = only direct illumination with photon mapping
 	// 4 = only global illumination
-	int flagDI = 3;
+	int flagDI = 0;
 	pm = new PhotonMapping(w, photons_global, photons_caustic, max_shots, nb_nearest_photons, flagDI);
 
 	engine = new RenderEngine(w, film, &camera, pm);

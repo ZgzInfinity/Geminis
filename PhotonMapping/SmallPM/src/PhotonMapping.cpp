@@ -160,13 +160,12 @@ void PhotonMapping::preprocess()
 	// List of caustic photons
 	std::list<Photon> caustic_photons;
 
-	//
-	bool keepContinue = true;
+	bool continueShooting = true;
 
 	// Generation random numbers
 	mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 
-	while (keepContinue){
+	while (continueShooting){
 		// Iteration throw the different lights of the scene
 		for (auto const& lightSource : world->light_source_list){
 			// Generation of the random values
@@ -191,19 +190,19 @@ void PhotonMapping::preprocess()
 			Ray ray = Ray(lightSource->get_position(), rayDir.normalize());
 
 			// Trace the ray
-			// Flux adapted to the number of photons and PDF
+			// Flux adapted to the number of photons (later in radiance estimation) and PDF (sphere solid angle)
 			switch (flagDI){
 				case 1:
-					keepContinue = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4.f * M_PI / m_max_nb_shots, global_photons, caustic_photons, true, false);
+					continueShooting = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4.f * M_PI, global_photons, caustic_photons, true, false);
 				break;
 				case 2:
-					keepContinue = false;
+					continueShooting = false;
 				break;
 				case 3:
-					keepContinue = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4.f * M_PI / m_max_nb_shots, global_photons, caustic_photons, false, true);
+					continueShooting = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4.f * M_PI, global_photons, caustic_photons, false, true);
 				break;
 				default:
-					keepContinue = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4.f * M_PI / m_max_nb_shots, global_photons, caustic_photons, false, false);
+					continueShooting = trace_ray(ray, world->light_source_list.size() * lightSource->get_intensities() * 4.f * M_PI, global_photons, caustic_photons, false, false);
 			}
 		}
 	}
@@ -218,7 +217,6 @@ void PhotonMapping::preprocess()
 	if (!caustic_photons.empty()){
 		// Store caustic photons in the KDTree
 		for (auto const& photon : caustic_photons){
-			// cout << photon.flux.data[0] << " " << photon.flux.data[1] << " " << photon.flux.data[2] << endl;
 			m_caustics_map.store(std::vector<Real>(photon.position.data, photon.position.data + 3), photon);
 		}
 		// Balance the caustic photon Kdtree
@@ -266,10 +264,17 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 			if (lightSource->is_visible(it.get_position())){
 				Vector3 power = lightSource->get_intensities();
 				Vector3 connection = lightSource->get_position() - it.get_position();
+				/*
+				L += (power / (connection.length() * connection.length())) * (it.intersected()->material()->get_albedo(it) / M_PI) *
+					(dot_abs(it.get_normal(), connection.normalize()));
 
-
+				
 				L += (power / connection.length2()) * (it.intersected()->material()->get_albedo(it) / M_PI) *
 					(dot_abs(it.get_normal(), connection.normalize()));
+				*/
+				L += lightSource->get_incoming_light(it.get_position()) * (it.intersected()->material()->get_albedo(it) / M_PI) *
+					(dot_abs(it.get_normal(), connection.normalize()));
+				
 			}
 		}
 	}
@@ -319,9 +324,9 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 
 		// +ks * ((shininess + 2) / (2 * M_PI)) * pow(dot_abs(photon.direction.normalize(), - (it.get_ray().get_direction().normalize()), it);
 
-		globalRadEstR += ((kdR / M_PI) * photon.flux.data[0]) * filteringFactor;
-		globalRadEstG += ((kdG / M_PI) * photon.flux.data[1]) * filteringFactor;
-		globalRadEstB += ((kdB / M_PI) * photon.flux.data[2]) * filteringFactor;
+		globalRadEstR += ((kdR / M_PI) * photon.flux.data[0] / m_max_nb_shots) * filteringFactor;
+		globalRadEstG += ((kdG / M_PI) * photon.flux.data[1] / m_max_nb_shots) * filteringFactor;
+		globalRadEstB += ((kdB / M_PI) * photon.flux.data[2] / m_max_nb_shots) * filteringFactor;
 	}
 	// photonsGlobal.clear();
 	// vector<const KDTree<Photon, 3>::Node *>().swap(photonsGlobal);
@@ -361,9 +366,9 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 
 			// +ks * ((shininess + 2) / (2 * M_PI)) * pow(dot_abs(it.get_normal(), )shininess);
 
-			causticRadEstR += ((kdR / M_PI) * photon.flux.data[0]) * filteringFactor;
-			causticRadEstG += ((kdG / M_PI) * photon.flux.data[1]) * filteringFactor;
-			causticRadEstB += ((kdB / M_PI) * photon.flux.data[2]) * filteringFactor;
+			causticRadEstR += ((kdR / M_PI) * photon.flux.data[0] / m_max_nb_shots) * filteringFactor;
+			causticRadEstG += ((kdG / M_PI) * photon.flux.data[1] / m_max_nb_shots) * filteringFactor;
+			causticRadEstB += ((kdB / M_PI) * photon.flux.data[2] / m_max_nb_shots) * filteringFactor;
 		}
 		causticRadEstR *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
 		causticRadEstG *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
