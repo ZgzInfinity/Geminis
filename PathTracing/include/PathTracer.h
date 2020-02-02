@@ -158,7 +158,7 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                         }
                         if(!pathFinished){
                             randomRR = uniform_real_distribution<float>(0, 1)(rng);
-                            lastIntersection = intersection;
+                            lastIntersection = intersection;                            
                             if(randomRR <= diffuseUB){
                                 // Russian roulette: diffuse
                                 theta = acosf(sqrt(1.f - uniform_real_distribution<float>(0, 1)(rng)));
@@ -196,15 +196,18 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                                                             minDistanceDL, triangleList, nearestTriangle, nearestObject);
                                     // Check if directRay has intersect any object
                                     if (minDistanceDL == oldDistanceDL){
-                                        acumDL.back() = acumDL.back() + 
-                                                        RGB((directLight.color.red / (oldDistanceDL * oldDistanceDL)) * kdr / M_PI * abs(dot(normal, directLightRay)) / diffuseUB,
-                                                            (directLight.color.green / (oldDistanceDL * oldDistanceDL)) * kdg / M_PI * abs(dot(normal, directLightRay)) / diffuseUB,
-                                                            (directLight.color.blue / (oldDistanceDL * oldDistanceDL)) * kdb / M_PI * abs(dot(normal, directLightRay)) / diffuseUB);                                            
-                                    } 
+                                        acumDL.back() = acumDL.back() +
+                                                        RGB((directLight.color.red / (oldDistanceDL * oldDistanceDL)) * ((kdr / M_PI) + 
+                                                                (ksr * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(oldRayDir, rayDir)), shininess))) * abs(dot(normal, directLightRay)),
+                                                            (directLight.color.green / (oldDistanceDL * oldDistanceDL)) * ((kdg / M_PI) + 
+                                                                (ksg * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(oldRayDir, rayDir)), shininess))) * abs(dot(normal, directLightRay)),
+                                                            (directLight.color.blue / (oldDistanceDL * oldDistanceDL)) * ((kdb / M_PI) + 
+                                                                (ksb * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(oldRayDir, rayDir)), shininess))) * abs(dot(normal, directLightRay)));                                            
+                                    }
                                 }
-                                acumIL.back() = RGB((kdr / diffuseUB) * abs(dot(normal, rayDir)),
-                                                    (kdg / diffuseUB) * abs(dot(normal, rayDir)),
-                                                    (kdb / diffuseUB) * abs(dot(normal, rayDir)));
+                                acumIL.back() = RGB((kdr / diffuseUB),
+                                                    (kdg / diffuseUB),
+                                                    (kdb / diffuseUB));
                             }
                             else if(randomRR <= specularUB){
                                 // Russian roulette: specular
@@ -245,17 +248,17 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                                     // Check if directRay has intersect any object
                                     if (minDistanceDL == oldDistanceDL){
                                         acumDL.back() = acumDL.back() +
-                                                        RGB((directLight.color.red / (oldDistanceDL * oldDistanceDL)) *
-                                                                ((ksr / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(normal, directLightRay)), shininess)),
-                                                            (directLight.color.green / (oldDistanceDL * oldDistanceDL)) *
-                                                                ((ksg / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(normal, directLightRay)), shininess)),
-                                                            (directLight.color.blue / (oldDistanceDL * oldDistanceDL)) *
-                                                                ((ksb / abs(specularUB - diffuseUB)) * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(normal, directLightRay)), shininess)));
+                                                        RGB((directLight.color.red / (oldDistanceDL * oldDistanceDL)) * ((kdr / M_PI) + 
+                                                                (ksr * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(oldRayDir, rayDir)), shininess))) * abs(dot(normal, directLightRay)),
+                                                            (directLight.color.green / (oldDistanceDL * oldDistanceDL)) * ((kdg / M_PI) + 
+                                                                (ksg * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(oldRayDir, rayDir)), shininess))) * abs(dot(normal, directLightRay)),
+                                                            (directLight.color.blue / (oldDistanceDL * oldDistanceDL)) * ((kdb / M_PI) + 
+                                                                (ksb * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(oldRayDir, rayDir)), shininess))) * abs(dot(normal, directLightRay)));
                                     } 
                                 }
-                                acumIL.back() = RGB((ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f),
-                                                    (ksg / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f),
-                                                    (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(cosf(theta)), shininess) / 2.f));
+                                acumIL.back() = RGB((ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(oldRayDir, rayDir)), shininess) / 2.f),
+                                                    (ksg / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(oldRayDir, rayDir)), shininess) / 2.f),
+                                                    (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(oldRayDir, rayDir)), shininess) / 2.f));
                             }                                
                             else if(randomRR <= perfectSpecularUB){
                                 // Russian roulette: perfect specular
