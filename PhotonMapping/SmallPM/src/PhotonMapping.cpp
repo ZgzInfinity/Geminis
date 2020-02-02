@@ -206,12 +206,15 @@ void PhotonMapping::preprocess()
 			}
 		}
 	}
-	// Store global photons in the KDTree
-	for (auto const& photon : global_photons){
-		m_global_map.store(std::vector<Real>(photon.position.data, photon.position.data + 3), photon);
+
+	if (!global_photons.empty()){
+		// Store global photons in the KDTree
+		for (auto const& photon : global_photons){
+			m_global_map.store(std::vector<Real>(photon.position.data, photon.position.data + 3), photon);
+		}
+		// Balance the global photon Kdtree
+		m_global_map.balance();
 	}
-	// Balance the global photon Kdtree
-	m_global_map.balance();
 
 	// Check if there are caustic objects in the scene
 	if (!caustic_photons.empty()){
@@ -279,9 +282,6 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 		}
 	}
 	
-	
-		
-	
 	// Direct light contribution
 	// L = it.intersected()->material()->get_albedo(it);
 	// L = L * W;
@@ -291,7 +291,7 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 	std::vector<const KDTree<Photon, 3>::Node*> photonsGlobal, photonsCaustic;
 	Real max_distance;
 	// Find the k nearest photons
-	m_global_map.find(std::vector<Real>(p.data, p.data + 3), m_nb_photons, photonsGlobal, max_distance);
+	// Iteration through the global photons
 
 	// Calculation of the final radiance estimation
 	Real globalRadEstR = 0.0, globalRadEstG = 0.0, globalRadEstB = 0.0;
@@ -301,40 +301,42 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 	Vector3 globalRadEst(0);
 	Vector3 causticRadEst(0);
 
+	if (!m_global_map.is_empty()){
+		m_global_map.find(std::vector<Real>(p.data, p.data + 3), m_nb_photons, photonsGlobal, max_distance);
 
-	// Iteration through the global photons
-	for (auto const& photonNode : photonsGlobal){
-		// Cast like photon
-		Photon photon = photonNode->data();
-		// Get diffuse coefficient for each channel
-		float kdR = it.intersected()->material()->get_albedo(it).data[0];
-		float kdG = it.intersected()->material()->get_albedo(it).data[1];
-		float kdB = it.intersected()->material()->get_albedo(it).data[2];
+		for (auto const& photonNode : photonsGlobal){
+			// Cast like photon
+			Photon photon = photonNode->data();
+			// Get diffuse coefficient for each channel
+			float kdR = it.intersected()->material()->get_albedo(it).data[0];
+			float kdG = it.intersected()->material()->get_albedo(it).data[1];
+			float kdB = it.intersected()->material()->get_albedo(it).data[2];
 
-		// Get specular coefficient
-		float ks = it.intersected()->material()->get_specular(it);
+			// Get specular coefficient
+			float ks = it.intersected()->material()->get_specular(it);
 
-		filteringFactor = 1 - (sqrtf(pow(it.get_position().data[0] - photon.position.data[0], 2) +
-			pow(it.get_position().data[1] - photon.position.data[1], 2) +
-			pow(it.get_position().data[2] - photon.position.data[2], 2)) / (max_distance * k_cone));
+			filteringFactor = 1 - (sqrtf(pow(it.get_position().data[0] - photon.position.data[0], 2) +
+				pow(it.get_position().data[1] - photon.position.data[1], 2) +
+				pow(it.get_position().data[2] - photon.position.data[2], 2)) / (max_distance * k_cone));
 
-		// Phong p = (Phong) it.intersected()->material()->;
+			// Phong p = (Phong) it.intersected()->material()->;
 
-		// float shininess = 
+			// float shininess = 
 
-		// +ks * ((shininess + 2) / (2 * M_PI)) * pow(dot_abs(photon.direction.normalize(), - (it.get_ray().get_direction().normalize()), it);
+			// +ks * ((shininess + 2) / (2 * M_PI)) * pow(dot_abs(photon.direction.normalize(), - (it.get_ray().get_direction().normalize()), it);
 
-		globalRadEstR += ((kdR / M_PI) * photon.flux.data[0] / m_max_nb_shots) * filteringFactor;
-		globalRadEstG += ((kdG / M_PI) * photon.flux.data[1] / m_max_nb_shots) * filteringFactor;
-		globalRadEstB += ((kdB / M_PI) * photon.flux.data[2] / m_max_nb_shots) * filteringFactor;
+			globalRadEstR += ((kdR / M_PI) * photon.flux.data[0] / m_max_nb_shots) * filteringFactor;
+			globalRadEstG += ((kdG / M_PI) * photon.flux.data[1] / m_max_nb_shots) * filteringFactor;
+			globalRadEstB += ((kdB / M_PI) * photon.flux.data[2] / m_max_nb_shots) * filteringFactor;
+		}
+		// photonsGlobal.clear();
+		// vector<const KDTree<Photon, 3>::Node *>().swap(photonsGlobal);
+		globalRadEstR *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
+		globalRadEstG *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
+		globalRadEstB *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
+
+		globalRadEst = Vector3(globalRadEstR, globalRadEstG, globalRadEstB);
 	}
-	// photonsGlobal.clear();
-	// vector<const KDTree<Photon, 3>::Node *>().swap(photonsGlobal);
-	globalRadEstR *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
-	globalRadEstG *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
-	globalRadEstB *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
-
-	globalRadEst = Vector3(globalRadEstR, globalRadEstG, globalRadEstB);
 	
 	// globalRadEst = globalRadEst * (it.intersected()->material()->get_albedo(it) / M_PI);
 
