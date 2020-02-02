@@ -170,6 +170,7 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                                 // Get new rayDir, using new direction with normal = 1 in local coordinates
                                 rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, z_);
                                 rayDir = rayDir / mod(rayDir);
+                                Direction perfectReflection = oldRayDir - normal * dot(oldRayDir, normal) * 2.f;
                                 // product = product * kdx / maxkd
                                 productR *= (kdr / diffuseUB);
                                 productG *= (kdg / diffuseUB);
@@ -198,11 +199,11 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                                     if (minDistanceDL == oldDistanceDL){
                                         acumDL.back() = acumDL.back() +
                                                         RGB((directLight.color.red / (oldDistanceDL * oldDistanceDL)) * ((kdr / M_PI) + 
-                                                                (ksr * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(oldRayDir, rayDir)), shininess))) * abs(dot(normal, directLightRay)),
+                                                                (ksr * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(perfectReflection, rayDir)), shininess))) * abs(dot(normal, directLightRay)),
                                                             (directLight.color.green / (oldDistanceDL * oldDistanceDL)) * ((kdg / M_PI) + 
-                                                                (ksg * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(oldRayDir, rayDir)), shininess))) * abs(dot(normal, directLightRay)),
+                                                                (ksg * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(perfectReflection, rayDir)), shininess))) * abs(dot(normal, directLightRay)),
                                                             (directLight.color.blue / (oldDistanceDL * oldDistanceDL)) * ((kdb / M_PI) + 
-                                                                (ksb * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(oldRayDir, rayDir)), shininess))) * abs(dot(normal, directLightRay)));                                            
+                                                                (ksb * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(perfectReflection, rayDir)), shininess))) * abs(dot(normal, directLightRay)));                                            
                                     }
                                 }
                                 acumIL.back() = RGB((kdr / diffuseUB),
@@ -220,9 +221,10 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                                 // Get new rayDir, using new direction with normal = 1 in local coordinates
                                 rayDir = Matrix3::changeBase(x, y, normal) * Direction(x_, y_, z_);
                                 rayDir = rayDir / mod(rayDir);
-                                productR *= (ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(oldRayDir, rayDir)), shininess) / 2.f);
-                                productG *= (ksg / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(oldRayDir, rayDir)), shininess) / 2.f);
-                                productB *= (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(oldRayDir, rayDir)), shininess) / 2.f);
+                                Direction perfectReflection = oldRayDir - normal * dot(oldRayDir, normal) * 2.f;
+                                productR *= (ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(perfectReflection, rayDir)), shininess) / 2.f);
+                                productG *= (ksg / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(perfectReflection, rayDir)), shininess) / 2.f);
+                                productB *= (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(perfectReflection, rayDir)), shininess) / 2.f);
 
                                 // Calculate the contribution from direct light sources
                                 for(const auto& directLight : directLightList){
@@ -249,16 +251,16 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                                     if (minDistanceDL == oldDistanceDL){
                                         acumDL.back() = acumDL.back() +
                                                         RGB((directLight.color.red / (oldDistanceDL * oldDistanceDL)) * ((kdr / M_PI) + 
-                                                                (ksr * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(oldRayDir, rayDir)), shininess))) * abs(dot(normal, directLightRay)),
+                                                                (ksr * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(perfectReflection, rayDir)), shininess))) * abs(dot(normal, directLightRay)),
                                                             (directLight.color.green / (oldDistanceDL * oldDistanceDL)) * ((kdg / M_PI) + 
-                                                                (ksg * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(oldRayDir, rayDir)), shininess))) * abs(dot(normal, directLightRay)),
+                                                                (ksg * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(perfectReflection, rayDir)), shininess))) * abs(dot(normal, directLightRay)),
                                                             (directLight.color.blue / (oldDistanceDL * oldDistanceDL)) * ((kdb / M_PI) + 
-                                                                (ksb * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(oldRayDir, rayDir)), shininess))) * abs(dot(normal, directLightRay)));
+                                                                (ksb * ((shininess + 2.f) / (2.f * M_PI)) * pow(abs(dot(perfectReflection, rayDir)), shininess))) * abs(dot(normal, directLightRay)));
                                     } 
                                 }
-                                acumIL.back() = RGB((ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(oldRayDir, rayDir)), shininess) / 2.f),
-                                                    (ksg / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(oldRayDir, rayDir)), shininess) / 2.f),
-                                                    (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(oldRayDir, rayDir)), shininess) / 2.f));
+                                acumIL.back() = RGB((ksr / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(perfectReflection, rayDir)), shininess) / 2.f),
+                                                    (ksg / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(perfectReflection, rayDir)), shininess) / 2.f),
+                                                    (ksb / abs(specularUB - diffuseUB) * (shininess + 2.f) * powf(abs(dot(perfectReflection, rayDir)), shininess) / 2.f));
                             }                                
                             else if(randomRR <= perfectSpecularUB){
                                 // Russian roulette: perfect specular
