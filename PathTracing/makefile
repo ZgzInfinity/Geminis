@@ -14,7 +14,7 @@ SRCDIR = ./src
 # set the include folder where the .h files reside
 CFLAGS += -I$(INCDIR) -I$(SRCDIR)
 
-MAINSOURCES = main.cpp Point.cpp Direction.cpp SharedOps.cpp Matrix3.cpp Matrix4.cpp RGB.cpp Sphere.cpp Plane.cpp Image.cpp Triangle.cpp ImageLoaderPPM.cpp DirectLight.cpp
+MAINSOURCES = main.cpp Point.cpp Direction.cpp SharedOps.cpp Matrix3.cpp Matrix4.cpp RGB.cpp Sphere.cpp Plane.cpp Image.cpp Triangle.cpp ImageLoaderPPM.cpp DirectLight.cpp ImageSceneLoader.cpp
 
 # add here the source files for the compilation
 SOURCES = $(MAINSOURCES) # $(TESTSOURCES)
