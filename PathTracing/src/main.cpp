@@ -57,6 +57,61 @@ void sceneDefinitionHardShadows(list<Plane>& planeList, list<Sphere>& sphereList
 }
 
 
+
+void sceneDefinitionMultipleLights(list<Plane>& planeList, list<Sphere>& sphereList, list<Triangle>& triangleList, list<DirectLight>& directLightList, Image* textureList[]){
+     // Definition of the planes which are going to appear in the scene 
+    Plane leftWall = Plane(Direction(0, 0, 1), 2, 0.9, 0.0, 0, 0.0, 0.0, 0.0, 0.0, 0, 0, 1);
+    planeList.push_back(leftWall);
+    Plane rightWall = Plane(Direction(0, 0,-1), 2, 0.0, 0.9, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 1);
+    planeList.push_back(rightWall);
+    Plane ceiling = Plane(Direction(0, -1, 0), 2, 0.9, 0.9, 0.9, 0.0, 0.0, 0.0, 0.0, 0, 0, 1);
+    planeList.push_back(ceiling);
+    Plane floor = Plane(Direction(0, 1, 0), 2, 0.9, 0.9, 0.9, 0.0, 0.0, 0.0, 0.0, 0, 0, 1);
+    planeList.push_back(floor);
+    Plane background = Plane(Direction(-1, 0, 0), 5, 0.9, 0.9, 0.9, 0.0, 0.0, 0.0, 0.0, 0, 0, 1);
+    planeList.push_back(background);
+    Plane behind = Plane(Direction(1, 0, 0), 5, 0.9, 0.9, 0.9, 0.0, 0.0, 0.0, 0.0, 0, 0, 1);
+    planeList.push_back(behind);
+    
+
+    // Definition of the spheres which are going to appear in the scene 
+    Sphere leftSphere = Sphere(Point(3, -1.40, -1), 0.6,  0.7, 0.7, 0.7, 0.2, 0.2, 0.2, 1, 0, 0, 1);
+    sphereList.push_back(leftSphere);
+    Sphere rightSphere = Sphere(Point(2, -1.40, 1), 0.6, 0.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.20, 0.70, 1.5);
+    sphereList.push_back(rightSphere);
+
+    /*
+    // Definition of the triangles which are going to appear in the scene 
+    Triangle t1 = Triangle(Point(49.99, -7, -7), Point(49.99, -7, 7), 
+                           Point(49.99, 7, -7), textureList[0], 0.8, 0.1, 0.1, 0, 0, 1,
+                           0, 1, 0, 0, 0 , 1);
+    triangleList.push_back(t1);
+    Triangle t2 = Triangle(Point(49.99, 7, -7), Point(49.99, -7, 7), 
+                           Point(49.99, 7, 7), textureList[0], 0.8, 0.1, 0.1, 0, 0, 1,
+                           0, 1, 1, 1, 0, 1);
+    triangleList.push_back(t2);
+    */
+
+    // Definition of the direct lights which are going to appear in the scene 
+    DirectLight d1 = DirectLight(Point(2.5, 1, 0.5), RGB(100, 100, 100));
+    directLightList.push_back(d1);
+
+    // Definition of the direct lights which are going to appear in the scene 
+    DirectLight d2 = DirectLight(Point(3, 1, -0.5), RGB(100, 0, 0));
+    directLightList.push_back(d2);
+
+
+    // Definition of the direct lights which are going to appear in the scene 
+    DirectLight d3 = DirectLight(Point(1, 1, 0.5), RGB(0, 100, 0));
+    directLightList.push_back(d3);
+
+
+    // Definition of the direct lights which are going to appear in the scene 
+    DirectLight d4 = DirectLight(Point(4, 1, -0.5), RGB(0, 0, 100));
+    directLightList.push_back(d4);
+}
+
+
 void sceneDefinitionSoftShadows(list<Plane>& planeList, list<Sphere>& sphereList, list<Triangle>& triangleList, list<DirectLight>& directLightList, Image* textureList[]){
      // Definition of the planes which are going to appear in the scene 
     Plane leftWall = Plane(Direction(0, 0, 1), 2, 0.9, 0.0, 0, 0.0, 0.0, 0.0, 0.0, 0, 0, 1);
@@ -222,7 +277,8 @@ int main(int argc, char* argv[]){
 
         //sceneDefinition(planeList, sphereList, triangleList, directLightList, textureList);
         // sceneDefinitionHardShadows(planeList, sphereList, triangleList, directLightList, textureList);
-        sceneDefinitionSoftShadows(planeList, sphereList, triangleList, directLightList, textureList);
+        // sceneDefinitionSoftShadows(planeList, sphereList, triangleList, directLightList, textureList);
+        sceneDefinitionMultipleLights(planeList, sphereList, triangleList, directLightList, textureList);
 
         // Matrix of the image that is going to be built
         vector<vector<RGB>> img(height, vector<RGB>(width));
