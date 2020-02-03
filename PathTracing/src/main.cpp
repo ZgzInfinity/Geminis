@@ -177,7 +177,8 @@ void sceneDefinition(list<Plane>& planeList, list<Sphere>& sphereList, list<Tria
     // Plane ceiling = Plane(Direction(0, -1, 0), 7, RGB(255, 255, 255));
     Plane ceiling = Plane(Direction(0, -1, 0), 7, RGB(255, 255, 255));
     planeList.push_back(ceiling);
-    Plane floor = Plane(Direction(0, 1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+    // Plane floor = Plane(Direction(0, 1, 0), 7, 0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 0.1, 0, 0, 1);
+    Plane floor = Plane(Direction(0, 1, 0), 7, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.9, 0, 1);
     planeList.push_back(floor);
     Plane background = Plane(Direction(-1, 0, 0), 50, 0, 0, 0, 0, 0, 0, 0, 0.9, 0, 1);
     planeList.push_back(background);
@@ -188,8 +189,8 @@ void sceneDefinition(list<Plane>& planeList, list<Sphere>& sphereList, list<Tria
 
 
     // Definition of the spheres which are going to appear in the scene 
-    Sphere leftSphere = Sphere(Point(40, -5, -3), 2,  0.1, 0.1, 0.1, 0.8, 0.8, 0.8, 0.1, 0, 0, 1);
-    Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0.1, 0.9, 0, 1);
+    Sphere leftSphere = Sphere(Point(40, -5, -3), 2,  0.8, 0.8, 0.8, 0.1, 0.1, 0.1, 1, 0, 0, 1);
+    Sphere rightSphere = Sphere(Point(32, -5, 3), 2, 0.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.0, 0.9, 1.5);
     sphereList.push_back(leftSphere);
     sphereList.push_back(rightSphere);
 
@@ -202,6 +203,68 @@ void sceneDefinition(list<Plane>& planeList, list<Sphere>& sphereList, list<Tria
                             Point(49.99, 7, 7), textureList[0], 0.8, 0.1, 0.1, 0, 0, 1,
                             0, 1, 1, 1, 0, 1);
     triangleList.push_back(t2);
+}
+
+void sceneDefinitionOpenSpace(list<Plane>& planeList, list<Sphere>& sphereList, list<Triangle>& triangleList, list<DirectLight>& directLightList, Image* textureList[]){
+
+    // Definition of the spheres which are going to appear in the scene 
+    Sphere leftSphere = Sphere(Point(3, -1.40, -1), 0.6,  0.7, 0.7, 0.7, 0.2, 0.2, 0.2, 1, 0, 0, 1);
+    sphereList.push_back(leftSphere);
+    Sphere rightSphere = Sphere(Point(2, -1.40, 1), 0.6, 0.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.20, 0.70, 1.5);
+    sphereList.push_back(rightSphere);
+
+    // Definition of the direct lights which are going to appear in the scene 
+    DirectLight d1 = DirectLight(Point(2.5, 1, 0), RGB(100, 100, 100));
+    directLightList.push_back(d1);
+}
+
+void sceneDefinitionMoreObjects(list<Plane>& planeList, list<Sphere>& sphereList, list<Triangle>& triangleList, list<DirectLight>& directLightList, Image* textureList[]){
+     // Definition of the planes which are going to appear in the scene 
+    Plane leftWall = Plane(Direction(0, 0, 1), 2, 0.9, 0.0, 0, 0.0, 0.0, 0.0, 0.0, 0, 0, 1);
+    planeList.push_back(leftWall);
+    Plane rightWall = Plane(Direction(0, 0,-1), 2, 0.0, 0.9, 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 1);
+    planeList.push_back(rightWall);
+    Plane ceiling = Plane(Direction(0, -1, 0), 2, 0.9, 0.9, 0.9, 0.0, 0.0, 0.0, 0.0, 0, 0, 1);
+    planeList.push_back(ceiling);
+    Plane floor = Plane(Direction(0, 1, 0), 2, 0.9, 0.9, 0.9, 0.0, 0.0, 0.0, 0.0, 0, 0, 1);
+    planeList.push_back(floor);
+    Plane background = Plane(Direction(-1, 0, 0), 5, 0.9, 0.9, 0.9, 0.0, 0.0, 0.0, 0.0, 0, 0, 1);
+    planeList.push_back(background);
+    Plane behind = Plane(Direction(1, 0, 0), 5, 0.9, 0.9, 0.9, 0.0, 0.0, 0.0, 0.0, 0, 0, 1);
+    planeList.push_back(behind);
+    
+
+    // Definition of the spheres which are going to appear in the scene 
+    Sphere sphere1 = Sphere(Point(3, -1.40, -1), 0.2,  0.7, 0.7, 0.7, 0.2, 0.2, 0.2, 1, 0, 0, 1);
+    sphereList.push_back(sphere1);
+    Sphere sphere2 = Sphere(Point(2.5, -1.40, 1), 0.2, 0.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.20, 0.70, 1.5);
+    sphereList.push_back(sphere2);
+    Sphere sphere3 = Sphere(Point(2.5, -1.40, 0), 0.2, 0.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.20, 0.70, 1.5);
+    sphereList.push_back(sphere3);
+    Sphere sphere4 = Sphere(Point(2.5, -1.40, -1.5), 0.2, 0.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.20, 0.70, 1.5);
+    sphereList.push_back(sphere4);
+    Sphere sphere5 = Sphere(Point(1.5, -1.40, 1.5), 0.2, 0.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.20, 0.70, 1.5);
+    sphereList.push_back(sphere5);
+    Sphere sphere6 = Sphere(Point(1.5, -1.40, 1.5), 0.2, 0.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.20, 0.70, 1.5);
+    sphereList.push_back(sphere6);
+    Sphere sphere7 = Sphere(Point(1.5, -1.40, -1.5), 0.2, 0.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.20, 0.70, 1.5);
+    sphereList.push_back(sphere7);
+
+    /*
+    // Definition of the triangles which are going to appear in the scene 
+    Triangle t1 = Triangle(Point(49.99, -7, -7), Point(49.99, -7, 7), 
+                           Point(49.99, 7, -7), textureList[0], 0.8, 0.1, 0.1, 0, 0, 1,
+                           0, 1, 0, 0, 0 , 1);
+    triangleList.push_back(t1);
+    Triangle t2 = Triangle(Point(49.99, 7, -7), Point(49.99, -7, 7), 
+                           Point(49.99, 7, 7), textureList[0], 0.8, 0.1, 0.1, 0, 0, 1,
+                           0, 1, 1, 1, 0, 1);
+    triangleList.push_back(t2);
+    */
+
+    // Definition of the direct lights which are going to appear in the scene 
+    DirectLight d1 = DirectLight(Point(2.5, 1, 0), RGB(100, 100, 100));
+    directLightList.push_back(d1);
 }
 
 
@@ -268,11 +331,13 @@ int main(int argc, char* argv[]){
         textureList[0] = &brickTexture;
 
         //sceneDefinition(planeList, sphereList, triangleList, directLightList, textureList);
-        sceneDefinitionHardShadows(planeList, sphereList, triangleList, directLightList, textureList);
+        // sceneDefinitionHardShadows(planeList, sphereList, triangleList, directLightList, textureList);
         // sceneDefinitionSoftShadows(planeList, sphereList, triangleList, directLightList, textureList);
         // sceneDefinitionSpecular(planeList, sphereList, triangleList, directLightList, textureList);
         // sceneDefinitionBrickWall(planeList, sphereList, triangleList, directLightList, textureList);
         // sceneDefinition(planeList, sphereList, triangleList, directLightList, textureList);
+        // sceneDefinitionOpenSpace(planeList, sphereList, triangleList, directLightList, textureList);
+        sceneDefinitionMoreObjects(planeList, sphereList, triangleList, directLightList, textureList);
 
         // Matrix of the image that is going to be built
         vector<vector<RGB>> img(height, vector<RGB>(width));
