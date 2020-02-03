@@ -1,16 +1,24 @@
 /*********************************************************************************
+Collaborators
 Copyright (C) 2014 Adrian Jarabo (ajarabo@unizar.es)
 Copyright (C) 2014 Diego Gutierrez (diegog@unizar.es)
 All rights reserved.
 
 This is an educational Ray Tracer developed for the course 'Informatica Grafica'
-(Computer Graphics) tought at Universidad de Zaragoza (Spain). As such, it does not 
+(Computer Graphics) tought at Universidad de Zaragoza (Spain). As such, it does not
 intend to be fast or general, but just to provide an educational tool for undergraduate
-students. 
+students.
 
 This software is provided as is, and any express or implied warranties are disclaimed.
 In no event shall copyright holders be liable for any damage.
+
+Authors of the project
+
+Victor Peñasco Estivalez - 741294
+Ruben Rodriguez Esteban	 - 737215
+
 **********************************************************************************/
+
 
 #include <iostream>
 #include "globals.h"
@@ -200,7 +208,7 @@ int main(int argc, char* argv[])
 	// 2 = only direct illumination with ray tracing
 	// 3 = only direct illumination with photon mapping
 	// 4 = only global illumination
-	int flagDI = 3;
+	int flagDI = 1;
 	pm = new PhotonMapping(w, photons_global, photons_caustic, max_shots, nb_nearest_photons, flagDI);
 
 	engine = new RenderEngine(w, film, &camera, pm);

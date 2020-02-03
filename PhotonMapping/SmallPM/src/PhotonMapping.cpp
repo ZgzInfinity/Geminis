@@ -1,16 +1,24 @@
 /*********************************************************************************
+Collaborators
 Copyright (C) 2014 Adrian Jarabo (ajarabo@unizar.es)
 Copyright (C) 2014 Diego Gutierrez (diegog@unizar.es)
 All rights reserved.
 
 This is an educational Ray Tracer developed for the course 'Informatica Grafica'
-(Computer Graphics) tought at Universidad de Zaragoza (Spain). As such, it does not 
+(Computer Graphics) tought at Universidad de Zaragoza (Spain). As such, it does not
 intend to be fast or general, but just to provide an educational tool for undergraduate
-students. 
+students.
 
 This software is provided as is, and any express or implied warranties are disclaimed.
 In no event shall copyright holders be liable for any damage.
+
+Authors of the project
+
+Victor Peñasco Estivalez - 741294
+Ruben Rodriguez Esteban	 - 737215
+
 **********************************************************************************/
+
 
 #define _USE_MATH_DEFINES
 #include <cmath> 
@@ -267,24 +275,12 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 			if (lightSource->is_visible(it.get_position())){
 				Vector3 power = lightSource->get_intensities();
 				Vector3 connection = lightSource->get_position() - it.get_position();
-				/*
-				L += (power / (connection.length() * connection.length())) * (it.intersected()->material()->get_albedo(it) / M_PI) *
-					(dot_abs(it.get_normal(), connection.normalize()));
-
-				
-				L += (power / connection.length2()) * (it.intersected()->material()->get_albedo(it) / M_PI) *
-					(dot_abs(it.get_normal(), connection.normalize()));
-				*/
 				L += lightSource->get_incoming_light(it.get_position()) * (it.intersected()->material()->get_albedo(it) / M_PI) *
 					(dot_abs(it.get_normal(), connection.normalize()));
 				
 			}
 		}
 	}
-	
-	// Direct light contribution
-	// L = it.intersected()->material()->get_albedo(it);
-	// L = L * W;
 	
 	// Lambertian material
 	Vector3 p = it.get_position();
@@ -319,18 +315,10 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 				pow(it.get_position().data[1] - photon.position.data[1], 2) +
 				pow(it.get_position().data[2] - photon.position.data[2], 2)) / (max_distance * k_cone));
 
-			// Phong p = (Phong) it.intersected()->material()->;
-
-			// float shininess = 
-
-			// +ks * ((shininess + 2) / (2 * M_PI)) * pow(dot_abs(photon.direction.normalize(), - (it.get_ray().get_direction().normalize()), it);
-
 			globalRadEstR += ((kdR / M_PI) * photon.flux.data[0] / m_max_nb_shots) * filteringFactor;
 			globalRadEstG += ((kdG / M_PI) * photon.flux.data[1] / m_max_nb_shots) * filteringFactor;
 			globalRadEstB += ((kdB / M_PI) * photon.flux.data[2] / m_max_nb_shots) * filteringFactor;
 		}
-		// photonsGlobal.clear();
-		// vector<const KDTree<Photon, 3>::Node *>().swap(photonsGlobal);
 		globalRadEstR *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
 		globalRadEstG *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
 		globalRadEstB *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
@@ -338,9 +326,6 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 		globalRadEst = Vector3(globalRadEstR, globalRadEstG, globalRadEstB);
 	}
 	
-	// globalRadEst = globalRadEst * (it.intersected()->material()->get_albedo(it) / M_PI);
-
-
 	// Calculation of the final radiance estimation
 	Real causticRadEstR = 0.0, causticRadEstG = 0.0, causticRadEstB = 0.0;
 
@@ -366,8 +351,6 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 											  pow(it.get_position().data[1] - photon.position.data[1], 2) +
 											  pow(it.get_position().data[2] - photon.position.data[2], 2)) / (max_distance * k_cone));
 
-			// +ks * ((shininess + 2) / (2 * M_PI)) * pow(dot_abs(it.get_normal(), )shininess);
-
 			causticRadEstR += ((kdR / M_PI) * photon.flux.data[0] / m_max_nb_shots) * filteringFactor;
 			causticRadEstG += ((kdG / M_PI) * photon.flux.data[1] / m_max_nb_shots) * filteringFactor;
 			causticRadEstB += ((kdB / M_PI) * photon.flux.data[2] / m_max_nb_shots) * filteringFactor;
@@ -377,19 +360,9 @@ Vector3 PhotonMapping::shade(Intersection &it0)const
 		causticRadEstB *= 1.f / ((1.f - 2.f / (3.f * k_cone)) * max_distance * max_distance * M_PI);
 
 		causticRadEst = Vector3(causticRadEstR, causticRadEstG, causticRadEstB);
-		// causticRadEst = causticRadEst * (it.intersected()->material()->get_albedo(it) / M_PI);
 	}
-	// cout <<"Direct" << endl;
-	// cout << L.data[0] << " " << L.data[1] << " " << L.data[2] << endl;
-	// cout <<"Global" << endl;
-	// cout << globalRadEst.data[0] << " " << globalRadEst.data[1] << " " << globalRadEst.data[2] << endl;
-
-
 	// Add the contribution of global illumination
-	L = L + globalRadEst + causticRadEst;
-	
-	// cout << L.data[0] << " " << L.data[1] << " " << L.data[2] << endl;
-	
+	L = L + globalRadEst + causticRadEst;	
 	return L;
 	
 	//**********************************************************************

@@ -1,4 +1,5 @@
 /*********************************************************************************
+Collaborators 
 Copyright (C) 2014 Adrian Jarabo (ajarabo@unizar.es)
 Copyright (C) 2014 Diego Gutierrez (diegog@unizar.es)
 All rights reserved.
@@ -10,6 +11,12 @@ students.
 
 This software is provided as is, and any express or implied warranties are disclaimed.
 In no event shall copyright holders be liable for any damage.
+
+Authors of the project
+
+Victor Peñasco Estivalez - 741294
+Ruben Rodriguez Esteban	 - 737215
+
 **********************************************************************************/
 
 #ifdef WIN32
