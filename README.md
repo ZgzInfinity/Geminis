@@ -10,6 +10,8 @@ Theme | End date| Status
 Geometry |14-10-2019 | ![tic_correcto](https://i.ibb.co/48JQg0R/tic-1.png)
 Imaging  |29-10-2019 | ![tic_correcto](https://i.ibb.co/48JQg0R/tic-1.png)
 Ray Tracing |27-11-2019 |![tic_correcto](https://i.ibb.co/48JQg0R/tic-1.png)
+Path Tracing | 03-02-2020 | ![tic_correcto](https://i.ibb.co/48JQg0R/tic-1.png)
+Photon Mapping | 03-02-2020 | ![tic_correcto](https://i.ibb.co/48JQg0R/tic-1.png)
 
 # Authors
 
