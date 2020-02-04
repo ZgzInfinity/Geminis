@@ -137,7 +137,14 @@ int main(int argc, char* argv[]){
         for (int i = 0; i < NUM_THREADS; i++){
             // A thread computes path tracing algorithm in a part of the scene
             i1 = part * i;
-            i2 = i1 + part - 1;
+            if(height < part * (i + 2)){
+                // Assign height if last thread
+                i2 = height - 1;
+            }
+            else{
+                // Normal assignment
+                i2 = i1 + part - 1;
+            }
             P[i] = thread(&pathTracer, ref(PPP), ref(width), height, i1, i2, ref(img), ref(planeList), 
                                        ref(sphereList), ref(triangleList), ref(directLightList),
                                        ref(camera), ref(d_k), ref(leftPP), ref(upPP), ref(pixelSize), ref(rc));
