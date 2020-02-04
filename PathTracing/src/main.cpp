@@ -10,12 +10,15 @@
  */ 
 
 
+#include <iostream>
+#include <thread>
 #include "../include/PathTracer.h"
 #include "../include/ImageSceneLoader.h"
 
 using namespace std;
 
 const int NUMBER_PARAMETERS = 6;
+const int NUM_THREADS = 10;
 
 
 int main(int argc, char* argv[]){
@@ -122,13 +125,33 @@ int main(int argc, char* argv[]){
         // Matrix of the image that is going to be built
         vector<vector<RGB>> img(height, vector<RGB>(width));
         
+        // Vector of threads
+        thread P[NUM_THREADS];
+
+        // Number of rows computed by each thread
+        int part = height / NUM_THREADS;
+        // Index of the image 
+        int i1, i2;
+
         // Call path tracing algorithm
-        pathTracer(PPP, width, height, img, planeList, sphereList, triangleList, directLightList,
-                   camera, d_k, leftPP, upPP, pixelSize, rc);
+        for (int i = 0; i < NUM_THREADS; i++){
+            // A thread computes path tracing algorithm in a part of the scene
+            i1 = part * i;
+            i2 = i1 + part - 1;
+            P[i] = thread(&pathTracer, ref(PPP), ref(width), height, i1, i2, ref(img), ref(planeList), 
+                                       ref(sphereList), ref(triangleList), ref(directLightList),
+                                       ref(camera), ref(d_k), ref(leftPP), ref(upPP), ref(pixelSize), ref(rc));
+        }
+
+        // Wait until all threads have finished
+        for (int i = 0; i < NUM_THREADS; i++){
+            P[i].join();
+        }
 
         // Creation of the image and saving in a ppm format file
         Image image = Image(true, width, height, rc, rc, img);
         image.printImage(argv[5]);
+        cout << endl;
     }
     // Final execution of the programm
     return 0;

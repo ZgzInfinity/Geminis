@@ -3,7 +3,7 @@ EXEC = pathTracing
 CXX = g++             			# use the GNU C++ compiler
 OPTS = -O3 -Wall -g -std=c++11  # use some optimization, report all warnings and enable debugging
 CFLAGS = $(OPTS)      			# add compile flags
-LDFLAGS =             			# specify link flags here
+LDFLAGS = -pthread         		# specify link flags here
 
 # set a list of directories
 INCDIR =./include

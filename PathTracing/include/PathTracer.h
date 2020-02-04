@@ -20,6 +20,7 @@
 #include <random>
 #include <chrono>
 #include <algorithm>
+#include <mutex>
 #include "../include/Matrix4.h"
 #include "../include/SharedOps.h"
 #include "../include/Plane.h"
@@ -29,10 +30,42 @@
 #include "../include/ImageLoaderPPM.h"
 #include "../include/DirectLight.h"
 
-inline void pathTracer(const int& PPP, const float& width, const float& height, vector<vector<RGB>>& img,
-                list<Plane>& planeList, list<Sphere>& sphereList, list<Triangle>& triangleList, 
-                list<DirectLight>& directLightList, Point& camera, Direction& d_k,
-                Direction& leftPP, Direction& upPP, float& pixelSize, int& rc)
+
+const int BAR_PROGRESS = 30;
+
+
+// Control the critical section
+mutex g_pages_mutex;
+
+// Number of rows processed
+int rowsProcessed = 0;
+
+// Progress of the render
+int progress = 0;
+
+/**
+ * Computationof Path Tracing algorithm which calculates Render equation using Monte Carlo
+ * @param PPP is the number of rays per pixel
+ * @param width is the width dimension of the scene
+ * @param i1 is the lower index row of the image
+ * @param i2 is the upper index row of the image
+ * @param img is the matrix where is going to be generated the scene
+ * @param planeList is the list of planes of the scene
+ * @param sphereList is the list spheres of the scene
+ * @param triangleList is the list of triangles of the scene
+ * @param directLightList is the list of point lights of the scene
+ * @param camera is the camera which generates the scene
+ * @param d_k is the direction vector of the k dimension 
+ * @param leftPP is the left direction vector of the plane proyection 
+ * @param upPP is the up direction vector of the plane proyection 
+ * @param pixelSize is the dimension of each pixel of the image
+ * @param rc is the real color number of the image
+ * Generates a scene using path tracing algorithm
+ */
+inline void pathTracer(const int& PPP, const int& width, const float height, const float i1, const float i2, 
+                       vector<vector<RGB>>& img, list<Plane>& planeList, list<Sphere>& sphereList, 
+                       list<Triangle>& triangleList, list<DirectLight>& directLightList, Point& camera, 
+                       Direction& d_k, Direction& leftPP, Direction& upPP, float& pixelSize, int& rc)
 {
     Point intersection, lastIntersection;
     Point origin = camera;
@@ -76,7 +109,7 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
     
     // Loop that calculates for each pixel the thrown ray and the intersections
     // between it and the spheres and planes stored in the scene
-    for(int row = 0; row < height; row++){
+    for(int row = i1; row <= i2; row++){
         for(int col = 0; col < width; col++){
             // Inicialization
             acumR = 0, acumG = 0, acumB = 0;
@@ -313,6 +346,9 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
                 acumG += productG + acumDL.back().green;
                 acumB += productB + acumDL.back().blue;
             }
+            // Critical section (updating variable rc by the threads)
+            g_pages_mutex.lock();
+
             // Update max rc (resolution color) value
             if((acumR / PPP) > rc){
                 rc = (int)(acumR / PPP);
@@ -323,10 +359,35 @@ inline void pathTracer(const int& PPP, const float& width, const float& height, 
             if((acumB / PPP) > rc){
                 rc = (int)(acumB / PPP);
             }
-            img[row][col] = RGB((int)(acumR / PPP), 
-                                (int)(acumG / PPP), 
-                                (int)(acumB / PPP));
+            img[row][col] = RGB((int)(acumR / PPP), (int)(acumG / PPP), (int)(acumB / PPP));
+        
+            // Finished critical section code
+            g_pages_mutex.unlock();
         }
+        // Critical section (updating loading bar by the threads)
+        g_pages_mutex.lock();
+
+        // Incremention of rows processed
+        rowsProcessed++;
+
+        // A new row of the image has been processed
+        progress = (BAR_PROGRESS * rowsProcessed) / int(height);
+
+        // Write progress bar 
+        cout << "Rendering progress [";
+        for(int i = 0; i != BAR_PROGRESS; ++i){
+            if(i < progress){
+                cout << "#";
+            }
+            else {
+                cout << ".";
+            }
+        }
+        // Progress in percent
+        cout << "] " << int((rowsProcessed / height) * 100.f) << " %\r";
+        cout.flush();
+        // Finished critical section code
+        g_pages_mutex.unlock();
     }
 }
 
