@@ -65,7 +65,7 @@ $> bin/pathTracing <rays per pixel> <width of image> <height of image> <scene_co
 
 This code can´t be executed from terminal directly because is code obtanied from the teachers of the subject. This code
 has a set precompiled libraries for visual studio editor, version of 2013. You must install the IDE in order to compile 
-and execute from it.
+and execute it.
 
 # Authors
 
